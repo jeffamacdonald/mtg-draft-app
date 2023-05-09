@@ -13,6 +13,8 @@ class CubeCard < ApplicationRecord
   belongs_to :cube
   belongs_to :card
 
+  enum custom_color_identity: Card::COLOR_IDENTITIES
+
   delegate :default_image, to: :card
 
   def update_from_hash(card_hash)

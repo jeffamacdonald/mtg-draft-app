@@ -3,12 +3,25 @@
   src: url("Magic.ttf");
 }
 
+.page__background {
+  background-color: #121212;
+}
+
 .page__title {
+  font-family: "Magic";
+  text-align: center;
+  border: 5px solid #c4a347;
+  border-radius: 15px;
+  background-color: #c4a347;
+  margin: 10px 40% 0px 40%;
+}
+
+.page__section_title {
   font-family: "Magic";
 }
 
-.page__scroll {
-  background-image: image-url("scroll-background.jpg");
-  background-repeat: no-repeat;
-  background-size: 100%;
+.page__section {
+  border: 5px solid #d4c59d;
+  border-radius: 15px;
+  background-color: #d4c59d;
 }

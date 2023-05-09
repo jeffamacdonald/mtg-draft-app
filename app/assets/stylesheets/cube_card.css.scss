@@ -1,4 +1,21 @@
-.cube-card__img {
+.cube_card__img {
   width: 15%;
-  border-radius: 22px / 10px;
+  border-radius: 9px;
+}
+
+.cube_card__img:hover {
+  transition-duration: 1s;
+  transform: scale(2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.cube_card__list_section {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0px 10px 0px;
+}
+
+.cube_card__list_section_cards {
+  display: flex;
+  flex-direction: row;
 }
