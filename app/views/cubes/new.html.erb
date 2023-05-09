@@ -1,0 +1,16 @@
+<h1>Import a cube</h1>
+<%= form_with(model: Cube.new, local: true) do |f| %>
+  <div class="pt-3 row">
+    <div class="col-12">
+      <%= f.hidden_field :user, value: current_user %>
+      <%= f.text_field :name %>
+      <%= render(FileField.new(form: f, help: "Dck file", name: :import_file, file_format: "text/dck")) %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <%= f.submit "Import", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

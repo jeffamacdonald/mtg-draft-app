@@ -1,0 +1,7 @@
+<% if @url %>
+  <%= link_to content, @url, class: @classes, **@attributes %>
+<% else %>
+  <%= tag.button class: @classes, **@attributes do %>
+    <%= content %>
+  <% end %>
+<% end %>

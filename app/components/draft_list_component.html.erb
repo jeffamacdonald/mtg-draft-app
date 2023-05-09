@@ -1,0 +1,24 @@
+<div>
+  <% if @active_drafts.present? %>
+    <section>
+      <h3>Your Drafts</h3>
+      <ul>
+        <% @active_drafts.each do |active_draft| %>
+          <li>
+            <%= render(ButtonComponent.new(url: draft_path(active_draft), variation: :link) { active_draft.name } %>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+  <section>
+    <h3>Drafts You Can Join</h3>
+    <ul>
+      <% @pending_drafts.each do |pending_draft| %>
+        <li>
+          <%= render(ButtonComponent.new(url: draft_path(pending_draft), variation: :link) { pending_draft.name } %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+</div>

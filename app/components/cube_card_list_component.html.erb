@@ -1,0 +1,5 @@
+<div class="row">
+  <% cube.cube_cards.each do |cube_card| %>
+    <%= render(MagicCardComponent.new(cube_card: cube_card)) %>
+  <% end %>
+</div>

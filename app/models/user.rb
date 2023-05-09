@@ -1,6 +1,17 @@
+# t.string :email,              null: false, default: ""
+# t.string :encrypted_password, null: false, default: ""
+# t.string :username
+# t.string :phone
+# t.string   :reset_password_token
+# t.datetime :reset_password_sent_at
+# t.timestamps null: false
+
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
+  has_many :cubes
+  has_many :draft_participants
+  has_many :drafts, :through => :draft_participants
+  # validates :username, uniqueness: { case_sensitive: false }, presence: true, allow_blank: false, format: { with: /\A[a-zA-Z0-9_]+\z/ }
 end

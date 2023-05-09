@@ -1,0 +1,11 @@
+<section>
+  <h3>Your Cubes</h3>
+  <ul>
+    <% @user_cubes.each do |cube| %>
+      <li>
+        <%= render(ButtonComponent.new(url: cube_path(cube), variation: :link)) { cube.name } %>
+      </li>
+    <% end %>
+  </ul>
+</section>
+<%= render(ButtonComponent.new(url: new_cube_path(), data: { turbo_method: :get })) { "Create Cube" } %>
