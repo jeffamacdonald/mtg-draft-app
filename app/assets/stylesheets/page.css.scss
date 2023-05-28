@@ -8,7 +8,19 @@
 }
 
 .page__title {
+  font-size: 24pt;
   font-family: "Magic";
+  font-weight: bold;
+  text-align: center;
+  border: 5px solid #c4a347;
+  border-radius: 15px;
+  background-color: #c4a347;
+  margin: 10px 40% 0px 40%;
+}
+
+.page__subheading {
+  font-size: 16pt;
+  font-weight: bold;
   text-align: center;
   border: 5px solid #c4a347;
   border-radius: 15px;

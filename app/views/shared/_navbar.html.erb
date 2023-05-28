@@ -7,6 +7,9 @@
     <ul class="navbar-nav ml-auto">
         <% if user_signed_in? %>
             <li class="nav-item">
+                <%= render(ButtonComponent.new(url: drafts_path, classes: "nav-link", data: { turbo_method: :get })) { "Drafts" } %>
+            </li>
+            <li class="nav-item">
                 <%= render(ButtonComponent.new(url: cubes_path, classes: "nav-link", data: { turbo_method: :get })) { "Cubes" } %>
             </li>
             <li class="nav-item">
