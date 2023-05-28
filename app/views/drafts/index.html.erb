@@ -1,2 +1,5 @@
 <h3 class="page__title">Your Drafts</h3>
 <%= render(DraftListComponent.new(user: current_user)) %>
+<div class="text-center">
+  <%= render(ButtonComponent.new(url: new_draft_path, variation: :primary)) { "New Draft" } %>
+</div>
