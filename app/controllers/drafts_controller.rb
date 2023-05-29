@@ -6,8 +6,11 @@ class DraftsController < ApplicationController
     @draft = Draft.find params[:id]
   end
 
-  def new
+  def edit
+    @draft = Draft.find params[:id]
+  end
 
+  def new
   end
 
   def create

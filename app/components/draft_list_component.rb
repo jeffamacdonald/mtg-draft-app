@@ -5,8 +5,4 @@ class DraftListComponent < ViewComponent::Base
     @pending_drafts = Draft.pending - user.drafts
     @active_drafts = user.drafts
   end
-
-  def create_new_draft
-
-  end
 end
