@@ -1,13 +1,23 @@
 class DraftsController < ApplicationController
+  before_action :find_draft, only: [:show, :edit, :update]
   def index
   end
 
   def show
-    @draft = Draft.find params[:id]
+    if @draft.status == "PENDING"
+      redirect_to edit_draft_path(@draft)
+    end
   end
 
   def edit
-    @draft = Draft.find params[:id]
+    if @draft.status != "PENDING"
+      redirect_to draft_path(@draft)
+    end
+  end
+
+  def update
+    @draft.update(update_params)
+    redirect_to draft_path(@draft)
   end
 
   def new
@@ -34,5 +44,16 @@ class DraftsController < ApplicationController
       :rounds,
       :cube_id
     )
+  end
+
+  def update_params
+    params.permit(
+      :id,
+      :status
+    )
+  end
+
+  def find_draft
+    @draft = Draft.find params[:id]
   end
 end
