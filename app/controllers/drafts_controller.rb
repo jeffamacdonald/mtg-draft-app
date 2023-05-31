@@ -32,7 +32,7 @@ class DraftsController < ApplicationController
         user: current_user,
         status: "PENDING"
       )
-      # redirect to index
+      redirect_to drafts_path
     end
   end
 

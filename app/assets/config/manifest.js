@@ -4,3 +4,4 @@
 //= link cube_card.css
 //= link page.css
 //= link form.css
+//= link modal.css

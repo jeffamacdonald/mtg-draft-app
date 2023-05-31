@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="custom_modal">
+    <%= form_with(model: DraftParticipant.new) do |f| %>
+      <div class="mb-3">
+        <%= f.hidden_field :draft_id, value: @draft.id %>
+        <%= f.hidden_field :user_id, value: current_user.id %>
+        <%= f.submit "Join", class: "btn btn-success btn-block" %>
+      </div>
+    <% end %>
+    <%= render(ButtonComponent.new(url: "#", variation: :secondary, data: { controller: "modal", action: "modal#close"})) {"Cancel"} %>
+  </div>
+<% end %>

@@ -10,6 +10,7 @@
     <%= stylesheet_link_tag "cube_card", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "page", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "form", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "modal", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
@@ -23,6 +24,7 @@
     <% if alert.present? %>
       <p class="alert"><%= alert %></p>
     <% end %>
+    <%= turbo_frame_tag "modal" %>
     <%= yield %>
   </body>
 </html>
