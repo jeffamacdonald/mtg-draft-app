@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  pg:
+    image: postgres:12.2-alpine
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:${POSTGRES_PORT:-5432}:5432
+    environment:
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - pg
+
+volumes:
+  pg-data:

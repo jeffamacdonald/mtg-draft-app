@@ -17,9 +17,11 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= ENV["RAILS_MAX_THREADS"] || 5 %>
+  username: <%= ENV.fetch('POSTGRES_USERNAME', "postgres") %>
+  password: <%= ENV.fetch('POSTGRES_PASSWORD', "postgres") %>
+  host: pg
+  port: <%= ENV.fetch('POSTGRES_PORT', 5432) %>
 
 development:
   <<: *default
@@ -29,10 +31,10 @@ development:
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
   # the same name as the operating system user running Rails.
-  username: rails_dev
-  password: aqwe123
-  host: localhost
-  port: 5432
+  # username: rails_dev
+  # password: aqwe123
+  # host: localhost
+  # port: 5432
 
   # The password associated with the postgres role (username).
   #password:
@@ -61,10 +63,10 @@ development:
 test:
   <<: *default
   database: mtg_draft_app_test
-  username: rails_dev
-  password: aqwe123
-  host: localhost
-  port: 5432
+  # username: rails_dev
+  # password: aqwe123
+  # host: localhost
+  # port: 5432
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -89,5 +91,5 @@ test:
 production:
   <<: *default
   database: mtg_draft_app_production
-  username: mtg_draft_app
-  password: <%= ENV["MTG_DRAFT_APP_DATABASE_PASSWORD"] %>
+  # username: mtg_draft_app
+  # password: <%= ENV["MTG_DRAFT_APP_DATABASE_PASSWORD"] %>
