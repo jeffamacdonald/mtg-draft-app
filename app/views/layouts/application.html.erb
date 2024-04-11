@@ -14,7 +14,7 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
-  <body class="page__background">
+  <body class="bg-dark">
     <% if current_user.present? %>
       <%= render 'shared/navbar' %>
     <% end %>
@@ -25,7 +25,9 @@
       <p class="alert"><%= alert %></p>
     <% end %>
     <%= turbo_frame_tag "modal" %>
-    <%= yield %>
+    <div class="d-flex flex-column justify-content-center align-items-center min-vh-100">
+      <%= yield %>
+    </div>
   </body>
 </html>
 
