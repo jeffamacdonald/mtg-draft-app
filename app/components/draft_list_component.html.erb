@@ -1,5 +1,6 @@
 <div>
   <% if @active_drafts.present? %>
+    <h2 class="card-title">Your Drafts</h2>
     <section>
       <ul class="list-unstyled text-center">
         <% @active_drafts.each do |active_draft| %>
@@ -10,14 +11,16 @@
       </ul>
     </section>
   <% end %>
-  <section>
-    <h3 class="page__subheading">Drafts You Can Join</h3>
-    <ul class="list-unstyled text-center">
-      <% @pending_drafts.each do |pending_draft| %>
-        <li>
-          <%= render(ButtonComponent.new(url: new_draft_participant_path(draft_id: pending_draft.id), variation: :link, data: { turbo_frame: "modal" })) { pending_draft.name } %>
-        </li>
-      <% end %>
-    </ul>
-  </section>
+  <% if @pending_drafts.present? %>
+    <section>
+      <h4 class="card-subtitle">Drafts You Can Join</h4>
+      <ul class="list-unstyled text-center">
+        <% @pending_drafts.each do |pending_draft| %>
+          <li>
+            <%= render(ButtonComponent.new(url: new_draft_participant_path(draft_id: pending_draft.id), variation: :link, data: { turbo_frame: "modal" })) { pending_draft.name } %>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
 </div>
