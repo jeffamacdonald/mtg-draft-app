@@ -1,11 +1,7 @@
-<h3 class="page__title">Your Cubes</h3>
-<div class="container text-center">
-  <ul class="list-unstyled">
-    <% @user_cubes.each do |cube| %>
-      <li>
-        <%= render(ButtonComponent.new(url: cube_path(cube), variation: :link)) { cube.name } %>
-      </li>
-    <% end %>
-  </ul>
-  <%= render(ButtonComponent.new(url: new_cube_path(), data: { turbo_method: :get })) { "Create Cube" } %>
-</div>
+<%= render(DisplayCardComponent.new(width: :lg)) do %>
+  <div class="card-header">CUBES</div>
+  <%= render(CubeListComponent.new(cubes: @user_cubes)) %>
+  <div class="text-center">
+    <%= render(ButtonComponent.new(url: new_cube_path(), variation: :primary, classes: "mb-2 mt-2")) { "Create Cube" } %>
+  </div>
+<% end %>

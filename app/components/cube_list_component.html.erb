@@ -1,0 +1,8 @@
+<h2 class="card-title">Your Cubes</h2>
+<ul class="list-unstyled text-center">
+  <% @cubes.each do |cube| %>
+    <li>
+      <%= render(ButtonComponent.new(url: cube_path(cube), variation: :link)) { cube.name } %>
+    </li>
+  <% end %>
+</ul>
