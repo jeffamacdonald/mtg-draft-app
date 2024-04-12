@@ -1,16 +1,25 @@
-<h1>Import a cube</h1>
-<%= form_with(model: Cube.new, local: true) do |f| %>
-  <div class="pt-3 row">
-    <div class="col-12">
-      <%= f.hidden_field :user, value: current_user %>
-      <%= f.text_field :name %>
-      <%= render(FileField.new(form: f, help: "Dck file", name: :import_file, file_format: "text/dck")) %>
+<%= render(DisplayCardComponent.new(width: :md)) do %>
+  <div class="card-header">IMPORT A CUBE</div>
+  <%= form_with(model: Cube.new, local: true) do |f| %>
+    <div class="pt-3 row justify-content-center">
+      <div class="col-6 text-start d-grid gap-2">
+        <div>
+          <%= f.hidden_field :user, value: current_user %>
+          <%= f.label :name do %>
+            <div class="fw-bold">
+              Cube Name
+            </div>
+          <% end %>
+          <%= f.text_field :name, class: "d-block" %>
+        </div>
+        <%= render(FileField.new(form: f, help: "Dck file", name: :import_file, file_format: "text/dck")) %>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-12">
-      <%= f.submit "Import", class: "btn btn-primary" %>
+    <div class="row">
+      <div class="col-12">
+        <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { "Import" } %>
+      </div>
     </div>
-  </div>
+  <% end %>
 <% end %>
