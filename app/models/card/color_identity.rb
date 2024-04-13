@@ -1,6 +1,7 @@
 class Card
   class ColorIdentity
     COLOR_IDENTITIES = {
+      "L" => "land",
       "C" => "colorless",
       "W" => "white",
       "U" => "blue",
@@ -19,6 +20,10 @@ class Card
       card_identities.map do |identity|
         COLOR_IDENTITIES[identity]
       end.join(" ")
+    end
+
+    def land?
+      card_identities == ["L"]
     end
 
     def colorless?

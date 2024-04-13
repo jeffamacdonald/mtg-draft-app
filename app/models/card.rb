@@ -20,6 +20,13 @@ class Card < ApplicationRecord
   end
 
   def self.create_card_from_hash(card_hash)
+    color_identity = if card_hash[:color_identity].empty?
+      ['C']
+    elsif card_hash[:type_line].include? "Land"
+      ['L']
+    else
+      card_hash[:color_identity]
+    end
     Card.create! do |card|
       card.name = card_hash[:name]
       card.cost = card_hash[:mana_cost]
@@ -29,14 +36,13 @@ class Card < ApplicationRecord
       card.power = card_hash[:power]
       card.toughness = card_hash[:toughness]
       card.default_image = card_hash[:image_uri]
-      card.color_identity = card_hash[:color_identity].empty? ? ['C'] : card_hash[:color_identity]
+      card.color_identity = color_identity
       card.default_set = card_hash[:set]
       card.type_line = card_hash[:type_line]
     end
   end
 
-  delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
-
+  delegate :land?, :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
   def color_identity
     Card::ColorIdentity.new(super)
   end
