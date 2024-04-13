@@ -14,6 +14,15 @@ class CubeCard < ApplicationRecord
   belongs_to :card
 
   delegate :default_image, to: :card
+  delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
+
+  def color_identity
+    if custom_color_identity
+      Card::ColorIdentity.new(custom_color_identity)
+    else
+      card.color_identity
+    end
+  end
 
   def update_from_hash(card_hash)
     card_hash[:id] = self.card_id

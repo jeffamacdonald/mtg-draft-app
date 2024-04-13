@@ -15,15 +15,6 @@ class Card < ApplicationRecord
   has_many :cube_cards
   has_many :cubes, :through => :cube_cards
 
-  COLOR_IDENTITIES = {
-    "C" => "colorless",
-    "W" => "white",
-    "U" => "blue",
-    "B" => "black",
-    "R" => "red",
-    "G" => "green"
-  }
-
   def self.get_cards_by_cube_list(cube_list)
     where(name: cube_list.map { |c| c[:name] })
   end
@@ -38,17 +29,15 @@ class Card < ApplicationRecord
       card.power = card_hash[:power]
       card.toughness = card_hash[:toughness]
       card.default_image = card_hash[:image_uri]
-      card.color_identity = get_color_identity(card_hash)
+      card.color_identity = card_hash[:color_identity].empty? ? ['C'] : card_hash[:color_identity]
       card.default_set = card_hash[:set]
       card.type_line = card_hash[:type_line]
     end
   end
 
-  def self.get_color_identity(card_hash)
-    if card_hash[:color_identity].empty?
-      ['C']
-    else
-      card_hash[:color_identity]
-    end
+  delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
+
+  def color_identity
+    Card::ColorIdentity.new(super)
   end
 end
