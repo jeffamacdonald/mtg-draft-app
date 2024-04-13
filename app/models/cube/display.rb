@@ -9,7 +9,7 @@ class Cube
     end
 
     def sections
-      [white, blue, black, red, green, gold, land]
+      [white, blue, black, red, green, gold, colorless, land]
     end
 
     private

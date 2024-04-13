@@ -6,7 +6,8 @@ class DisplayCardComponent < ViewComponent::Base
   WIDTHS = {
     sm: "col-md-4",
     md: "col-md-6",
-    lg: "col-md-8"
+    lg: "col-md-8",
+    xl: "col flex-fill"
   }.freeze
 
   def initialize(width: :sm)
