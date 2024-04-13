@@ -1,8 +1,9 @@
 class CubeCardListSectionComponent < ViewComponent::Base
-  attr_reader :title, :cube_cards
+  attr_reader :cube_section
 
-  def initialize(title:, cube_cards:)
-    @title = title
-    @cube_cards = cube_cards
+  delegate :title, :cards, to: :cube_section
+
+  def initialize(cube_section:)
+    @cube_section = cube_section
   end
 end

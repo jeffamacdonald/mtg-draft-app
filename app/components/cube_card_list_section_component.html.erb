@@ -1,7 +1,7 @@
 <div class="cube_card__list_section page__section">
-  <h2 class="page__section_title"><%= title.titleize %></h2>
+  <h2 class="page__section_title"><%= title %></h2>
   <div class="cube_card__list_section_cards">
-    <% cube_cards.each do |cube_card| %>
+    <% cards.each do |cube_card| %>
       <%= render(MagicCardComponent.new(cube_card: cube_card)) %>
     <% end %>
   </div>

@@ -13,6 +13,9 @@ class CubeCard < ApplicationRecord
   belongs_to :cube
   belongs_to :card
 
+  scope :active, -> { where(soft_delete: false) }
+  scope :sorted, -> { order(:custom_color_identity, :custom_cmc) }
+
   delegate :default_image, to: :card
   delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
 
