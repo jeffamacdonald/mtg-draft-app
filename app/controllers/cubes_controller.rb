@@ -21,7 +21,7 @@ class CubesController < ApplicationController
         # show errors and redirect to new
       else
         @cube.setup_cube_from_list(cube_list)
-        # redirect to index
+        redirect_to cubes_path
       end
     end
   end

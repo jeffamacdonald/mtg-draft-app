@@ -6,7 +6,7 @@ class CardSanitizer
       case card_data[:layout]
       when 'split'
         sanitize_split(card_data)
-      when 'transform'
+      when 'transform', 'modal_dfc'
         sanitize_transform(card_data, name)
       when 'adventure'
         sanitize_adventure(card_data)

@@ -45,11 +45,20 @@ module Clients
     def card_list_params(card_list)
       {
         :identifiers => card_list.map do |card|
-          card.select do |k,_|
-            [:name, :set].include? k
-          end
+          {
+            :name => parsed_card_name(card),
+            :set => card[:set]
+          }
         end
       }
+    end
+
+    def parsed_card_name(card)
+      if card[:name].include? "//"
+        card[:name].split("//").first
+      else
+        card[:name]
+      end
     end
   end
 end

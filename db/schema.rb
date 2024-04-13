@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_15_062258) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_13_053009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,7 +18,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_15_062258) do
     t.string "name", null: false
     t.string "cost"
     t.integer "cmc", null: false
-    t.string "color_identity", null: false
     t.string "type_line", null: false
     t.string "card_text"
     t.string "layout"
@@ -28,9 +27,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_15_062258) do
     t.string "default_set", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "color_identity", null: false, array: true
     t.index ["card_text"], name: "index_cards_on_card_text"
     t.index ["cmc"], name: "index_cards_on_cmc"
-    t.index ["color_identity"], name: "index_cards_on_color_identity"
     t.index ["name"], name: "index_cards_on_name", unique: true
     t.index ["power"], name: "index_cards_on_power"
     t.index ["toughness"], name: "index_cards_on_toughness"
@@ -42,15 +41,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_15_062258) do
     t.integer "count", null: false
     t.string "custom_set"
     t.string "custom_image"
-    t.string "custom_color_identity"
     t.integer "custom_cmc"
     t.boolean "soft_delete", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "custom_color_identity", array: true
     t.index ["card_id"], name: "index_cube_cards_on_card_id"
     t.index ["cube_id", "card_id"], name: "index_cube_cards_on_cube_id_and_card_id", unique: true
     t.index ["cube_id"], name: "index_cube_cards_on_cube_id"
-    t.index ["custom_color_identity"], name: "index_cube_cards_on_custom_color_identity"
     t.index ["soft_delete"], name: "index_cube_cards_on_soft_delete"
   end
 

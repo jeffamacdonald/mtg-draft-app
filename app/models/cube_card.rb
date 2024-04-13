@@ -3,7 +3,7 @@
 # t.integer :count, null: false
 # t.string :custom_set
 # t.string :custom_image
-# t.string :custom_color_identity
+# t.string :custom_color_identity, array: true
 # t.integer :custom_cmc
 # t.boolean :soft_delete, null: false
 # t.timestamps null: false
@@ -12,8 +12,6 @@ class CubeCard < ApplicationRecord
   class CreationError < StandardError;end
   belongs_to :cube
   belongs_to :card
-
-  enum custom_color_identity: Card::COLOR_IDENTITIES
 
   delegate :default_image, to: :card
 

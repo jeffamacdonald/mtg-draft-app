@@ -20,7 +20,7 @@ class DckParser
         @hash_array << {
           :count => count.to_i,
           :set => set,
-          :name => name
+          :name => parse_name(name)
         }
       else
         raise ParseError.new("Malformed File")
@@ -56,6 +56,14 @@ class DckParser
         :name => "#{name}",
         :message => "Set Invalid"
       }
+    end
+  end
+
+  def parse_name(name)
+    if name.include?("//") && !name.include?(" // ")
+      name.gsub("//", " // ")
+    else
+      name
     end
   end
 end
