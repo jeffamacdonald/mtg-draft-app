@@ -20,10 +20,10 @@ class Card < ApplicationRecord
   end
 
   def self.create_card_from_hash(card_hash)
-    color_identity = if card_hash[:color_identity].empty?
-      ['C']
-    elsif card_hash[:type_line].include? "Land"
+    color_identity = if card_hash[:type_line].include? "Land"
       ['L']
+    elsif card_hash[:color_identity].empty?
+      ['C']
     else
       card_hash[:color_identity]
     end

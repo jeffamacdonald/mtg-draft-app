@@ -211,7 +211,7 @@ RSpec.describe Cube do
           let(:count) { 2 }
           let(:custom_set) { '3ED' }
           let(:custom_image) { 'new_image' }
-          let(:custom_color_identity) { 'C' }
+          let(:custom_color_identity) { ['C'] }
           let(:custom_cmc) { 2 }
           let(:bolt) do
             {
@@ -235,44 +235,12 @@ RSpec.describe Cube do
             expect(card.count).to eq 2
             expect(card.custom_set).to eq custom_set
             expect(card.custom_image).to eq custom_image
-            expect(card.custom_color_identity).to eq custom_color_identity
+            expect(card.color_identity.color_identities).to eq custom_color_identity
             expect(card.custom_cmc).to eq custom_cmc
             expect(CubeCard.find(bob_cube_card.id).soft_delete).to eq true
           end
         end
       end
-    end
-  end
-
-  describe '#display_cube' do
-    let!(:cube) { create :cube }
-    let!(:card_1) { create :card, cmc: 4, color_identity: 'B' }
-    let!(:card_2) { create :card, cmc: 5, color_identity: 'C' }
-    let!(:card_3) { create :card, cmc: 3, color_identity: 'C' }
-    let!(:card_4) { create :card, cmc: 2, color_identity: 'C' }
-    let!(:card_5) { create :card, cmc: 5, color_identity: 'UG' }
-    let!(:card_6) { create :card, cmc: 4, color_identity: 'UG' }
-    let!(:cube_card_1) { create :cube_card, cube_id: cube.id, card_id: card_1.id, custom_cmc: 4, custom_color_identity: 'B', soft_delete: true }
-    let!(:cube_card_2) { create :cube_card, cube_id: cube.id, card_id: card_2.id, custom_cmc: 0, custom_color_identity: 'C' }
-    let!(:cube_card_3) { create :cube_card, cube_id: cube.id, card_id: card_3.id, custom_cmc: 3, custom_color_identity: 'C' }
-    let!(:cube_card_4) { create :cube_card, cube_id: cube.id, card_id: card_4.id, custom_cmc: 2, custom_color_identity: 'R' }
-    let!(:cube_card_5) { create :cube_card, cube_id: cube.id, card_id: card_5.id, custom_cmc: 5, custom_color_identity: 'UG' }
-    let!(:cube_card_6) { create :cube_card, cube_id: cube.id, card_id: card_6.id, custom_cmc: 4, custom_color_identity: 'UG' }
-    let(:colorless_cards) { [cube_card_2,cube_card_3] }
-    let(:red_cards) { [cube_card_4] }
-    let(:gold_cards) { [cube_card_6,cube_card_5] }
-    let(:expected_response) do
-      {
-        "C" => colorless_cards,
-        "R" => red_cards,
-        "UG" => gold_cards
-      }
-    end
-
-    subject { cube.display_cube }
-
-    it 'returns active, sorted, chunked, and hashed' do
-      expect(subject).to eq expected_response
     end
   end
 end

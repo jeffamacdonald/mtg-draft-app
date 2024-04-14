@@ -59,7 +59,7 @@ RSpec.describe Card do
       expect(card.default_image).to eq image_uri
       expect(card.default_set).to eq set
       expect(card.type_line).to eq type_line
-      expect(card.color_identity).to eq color_identity.join
+      expect(card.color_identity.color_identities).to eq color_identity
       expect(card.power).to be_nil
       expect(card.toughness).to be_nil
     end
@@ -68,15 +68,15 @@ RSpec.describe Card do
       let(:color_identity) { [] }
       it 'creates card with color identity as C' do
         subject
-        expect(Card.find_by(name: name).color_identity).to eq 'C'
+        expect(Card.find_by(name: name).color_identity.color_identities).to eq ['C']
       end
     end
 
     context 'when type_line includes land' do
       let(:type_line) { 'Legendary Land' }
-      it 'creates card with color identity as C' do
+      it 'creates card with color identity as L' do
         subject
-        expect(Card.find_by(name: name).color_identity).to eq 'C'
+        expect(Card.find_by(name: name).color_identity.color_identities).to eq ['L']
       end
     end
   end

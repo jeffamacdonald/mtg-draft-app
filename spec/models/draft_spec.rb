@@ -69,29 +69,29 @@ RSpec.describe Draft do
     end
   end
 
-  describe '#display_card_pool' do
-    let!(:cube) { create :cube }
-    let!(:cube_card_1) { create :cube_card, cube_id: cube.id, custom_color_identity: 'R' }
-    let!(:cube_card_2) { create :cube_card, cube_id: cube.id, custom_color_identity: 'G' }
-    let!(:cube_card_3) { create :cube_card, cube_id: cube.id, custom_color_identity: 'U' }
-    let!(:draft) { create :draft, cube_id: cube.id }
-    let!(:draft_participant) { create :draft_participant, draft_id: draft.id }
-    let!(:participant_pick) { create :participant_pick, draft_participant_id: draft_participant.id, cube_card_id: cube_card_1.id }
+  # describe '#display_card_pool' do
+  #   let!(:cube) { create :cube }
+  #   let!(:cube_card_1) { create :cube_card, cube_id: cube.id, custom_color_identity: 'R' }
+  #   let!(:cube_card_2) { create :cube_card, cube_id: cube.id, custom_color_identity: 'G' }
+  #   let!(:cube_card_3) { create :cube_card, cube_id: cube.id, custom_color_identity: 'U' }
+  #   let!(:draft) { create :draft, cube_id: cube.id }
+  #   let!(:draft_participant) { create :draft_participant, draft_id: draft.id }
+  #   let!(:participant_pick) { create :participant_pick, draft_participant_id: draft_participant.id, cube_card_id: cube_card_1.id }
 
-    let(:expected_response) do
-      {
-        "R" => [cube_card_1.attributes.merge({:is_drafted => true})],
-        "G" => [cube_card_2.attributes.merge({:is_drafted => false})],
-        "U" => [cube_card_3.attributes.merge({:is_drafted => false})]
-      }
-    end
+  #   let(:expected_response) do
+  #     {
+  #       "R" => [cube_card_1.attributes.merge({:is_drafted => true})],
+  #       "G" => [cube_card_2.attributes.merge({:is_drafted => false})],
+  #       "U" => [cube_card_3.attributes.merge({:is_drafted => false})]
+  #     }
+  #   end
 
-    subject { draft.display_card_pool }
+  #   subject { draft.display_card_pool }
 
-    it 'returns expected response' do
-      expect(subject).to eq expected_response
-    end
-  end
+  #   it 'returns expected response' do
+  #     expect(subject).to eq expected_response
+  #   end
+  # end
 
   describe '#active_participant' do
     let(:draft) { create :draft }

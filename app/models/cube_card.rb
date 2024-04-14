@@ -20,7 +20,7 @@ class CubeCard < ApplicationRecord
   delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
 
   def color_identity
-    if custom_color_identity
+    if custom_color_identity.present?
       Card::ColorIdentity.new(custom_color_identity)
     else
       card.color_identity

@@ -19,14 +19,6 @@ class Cube < ApplicationRecord
     raise CreationError.new(errors.to_json) unless errors.empty?
   end
 
-  def display_cube
-    get_sorted_active_cube_cards.chunk_while { |bef, aft|
-      bef.color_identity.display_identity == aft.color_identity.display_identity
-    }.each_with_object({}) { |chnk, hsh|
-      hsh[chnk.first.color_identity.display_identity] = chnk
-    }
-  end
-
   def update_cube(params)
     ActiveRecord::Base.transaction do
       if params[:name]

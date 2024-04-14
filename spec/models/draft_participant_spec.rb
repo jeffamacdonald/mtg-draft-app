@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe DraftParticipant do
   describe '#pick_card' do
     let(:cube) { create :cube }
-    let(:draft) { create :draft, cube_id: cube.id }
-    let(:cube_card) { create :cube_card, cube_id: cube.id }
+    let(:draft) { create :draft, cube: cube }
+    let(:cube_card) { create :cube_card, cube: cube }
     let!(:participants) do
-      14.times{ |i| create :draft_participant, draft_id: draft.id, draft_position: i+1 }
+      14.times{ |i| create :draft_participant, draft: draft, draft_position: i+1 }
       DraftParticipant.all
     end
 
