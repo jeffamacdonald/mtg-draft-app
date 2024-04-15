@@ -1,0 +1,20 @@
+<%= render(DisplayCardComponent.new(width: :md)) do %>
+  <div class="card-header">UPDATE <%= @cube_card.name.upcase %></div>
+  <%= form_with(model: @cube_card, local: true) do |f| %>
+    <div class="pt-3 row justify-content-center">
+      <div class="col-6 text-start d-grid gap-2">
+        <div>
+          <%= f.label :custom_color_identity, "Color Identity", class: "fw-bold" do %>
+            <%= f.select :custom_color_identity, Card::ColorIdentity::COLOR_IDENTITIES.invert, {}, { multiple: true, class: "form-control" } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { "Update" } %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

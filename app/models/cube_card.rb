@@ -14,7 +14,7 @@ class CubeCard < ApplicationRecord
   belongs_to :card
 
   scope :active, -> { where(soft_delete: false) }
-  scope :sorted, -> { order(:custom_color_identity, :custom_cmc) }
+  scope :sorted, -> { joins(:card).order(:custom_color_identity, :custom_cmc, "cards.name") }
 
   delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
   delegate_missing_to :card
