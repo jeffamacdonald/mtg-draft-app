@@ -15,7 +15,7 @@ class Cube
     private
 
     def to_hash
-      cube.cube_cards.active.sorted.chunk_while do |bef, aft|
+      @_to_hash ||= cube.cube_cards.active.sorted.chunk_while do |bef, aft|
         bef.color_identity.display_identity == aft.color_identity.display_identity
       end.each_with_object({}) do |chnk, hsh|
         hsh[chnk.first.color_identity.display_identity] = chnk
@@ -23,8 +23,14 @@ class Cube
     end
 
     Card::ColorIdentity::COLOR_IDENTITIES.values.each do |color|
-      define_method(color.to_sym) do
-        Section.new(title: color.titleize, cards: to_hash[color])
+      if color == "land"
+        define_method(color.to_sym) do
+          Section.new(title: color.titleize, cards: sort_land(to_hash[color]))
+        end
+      else
+        define_method(color.to_sym) do
+          Section.new(title: color.titleize, cards: to_hash[color])
+        end
       end
     end
 
@@ -34,14 +40,43 @@ class Cube
 
     def two_color_gold
       to_hash.select do |color, cards|
-        cards.first.color_identity.card_identities.count == 2
+        cards.first.color_identity.color_identities.count == 2
       end.values.flatten
     end
 
     def many_color_gold
       to_hash.select do |color, cards|
-        cards.first.color_identity.card_identities.count > 2
+        cards.first.color_identity.color_identities.count > 2
       end.values.flatten
+    end
+
+    def sort_land(cube_cards)
+      cube_cards.sort_by do |cube_card|
+        [cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{U}") ? 0 : 1,
+        cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Island") ? 0 : 1,
+        cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{B}") ? 0 : 1,
+        cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Swamp") ? 0 : 1,
+        cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{R}") ? 0 : 1,
+        cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Mountain") ? 0 : 1,
+        cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{G}") ? 0 : 1,
+        cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Forest") ? 0 : 1,
+        cube_card.card_text.include?("{U}") && cube_card.card_text.include?("{B}") ? 0 : 1,
+        cube_card.card_text.include?("Island") && cube_card.card_text.include?("Swamp") ? 0 : 1,
+        cube_card.card_text.include?("{U}") && cube_card.card_text.include?("{R}") ? 0 : 1,
+        cube_card.card_text.include?("Island") && cube_card.card_text.include?("Mountain") ? 0 : 1,
+        cube_card.card_text.include?("{U}") && cube_card.card_text.include?("{G}") ? 0 : 1,
+        cube_card.card_text.include?("Island") && cube_card.card_text.include?("Forest") ? 0 : 1,
+        cube_card.card_text.include?("{B}") && cube_card.card_text.include?("{R}") ? 0 : 1,
+        cube_card.card_text.include?("Swamp") && cube_card.card_text.include?("Mountain") ? 0 : 1,
+        cube_card.card_text.include?("{B}") && cube_card.card_text.include?("{G}") ? 0 : 1,
+        cube_card.card_text.include?("Swamp") && cube_card.card_text.include?("Forest") ? 0 : 1,
+        cube_card.card_text.include?("{R}") && cube_card.card_text.include?("{G}") ? 0 : 1,
+        cube_card.card_text.include?("Mountain") && cube_card.card_text.include?("Forest") ? 0 : 1,
+        cube_card.card_text.include?("any color") ? 0 : 1,
+        cube_card.card_text.include?("basic land card") ? 0 : 1,
+        cube_card.card_text.include?("Add {C}") ? 0 : 1,
+        cube_card.card_text.include?("{T}: Add") ? 0 : 1]
+      end
     end
   end
 end
