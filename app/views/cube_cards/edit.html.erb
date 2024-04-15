@@ -4,9 +4,8 @@
     <div class="pt-3 row justify-content-center">
       <div class="col-6 text-start d-grid gap-2">
         <div>
-          <%= f.label :custom_color_identity, "Color Identity", class: "fw-bold" do %>
-            <%= f.select :custom_color_identity, Card::ColorIdentity::COLOR_IDENTITIES.invert, {}, { multiple: true, class: "form-control" } %>
-          <% end %>
+          <%= f.label :custom_color_identity, "Color Identity", class: "fw-bold" %>
+          <%= f.select :custom_color_identity, Card::ColorIdentity::COLOR_IDENTITIES.invert, {}, { multiple: true, class: "form-control" } %>
         </div>
       </div>
     </div>
