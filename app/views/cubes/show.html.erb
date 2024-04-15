@@ -1,4 +1,6 @@
-<h1 class="page__title"><%= @cube.name %></h1>
+<%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
+  <p class="h1"><%= @cube.name %></p>
+<% end %>
 <div class="container">
   <%= render(CubeCardListComponent.new(cube: @cube)) %>
 </div>

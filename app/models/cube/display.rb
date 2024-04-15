@@ -12,13 +12,10 @@ class Cube
       [white, blue, black, red, green, gold, colorless, land]
     end
 
-    private
-
     def to_hash
-      @_to_hash ||= cube.cube_cards.active.sorted.chunk_while do |bef, aft|
-        bef.color_identity.display_identity == aft.color_identity.display_identity
-      end.each_with_object({}) do |chnk, hsh|
-        hsh[chnk.first.color_identity.display_identity] = chnk
+      @_to_hash ||= cube.cube_cards.active.sorted.each_with_object({}) do |cube_card, hsh|
+        hsh[cube_card.color_identity.display_identity] ||= []
+        hsh[cube_card.color_identity.display_identity] << cube_card
       end
     end
 
