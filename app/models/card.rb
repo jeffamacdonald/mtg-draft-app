@@ -43,6 +43,7 @@ class Card < ApplicationRecord
   end
 
   delegate :land?, :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
+
   def color_identity
     Card::ColorIdentity.new(super)
   end

@@ -12,6 +12,8 @@ class Cube
       [white, blue, black, red, green, gold, colorless, land]
     end
 
+    private
+
     def to_hash
       @_to_hash ||= cube.cube_cards.active.sorted.each_with_object({}) do |cube_card, hsh|
         hsh[cube_card.color_identity.display_identity] ||= []
