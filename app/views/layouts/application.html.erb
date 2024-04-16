@@ -18,6 +18,7 @@
     <% if current_user.present? %>
       <%= render 'shared/navbar' %>
     <% end %>
+    <%= render partial: "layouts/flash" %>
     <% if notice.present? %>
       <p class="notice"><%= notice %></p>
     <% end %>

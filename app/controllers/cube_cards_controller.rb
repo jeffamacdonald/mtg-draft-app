@@ -7,10 +7,19 @@ class CubeCardsController < ApplicationController
     @cube_card = CubeCard.find params[:id]
     @cube_card.attributes = update_params.merge(custom_color_identity)
     if @cube_card.save
-      redirect_to cube_path(@cube_card.cube), flash: {success: "Cube card changes saved"}
+      flash[:success] = "Cube card changes saved"
+      redirect_to cube_path(@cube_card.cube)
     else
-      render :edit, flash: {error: "Cube card changes failed: #{@cube_card.errors.full_messages.join(" ")}"}
+      flash[:error] = "Cube card changes failed: #{@cube_card.errors.full_messages.join(" ")}"
+      render :edit
     end
+  end
+
+  def destroy
+    @cube_card = CubeCard.find params[:id]
+    @cube_card.update!(soft_delete: true)
+    flash[:success] = "Cube card deleted"
+    redirect_to cube_path(@cube_card.cube)
   end
 
   private
