@@ -16,5 +16,5 @@
       </div>
     </div>
   <% end %>
-  <%= render(ButtonComponent.new(url: cube_card_path(@cube_card), variation: :secondary, classes: "mb-2 mt-2", data: { turbo_method: :delete })) { "Delete" } %>
+  <%= button_to("Delete", cube_card_path(@cube_card), method: :delete, class: "btn btn-danger mb-2") %>
 <% end %> 
