@@ -4,8 +4,8 @@ class DraftParticipantsController < ApplicationController
   end
 
   def create
-    DraftParticipant.create(create_params)
-    redirect_to drafts_path
+    draft_participant = DraftParticipant.create(create_params)
+    redirect_to draft_path(draft_participant.draft)
   end
 
   private

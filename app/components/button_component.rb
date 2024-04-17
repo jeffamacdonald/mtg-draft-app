@@ -8,7 +8,8 @@ class ButtonComponent < ViewComponent::Base
     secondary: "#{base_button_classes} btn-secondary",
     light: "#{base_button_classes} btn-light",
     dark: "#{base_button_classes} btn-dark",
-    link: "#{base_button_classes} btn-link"
+    link: "#{base_button_classes} btn-link",
+    close: "btn-close"
   }.freeze
   VARIATION_OPTIONS = VARIATIONS.keys
 

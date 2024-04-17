@@ -1,12 +1,25 @@
 <%= turbo_frame_tag "modal" do %>
-  <div class="custom_modal">
-    <%= form_with(model: DraftParticipant.new) do |f| %>
-      <div class="mb-3">
-        <%= f.hidden_field :draft_id, value: @draft.id %>
-        <%= f.hidden_field :user_id, value: current_user.id %>
-        <%= f.submit "Join", class: "btn btn-success btn-block" %>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= form_with(model: DraftParticipant.new) do |f| %>
+          <div class="modal-header">
+            <h5 class="modal-title">Join Draft</h5>
+            <%= render(ButtonComponent.new(variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              Join <%= @draft.name %>?
+              <%= f.hidden_field :draft_id, value: @draft.id %>
+              <%= f.hidden_field :user_id, value: current_user.id %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <%= f.submit "Yes", class: "btn btn-primary btn-block" %>
+            <%= render(ButtonComponent.new(url: "#", variation: :secondary, data: { controller: "modal", action: "modal#close"})) {"No"} %>
+          </div>
+        <% end %>
       </div>
-    <% end %>
-    <%= render(ButtonComponent.new(url: "#", variation: :secondary, data: { controller: "modal", action: "modal#close"})) {"Cancel"} %>
+    </div>
   </div>
 <% end %>
