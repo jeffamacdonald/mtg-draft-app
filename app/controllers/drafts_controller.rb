@@ -32,6 +32,7 @@ class DraftsController < ApplicationController
         user: current_user,
         status: "PENDING"
       )
+      @draft.draft_participants.create(user: current_user, display_name: current_user.username)
       redirect_to drafts_path
     end
   end
