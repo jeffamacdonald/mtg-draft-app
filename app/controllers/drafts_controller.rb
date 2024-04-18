@@ -7,7 +7,7 @@ class DraftsController < ApplicationController
   end
 
   def edit
-    if @draft.status != "PENDING"
+    if @draft.status != DraftStatus.pending
       redirect_to draft_path(@draft)
     end
   end
@@ -27,7 +27,7 @@ class DraftsController < ApplicationController
         rounds: create_params[:rounds],
         cube: Cube.find(create_params[:cube_id]),
         owner: current_user,
-        status: "PENDING"
+        status: DraftStatus.pending
       )
       @draft.draft_participants.create(user: current_user, display_name: current_user.username)
       redirect_to drafts_path
@@ -45,8 +45,7 @@ class DraftsController < ApplicationController
   end
 
   def update_params
-    params.permit(
-      :id,
+    params.require(:draft).permit(
       :status
     )
   end

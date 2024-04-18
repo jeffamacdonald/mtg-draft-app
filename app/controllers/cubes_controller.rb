@@ -7,20 +7,18 @@ class CubesController < ApplicationController
     @cube = Cube.find(params[:id])
   end
 
-  def edit
-  end
-
   def new
   end
 
   def create
     ActiveRecord::Base.transaction do
-      @cube = Cube.create(name: create_params[:name], owner: current_user)
       cube_list, errors = DckParser.new(create_params[:import_file]).get_parsed_list
       if errors.present?
-        # show errors and redirect to new
+        flash[:error] = "Failed to import cube: #{errors.join(" ")}"
+        redirect_to new_cube_path
       else
-        @cube.setup_cube_from_list(cube_list)
+        cube = Cube.create(name: create_params[:name], owner: current_user)
+        cube.setup_cube_from_list(cube_list)
         redirect_to cubes_path
       end
     end

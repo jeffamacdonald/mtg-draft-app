@@ -7,15 +7,14 @@
 # t.timestamps null: false
 
 class Draft < ApplicationRecord
-  STATUSES = %w[ACTIVE INACTIVE PENDING]
   belongs_to :cube
   belongs_to :owner, foreign_key: :user_id, class_name: "User"
   has_many :draft_participants
   has_many :users, :through => :draft_participants
   has_many :participant_picks, :through => :draft_participants
-  enum :status, STATUSES.zip(STATUSES).to_h
+  enum :status, DraftStatus.all.zip(DraftStatus.all).to_h
 
-  scope :pending, -> { where(status: "PENDING") }
+  scope :pending, -> { where(status: DraftStatus.pending) }
 
   def create_participants(user_ids)
     existing_user_ids = draft_participants.map(&:user_id)

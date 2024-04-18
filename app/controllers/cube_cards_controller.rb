@@ -11,7 +11,7 @@ class CubeCardsController < ApplicationController
       redirect_to cube_path(@cube_card.cube)
     else
       flash[:error] = "Cube card changes failed: #{@cube_card.errors.full_messages.join(" ")}"
-      render :edit
+      redirect_to edit_cube_card_path(@cube_card)
     end
   end
 

@@ -50,7 +50,7 @@ class Cube
     end
 
     def sort_land(cube_cards)
-      cube_cards.sort_by do |cube_card|
+      cube_cards&.sort_by do |cube_card|
         [cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{U}") ? 0 : 1,
         cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Island") ? 0 : 1,
         cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{B}") ? 0 : 1,

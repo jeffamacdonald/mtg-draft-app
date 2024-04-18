@@ -1,6 +1,6 @@
 <h1 class="page__title"><%= @draft.name %></h1>
 <div class="text-center">
-  <%= render(ButtonComponent.new(url: draft_path(@draft, status: "ACTIVE"), variation: :primary, data: { turbo_method: :put })) {"Start Draft"} %>
+  <%= render(ButtonComponent.new(url: draft_path(@draft, status: DraftStatus.active), variation: :primary, data: { turbo_method: :put })) {"Start Draft"} %>
 </div>
 <%= render(ParticipantsListComponent.new(draft: @draft)) %>
 <div class="text-center">

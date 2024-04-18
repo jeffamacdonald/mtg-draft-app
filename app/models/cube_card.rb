@@ -13,6 +13,8 @@ class CubeCard < ApplicationRecord
   belongs_to :cube
   belongs_to :card
 
+  validates :count, presence: true
+
   scope :active, -> { where(soft_delete: false) }
   scope :sorted, -> { joins(:card).order(:custom_color_identity, :custom_cmc, "cards.name") }
 

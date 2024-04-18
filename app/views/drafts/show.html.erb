@@ -1,4 +1,4 @@
-<% if @draft.status == "PENDING" %>
+<% if @draft.status == DraftStatus.pending %>
   <%= render "pending" %>
 <% else %>
   <h1 class="page__title"><%= @draft.name %></h1>
