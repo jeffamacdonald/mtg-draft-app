@@ -12,6 +12,7 @@
               Join <%= @draft.name %>?
               <%= f.hidden_field :draft_id, value: @draft.id %>
               <%= f.hidden_field :user_id, value: current_user.id %>
+              <%= f.hidden_field :display_name, value: current_user.username %>
             </div>
           </div>
           <div class="modal-footer">

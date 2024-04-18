@@ -1,0 +1,10 @@
+<%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
+  <p class="h1"><%= @draft.name %></p>
+<% end %>
+<% if @draft.owner == current_user %>
+  <div class="container">
+    <%= render(ButtonComponent.new(url: edit_draft_path(@draft), variation: :primary)) {"Edit Draft"} %>
+    <%= render(ButtonComponent.new(url: draft_path(@draft, status: "ACTIVE"), variation: :primary, data: { turbo_method: :put })) {"Start Draft"} %>
+  </div>
+<% end %>
+<%= render(ParticipantsListComponent.new(draft: @draft)) %>

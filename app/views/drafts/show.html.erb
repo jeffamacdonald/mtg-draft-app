@@ -1,5 +1,9 @@
-<h1 class="page__title"><%= @draft.name %></h1>
-<%= render(ParticipantsListComponent.new(draft: @draft)) %>
-<div class="text-center">
-  <%= render(ButtonComponent.new(url: edit_draft_path(@draft), variation: :primary)) {"Edit Draft"} %>
-</div>
+<% if @draft.status == "PENDING" %>
+  <%= render "pending" %>
+<% else %>
+  <h1 class="page__title"><%= @draft.name %></h1>
+  <%= render(ParticipantsListComponent.new(draft: @draft)) %>
+  <div class="text-center">
+    <%= render(ButtonComponent.new(url: edit_draft_path(@draft), variation: :primary)) {"Edit Draft"} %>
+  </div>
+<% end %>

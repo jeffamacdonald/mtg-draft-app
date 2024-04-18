@@ -5,7 +5,7 @@
 class Cube < ApplicationRecord
   class CreationError < StandardError;end
 
-  belongs_to :user
+  belongs_to :owner, foreign_key: :user_id, class_name: "User"
   has_many :cube_cards
   has_many :cards, :through => :cube_cards
   include CubeHelper

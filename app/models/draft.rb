@@ -9,7 +9,7 @@
 class Draft < ApplicationRecord
   STATUSES = %w[ACTIVE INACTIVE PENDING]
   belongs_to :cube
-  belongs_to :user
+  belongs_to :owner, foreign_key: :user_id, class_name: "User"
   has_many :draft_participants
   has_many :users, :through => :draft_participants
   has_many :participant_picks, :through => :draft_participants

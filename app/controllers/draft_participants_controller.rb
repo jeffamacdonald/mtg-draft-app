@@ -13,7 +13,8 @@ class DraftParticipantsController < ApplicationController
   def create_params
     params.require(:draft_participant).permit(
       :draft_id,
-      :user_id
+      :user_id,
+      :display_name
     )
   end
 end

@@ -4,9 +4,6 @@ class DraftsController < ApplicationController
   end
 
   def show
-    if @draft.status == "PENDING"
-      redirect_to edit_draft_path(@draft)
-    end
   end
 
   def edit
@@ -29,7 +26,7 @@ class DraftsController < ApplicationController
         name: create_params[:name],
         rounds: create_params[:rounds],
         cube: Cube.find(create_params[:cube_id]),
-        user: current_user,
+        owner: current_user,
         status: "PENDING"
       )
       @draft.draft_participants.create(user: current_user, display_name: current_user.username)

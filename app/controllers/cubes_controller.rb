@@ -15,7 +15,7 @@ class CubesController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      @cube = Cube.create(name: create_params[:name], user: current_user)
+      @cube = Cube.create(name: create_params[:name], owner: current_user)
       cube_list, errors = DckParser.new(create_params[:import_file]).get_parsed_list
       if errors.present?
         # show errors and redirect to new
