@@ -4,7 +4,7 @@ export default class extends Controller {
   connect() {}
 
   close(event) {
-    event.preventDefault();\
+    event.preventDefault();
     const modal = document.getElementById("modal");
     modal.innerHTML = "";
     modal.removeAttribute("src");

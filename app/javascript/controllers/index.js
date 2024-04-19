@@ -4,5 +4,8 @@
 
 import { application } from "./application"
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
+import FormRedirectController from "./form_redirect_controller"
+application.register("form-redirect", FormRedirectController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
