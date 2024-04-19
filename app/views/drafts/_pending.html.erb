@@ -3,8 +3,16 @@
 <% end %>
 <% if @draft.owner == current_user %>
   <div class="container text-center mb-2">
-    <%= render(ButtonComponent.new(url: edit_draft_path(@draft), variation: :primary)) {"Edit Draft"} %>
-    <%= render(ButtonComponent.new(url: draft_path(@draft, status: DraftStatus.active), variation: :primary, data: { turbo_method: :put })) {"Start Draft"} %>
+    <%= form_with(model: @draft, local: true) do |f| %>
+      <%= f.hidden_field :status, value: DraftStatus.active %>
+      <%= render(ButtonComponent.new) {"Start Draft"} %>
+    <% end %>
   </div>
 <% end %>
+<% unless @draft.users.include? current_user %>
+  <div class="container text-center mb-2">
+    <%= render(ButtonComponent.new(url: new_draft_participant_path(draft_id: @draft.id), variation: :primary, data: { turbo_frame: "modal" })) { "Join" } %>
+  </div>
+<% end %>
+<%= render(DraftDetailsComponent.new(draft: @draft)) %>
 <%= render(ParticipantsListComponent.new(draft: @draft)) %>

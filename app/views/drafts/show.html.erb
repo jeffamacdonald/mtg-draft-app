@@ -1,9 +1,7 @@
 <% if @draft.status == DraftStatus.pending %>
   <%= render "pending" %>
 <% else %>
-  <h1 class="page__title"><%= @draft.name %></h1>
-  <%= render(ParticipantsListComponent.new(draft: @draft)) %>
-  <div class="text-center">
-    <%= render(ButtonComponent.new(url: edit_draft_path(@draft), variation: :primary)) {"Edit Draft"} %>
-  </div>
+  <%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
+    <p class="h1"><%= @draft.name %></p>
+  <% end %>
 <% end %>

@@ -1,0 +1,11 @@
+<%= render(DisplayCardComponent.new(width: :lg)) do %>
+  <div class="card-header">DETAILS</div>
+  <ul class="list-unstyled text-center">
+      <li>
+        Cube: <%= render(ButtonComponent.new(url: cube_path(cube), variation: :link)) { cube.name } %>
+      </li>
+      <li>
+        Number of rounds: <%= draft.rounds %>
+      </li>
+  </ul>
+<% end %>
