@@ -1,10 +1,10 @@
 # t.references :cube, references: :cubes, foreign_key: { to_table: :cubes}
 # t.references :card, references: :cards, foreign_key: { to_table: :cards}
 # t.integer :count, null: false
-# t.string :custom_set
-# t.string :custom_image
+# t.string :custom_set, null: false
+# t.string :custom_image, null: false
 # t.string :custom_color_identity, array: true
-# t.integer :custom_cmc
+# t.integer :custom_cmc, null: false
 # t.boolean :soft_delete, null: false
 # t.timestamps null: false
 

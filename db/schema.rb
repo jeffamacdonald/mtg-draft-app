@@ -10,14 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_13_053009) do
+ActiveRecord::Schema[7.0].define(version: 2022_01_12_050936) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "cards", force: :cascade do |t|
+  create_table "cards", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "cost"
     t.integer "cmc", null: false
+    t.string "color_identity", null: false, array: true
     t.string "type_line", null: false
     t.string "card_text"
     t.string "layout"
@@ -27,33 +29,34 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_053009) do
     t.string "default_set", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "color_identity", null: false, array: true
     t.index ["card_text"], name: "index_cards_on_card_text"
     t.index ["cmc"], name: "index_cards_on_cmc"
+    t.index ["color_identity"], name: "index_cards_on_color_identity"
     t.index ["name"], name: "index_cards_on_name", unique: true
     t.index ["power"], name: "index_cards_on_power"
     t.index ["toughness"], name: "index_cards_on_toughness"
   end
 
-  create_table "cube_cards", force: :cascade do |t|
-    t.bigint "cube_id"
-    t.bigint "card_id"
+  create_table "cube_cards", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "cube_id"
+    t.uuid "card_id"
     t.integer "count", null: false
-    t.string "custom_set"
-    t.string "custom_image"
-    t.integer "custom_cmc"
+    t.string "custom_set", null: false
+    t.string "custom_image", null: false
+    t.string "custom_color_identity", null: false, array: true
+    t.integer "custom_cmc", null: false
     t.boolean "soft_delete", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "custom_color_identity", array: true
     t.index ["card_id"], name: "index_cube_cards_on_card_id"
     t.index ["cube_id", "card_id"], name: "index_cube_cards_on_cube_id_and_card_id", unique: true
     t.index ["cube_id"], name: "index_cube_cards_on_cube_id"
+    t.index ["custom_color_identity"], name: "index_cube_cards_on_custom_color_identity"
     t.index ["soft_delete"], name: "index_cube_cards_on_soft_delete"
   end
 
-  create_table "cubes", force: :cascade do |t|
-    t.bigint "user_id"
+  create_table "cubes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -61,11 +64,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_053009) do
     t.index ["user_id"], name: "index_cubes_on_user_id"
   end
 
-  create_table "draft_participants", force: :cascade do |t|
-    t.bigint "draft_id"
-    t.bigint "user_id"
-    t.bigint "surrogate_user_id"
-    t.string "display_name"
+  create_table "draft_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "draft_id"
+    t.uuid "user_id"
+    t.uuid "surrogate_user_id"
+    t.string "display_name", null: false
     t.integer "draft_position"
     t.boolean "skipped"
     t.datetime "created_at", null: false
@@ -77,9 +80,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_053009) do
     t.index ["user_id"], name: "index_draft_participants_on_user_id"
   end
 
-  create_table "drafts", force: :cascade do |t|
-    t.bigint "cube_id"
-    t.bigint "user_id"
+  create_table "drafts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "cube_id"
+    t.uuid "user_id"
     t.string "name", null: false
     t.integer "rounds", null: false
     t.integer "timer_minutes"
@@ -92,9 +95,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_053009) do
     t.index ["user_id"], name: "index_drafts_on_user_id"
   end
 
-  create_table "participant_picks", force: :cascade do |t|
-    t.bigint "draft_participant_id"
-    t.bigint "cube_card_id"
+  create_table "participant_picks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "draft_participant_id"
+    t.uuid "cube_card_id"
     t.integer "pick_number", null: false
     t.integer "round", null: false
     t.datetime "created_at", null: false
@@ -104,16 +107,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_053009) do
     t.index ["round"], name: "index_participant_picks_on_round"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "username"
     t.string "phone"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "remember_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true

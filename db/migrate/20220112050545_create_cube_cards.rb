@@ -1,13 +1,13 @@
 class CreateCubeCards < ActiveRecord::Migration[7.0]
   def change
-    create_table :cube_cards do |t|
-      t.references :cube, references: :cubes, foreign_key: { to_table: :cubes}
-      t.references :card, references: :cards, foreign_key: { to_table: :cards}
+    create_table :cube_cards, id: :uuid do |t|
+      t.references :cube, references: :cubes, foreign_key: { to_table: :cubes}, type: :uuid
+      t.references :card, references: :cards, foreign_key: { to_table: :cards}, type: :uuid
       t.integer :count, null: false
-      t.string :custom_set
-      t.string :custom_image
-      t.string :custom_color_identity
-      t.integer :custom_cmc
+      t.string :custom_set, null: false
+      t.string :custom_image, null: false
+      t.string :custom_color_identity, array: true, null: false
+      t.integer :custom_cmc, null: false
       t.boolean :soft_delete, null: false
       t.timestamps null: false
     end

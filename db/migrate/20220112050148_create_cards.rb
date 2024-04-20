@@ -1,10 +1,10 @@
 class CreateCards < ActiveRecord::Migration[7.0]
   def change
-    create_table :cards do |t|
+    create_table :cards, id: :uuid do |t|
       t.string :name, null: false
       t.string :cost
       t.integer :cmc, null: false
-      t.string :color_identity, null: false
+      t.string :color_identity, array: true, null: false
       t.string :type_line, null: false
       t.string :card_text
       t.string :layout
