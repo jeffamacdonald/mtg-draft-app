@@ -1,7 +1,7 @@
 # t.references :draft, references: :drafts, foreign_key: { to_table: :drafts }
 # t.references :user, references: :users, foreign_key: { to_table: :users }
 # t.references :surrogate_user, references: :users, foreign_key: { to_table: :users }
-# t.string :display_name
+# t.string :display_name, null: false
 # t.integer :draft_position
 # t.boolean :skipped
 # t.timestamps null: false
@@ -15,11 +15,10 @@ class DraftParticipant < ApplicationRecord
   def pick_card(cube_card_id)
     round = next_pick_round
     pick_number = calculate_pick_number(round)
-    ParticipantPick.create!(draft_participant_id: self.id, cube_card_id: cube_card_id,
+    ParticipantPick.create!(draft_participant: self, cube_card_id: cube_card_id,
       round: round, pick_number: pick_number)
-    if self.skipped && draft.participant_picks.maximum(:pick_number) < next_pick_number
-      self.skipped = false
-      self.save!
+    if skipped? && draft.participant_picks.maximum(:pick_number) < next_pick_number
+      update!(skipped: false)
     end
   end
 
@@ -30,7 +29,7 @@ class DraftParticipant < ApplicationRecord
   private
 
   def next_pick_round
-    last_pick = participant_picks.last
+    last_pick = participant_picks.reload.last
     last_pick.nil? ? 1 : last_pick.round + 1
   end
 

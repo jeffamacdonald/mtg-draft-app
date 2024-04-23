@@ -12,14 +12,20 @@ class CubesController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      cube_list, errors = DckParser.new(create_params[:import_file]).get_parsed_list
-      if errors.present?
-        flash[:error] = "Failed to import cube: #{errors.join(" ")}"
+      import_cards, invalid_records = DckParser.new(create_params[:import_file]).call
+      if invalid_records.present?
+        error_messages = invalid_records.map { |record| "#{record.name}: #{record.error_message}"}.join(", ")
+        flash[:error] = "Failed to import cube: #{error_messages}"
         redirect_to new_cube_path
       else
-        cube = Cube.create(name: create_params[:name], owner: current_user)
-        cube.setup_cube_from_list(cube_list)
-        redirect_to cubes_path
+        cube = Cube.new(name: create_params[:name], owner: current_user)
+        importer = Import::DckFile.new(import_cards, cube)
+        if importer.import
+          redirect_to cubes_path
+        else
+          flash[:error] = importer.errors.join(" ")
+          redirect_to new_cube_path
+        end
       end
     end
   end

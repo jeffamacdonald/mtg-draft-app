@@ -1,28 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Card do
-  describe '.get_cards_by_cube_list' do
-    let(:name1) { 'name1' }
-    let(:name2) { 'name2' }
-    let!(:card1) { create :card, name: name1 }
-    let!(:card2) { create :card, name: name2 }
-    let(:cube_list) do
-      [{
-        :name => name1
-      }, {
-        :name => name2
-      }, {
-        :name => 'name3'
-      }]
-    end
-
-    subject { described_class.get_cards_by_cube_list(cube_list) }
-
-    it 'returns cards in list' do
-      expect(subject.to_a).to eq [card1,card2]
-    end
-  end
-
   describe '.create_card_from_hash' do
     let(:name) { 'Lightning Bolt' }
     let(:mana_cost) { '{R}' }

@@ -15,26 +15,26 @@ module Clients
     def get_card(name, set = nil)
       @client.headers['Content-Type'] = 'application/x-www-form-urlencoded'
       response = @client.get("/cards/named?exact=#{card_params(name, set)}")
-      CardSanitizer.sanitize_card(response.body, name)
+      CardSanitizer.call(response.body, Import::Card.new(name:, set:))
     end
 
-    def get_card_list(card_list)
+    def get_card_list(import_cards)
       @client.headers['Content-Type'] = 'application/json'
-      response = @client.post("/cards/collection", card_list_params(card_list).to_json)
-      sanitize_list(response.body, card_list)
+      response = @client.post("/cards/collection", card_list_params(import_cards).to_json)
+      sanitize_list(response.body, import_cards)
     end
 
     private
 
-    def sanitize_list(list_data, card_list)
-      errors = list_data[:not_found].map do |error|
-        error.merge({:message => "Card Not Found"})
+    def sanitize_list(response_body, card_list)
+      scryfall_cards = response_body[:data].map do |card_data|
+        import_card = card_list.find { |card| card_data[:name].include? card.name }
+        CardSanitizer.call(card_data, import_card)
       end
-      cards = list_data[:data].map do |card_data|
-        CardSanitizer.sanitize_card(card_data, card_list.find { |card|
-          card_data[:name].include? card[:name] }[:name])
+      errors = response_body[:not_found].map do |error|
+        "#{error[:name]} was not found."
       end
-      [errors, cards]
+      [scryfall_cards, errors]
     end
 
     def card_params(name, set)
@@ -42,22 +42,22 @@ module Clients
       params = set.nil? ? encoded_name : encoded_name + "&set=#{set}"
     end
 
-    def card_list_params(card_list)
+    def card_list_params(import_cards)
       {
-        :identifiers => card_list.map do |card|
+        :identifiers => import_cards.map do |card|
           {
-            :name => parsed_card_name(card),
-            :set => card[:set]
+            :name => parsed_card_name(card.name),
+            :set => card.set
           }
         end
       }
     end
 
-    def parsed_card_name(card)
-      if card[:name].include? "//"
-        card[:name].split("//").first
+    def parsed_card_name(card_name)
+      if card_name.include? "//"
+        card_name.split("//").first
       else
-        card[:name]
+        card_name
       end
     end
   end

@@ -8,7 +8,7 @@ class CreateCubeCards < ActiveRecord::Migration[7.0]
       t.string :custom_image, null: false
       t.string :custom_color_identity, array: true, null: false
       t.integer :custom_cmc, null: false
-      t.boolean :soft_delete, null: false
+      t.boolean :soft_delete, default: false
       t.timestamps null: false
     end
 

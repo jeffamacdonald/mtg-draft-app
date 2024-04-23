@@ -3,15 +3,15 @@ require 'rails_helper'
 RSpec.describe Cube::Display do
   describe '#sections' do
     let(:cube) { create(:cube) }
-    let(:display) { Cube::Display.new(cube) }
-    let!(:white_card) { create :cube_card, :with_color_identity, color_identity: ["W"], cube: cube }
-    let!(:blue_card) { create :cube_card, :with_color_identity, color_identity: ["U"], cube: cube }
-    let!(:black_card) { create :cube_card, :with_color_identity, color_identity: ["B"], cube: cube }
-    let!(:red_card) { create :cube_card, :with_color_identity, color_identity: ["R"], cube: cube }
-    let!(:green_card) { create :cube_card, :with_color_identity, color_identity: ["G"], cube: cube }
-    let!(:colorless_card) { create :cube_card, :with_color_identity, color_identity: ["C"], cube: cube }
-    let!(:land_card) { create :cube_card, :with_color_identity, color_identity: ["L"], cube: cube }
-    let!(:gold_card) { create :cube_card, :with_color_identity, color_identity: ["U", "R"], cube: cube }
+    let(:display) { Cube::Display.new(cube.cube_cards) }
+    let!(:white_card) { create :cube_card, color_identity: ["W"], cube: cube }
+    let!(:blue_card) { create :cube_card, color_identity: ["U"], cube: cube }
+    let!(:black_card) { create :cube_card, color_identity: ["B"], cube: cube }
+    let!(:red_card) { create :cube_card, color_identity: ["R"], cube: cube }
+    let!(:green_card) { create :cube_card, color_identity: ["G"], cube: cube }
+    let!(:colorless_card) { create :cube_card, color_identity: ["C"], cube: cube }
+    let!(:land_card) { create :cube_card, color_identity: ["L"], cube: cube }
+    let!(:gold_card) { create :cube_card, color_identity: ["U", "R"], cube: cube }
     subject { display.sections }
     
     it 'returns sections with appropriate titles' do
@@ -31,7 +31,7 @@ RSpec.describe Cube::Display do
     end
     
     it 'returns sections with cards sorted within each section' do
-      create(:cube_card, :with_color_identity, color_identity: ["W"], cube: cube)
+      create(:cube_card, color_identity: ["W"], cube: cube)
       cards = subject.find {|section| section.title == "White"}.cards
       sorted_cards = cards.sort_by { |card| card.name }
       expect(cards).to eq(sorted_cards)

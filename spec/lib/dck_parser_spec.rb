@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe DckParser do
-  describe '#get_parsed_list' do
+  describe '#call' do
     let(:line1) { '1 [LEB:123] Lightning Bolt' }
     let(:line2) { '1 [RAV1:321] Dark Confidant' }
     let(:file) do
@@ -11,125 +11,70 @@ RSpec.describe DckParser do
         f.close
       end
     end
+    let(:expected_cards) do
+      [
+        Import::Card.new(count: 1, set: "LEB", name: "Lightning Bolt"),
+        Import::Card.new(count: 1, set: "RAV1", name: "Dark Confidant")
+      ]
+    end
+    let(:expected_errors) do
+      []
+    end
 
     after do
       file.unlink
     end
 
-    let(:expected_response) do
-      [expected_array, expected_error]
-    end
-
-    subject { described_class.new(file.path).get_parsed_list }
+    subject { described_class.new(file.path).call }
 
     context 'when file is valid' do
-      let(:expected_array) do
-        [{
-          :count => 1,
-          :set => "LEB",
-          :name => "Lightning Bolt"
-        }, {
-          :count => 1,
-          :set => "RAV1",
-          :name => "Dark Confidant"
-        }]
-      end
-      let(:expected_error) { [] }
-
-      it 'raises no errors' do
-        expect{subject}.to_not raise_error
-      end
-
-      it 'adds card hashes to array' do
-        expect(subject).to eq expected_response
+      it 'parses cards' do
+        expect(subject.first).to match_array(expected_cards)
+        expect(subject.last).to match_array(expected_errors)
       end
     end
 
-    context 'when one line has invalid count' do
-      let(:card_name) {"Some Card"}
-      let(:line1) { "0 [SET:123] #{card_name}" }
-      let(:expected_array) do
-        [{
-          :count => 1,
-          :set => "RAV1",
-          :name => "Dark Confidant"
-        }]
-      end
-      let(:expected_error) do
-        [{
-          :message => "Count Invalid",
-          :name => "#{card_name}"
-        }]
+    context "with invalid line" do
+      let(:expected_cards) do
+        [Import::Card.new(count: 1, set: "RAV1", name: "Dark Confidant")]
       end
 
-      it 'adds errors to the array' do
-        expect(subject).to eq expected_response
-      end
-
-      context 'when two lines have invalid count' do
-        let(:card_name2) { "Some Other Card" }
-        let(:line2) { "A [SET:345] #{card_name2}"}
-        let(:expected_array) { [] }
-        let(:expected_error) do
-          [{
-            :message => "Count Invalid",
-            :name => "#{card_name}"
-          }, {
-            :message => "Count Invalid",
-            :name => "#{card_name2}"
-          }]
+      context 'when one line has invalid count' do
+        let(:card_name) {"Some Card"}
+        let(:line1) { "0 [SET:123] #{card_name}" }
+        let(:expected_errors) do
+          [Import::InvalidRecord.new(name: card_name, error_message: "Count Invalid")]
         end
 
-        it 'adds errors to the array' do
-          expect(subject).to eq expected_response
+        it 'tracks invalid records and doesnt add record to parsed cards' do
+          expect(subject.first).to match_array(expected_cards)
+          expect(subject.last).to match_array(expected_errors)
         end
       end
-    end
 
-    context 'when one line has invalid set' do
-      let(:card_name) {"Some Card"}
-      let(:line1) { "1 [SE:123] #{card_name}" }
-      let(:expected_array) do
-        [{
-          :count => 1,
-          :set => "RAV1",
-          :name => "Dark Confidant"
-        }]
-      end
-      let(:expected_error) do
-        [{
-          :message => "Set Invalid",
-          :name => "#{card_name}"
-        }]
+      context 'when one line has invalid set' do
+        let(:card_name) {"Some Card"}
+        let(:line1) { "1 [SE:123] #{card_name}" }
+        let(:expected_errors) do
+          [Import::InvalidRecord.new(name: card_name, error_message: "Set Invalid")]
+        end
+
+        it 'tracks invalid records and doesnt add record to parsed cards' do
+          expect(subject.first).to match_array(expected_cards)
+          expect(subject.last).to match_array(expected_errors)
+        end
       end
 
-      it 'adds errors to the array' do
-        expect(subject).to eq expected_response
-      end
-    end
+      context 'when name is empty string' do
+        let(:line1) { "1 [SET:123]  " }
+        let(:expected_errors) do
+          [Import::InvalidRecord.new(name: "N/A", error_message: "Unknown card, name is blank")]
+        end
 
-    context 'when name is empty string' do
-      let(:line1) { "1 [SET:123]  " }
-      let(:expected_array) do
-        [{
-          :count => 1,
-          :set => "RAV1",
-          :name => "Dark Confidant"
-        }]
-      end
-      let(:expected_error) { [] }
-
-      it 'does not get added to array' do
-        expect(subject).to eq expected_response
-      end
-    end
-
-    context 'when one line is malformed' do
-      let(:line1) { "1[SET:123]Card" }
-      let(:expected_error) { "Malformed File" }
-
-      it 'raises error' do
-        expect{subject}.to raise_error(DckParser::ParseError).with_message(expected_error)
+        it 'tracks invalid records and doesnt add record to parsed cards' do
+          expect(subject.first).to match_array(expected_cards)
+          expect(subject.last).to match_array(expected_errors)
+        end
       end
     end
   end

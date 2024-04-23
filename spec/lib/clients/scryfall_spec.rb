@@ -19,13 +19,14 @@ RSpec.describe Clients::Scryfall do
         "set": "LRW"
       }
     end
-    let(:expected_response) do
-      scryfall_response.select { |k,v| CardSanitizer::CARD_FIELDS.include? k.to_s }
-    end
     let(:status_code) {200}
     let!(:scryfall_stub) do
       stub_request(:get, "#{described_class::BASE_URL}/cards/named?#{scryfall_params}")
         .to_return(status: status_code, body: scryfall_response.to_json, headers: {})
+    end
+    let(:set) { nil }
+    let(:import_card) do
+      Import::Card.new(name: card_name, set: set)
     end
 
     context 'when params contains only name' do
@@ -46,7 +47,7 @@ RSpec.describe Clients::Scryfall do
       end
 
       it 'sanitizes response' do
-        expect(CardSanitizer).to receive(:sanitize_card).with(scryfall_response, card_name)
+        expect(CardSanitizer).to receive(:call).with(scryfall_response, import_card)
         subject
       end
 
@@ -109,8 +110,11 @@ RSpec.describe Clients::Scryfall do
     end
     let(:scryfall_response) do
       {
-        "not_found": [bad_query_data],
-        "data": [bolt_card_hash,bob_card_hash]
+        "not_found": [{
+          "name": bad_query_data.name,
+          "set": bad_query_data.set
+        }],
+        "data": [bolt_card_hash, bob_card_hash]
       }
     end
     let!(:scryfall_stub) do
@@ -118,41 +122,52 @@ RSpec.describe Clients::Scryfall do
         .to_return(status: 200, body: scryfall_response.to_json, headers: {})
     end
     let(:bolt) do
-      {
-        "name": "Lightning Bolt",
-        "set": "LEB"
-      }
+      Import::Card.new(
+        count: 1,
+        name: "Lightning Bolt",
+        set: "LEB"
+      )
     end
     let(:bob) do
-      {
-        "name": "Dark Confidant",
-        "set": "RAV"
-      }
+      Import::Card.new(
+        count: 1,
+        name: "Dark Confidant",
+        set: "RAV"
+      )
     end
     let(:bad_query_data) do
-      {
-        "name": "Some Garbage",
-        "set": "LEB"
-      }
+      Import::Card.new(
+        count: 1,
+        name: "Some Garbage",
+        set: "LEB"
+      )
     end
+    let(:import_cards) { [bolt, bob, bad_query_data] }
     let(:params) do
       {
-        "identifiers": [bolt, bob, bad_query_data]
+        "identifiers": [{
+          name: bolt.name,
+          set: bolt.set
+        }, {
+          name: bob.name,
+          set: bob.set
+        }, {
+          name: bad_query_data.name,
+          set: bad_query_data.set
+        }]
       }
-    end
-    let(:cube_list) do
-      [bolt, bob, bad_query_data].map {|card| card.merge({"count": 1})}
     end
     let(:expected_response) do
       [
-        [bad_query_data.merge({:message => "Card Not Found"})],
-        [CardSanitizer.sanitize_card(bolt_card_hash, 'Lightning Bolt'),
-          CardSanitizer.sanitize_card(bob_card_hash, 'Dark Confidant')
-        ]
+        [
+          CardSanitizer.call(bolt_card_hash, bolt),
+          CardSanitizer.call(bob_card_hash, bob)
+        ],
+        ["#{bad_query_data.name} was not found."]
       ]
     end
 
-    subject { described_class.new.get_card_list(cube_list) }
+    subject { described_class.new.get_card_list(import_cards) }
 
     it 'calls scryfall stub with expected params' do
       subject
@@ -160,7 +175,7 @@ RSpec.describe Clients::Scryfall do
     end
 
     it 'returns expected response' do
-      expect(subject).to eq expected_response
+      expect(subject).to match_array(expected_response)
     end
   end
 end

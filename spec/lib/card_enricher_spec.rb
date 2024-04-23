@@ -1,100 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe CardEnricher do
-  describe '.get_enriched_list' do
-    let(:cube_list) do
-      [{
-        "name": "Lightning Bolt",
-        "set": "LEB",
-        "count": 1
-      }, {
-        "name": "Channel",
-        "set": "LEB",
-        "count": 1
-      }]
-    end
-    let(:scryfall_response) do
-      [[], [{
-        "name": "Lightning Bolt",
-        "cmc": 1
-      }, {
-        "name": "Channel",
-        "cmc": 2
-      }]]
-    end
-
-    subject { described_class.get_enriched_list(cube_list) }
-
-    before do
-      allow_any_instance_of(Clients::Scryfall).to receive(:get_card_list).with(cube_list)
-        .and_return(scryfall_response)
-    end
-
-    context 'when scryfall returns no errors' do
-      let(:expected_response) do
-        {
-          :errors => [],
-          :card_list => [{
-            "name": "Lightning Bolt",
-            "cmc": 1,
-            "set": "LEB",
-            "count": 1
-          }, {
-            "name": "Channel",
-            "cmc": 2,
-            "set": "LEB",
-            "count": 1
-          }]
-        }
-      end
-
-      it 'returns all cards with combined keys with no errors' do
-        expect(subject).to eq expected_response
-      end
-    end
-
-    context 'when scryfall returns some errors' do
-      let(:scryfall_response) do
-        [[{
-          "name": "Channel",
-          "set": "LEB"
-        }], [{
-          "name": "Lightning Bolt",
-          "cmc": 1
-        }]]
-      end
-      let(:expected_response) do
-        {
-          :errors => [{
-            "name": "Channel",
-            "set": "LEB"
-          }],
-          :card_list => [{
-            "name": "Lightning Bolt",
-            "cmc": 1,
-            "set": "LEB",
-            "count": 1
-          }]
-        }
-      end
-
-      it 'returns cards with combined keys as well as errors' do
-        expect(subject).to eq expected_response
-      end
-    end
-  end
-
   describe '.get_enriched_card' do
     let(:card) do
       {
         "name": "Shock",
-        "set": set
-      }.merge(user_provided_params)
-    end
-    let(:user_provided_params) do
-      {
+        "set": set,
         "count": 1,
-        "custom_color_identity": "R"
+        "custom_color_identity": ["R"]
       }
     end
     let(:set) { "SHD" }
@@ -104,6 +17,7 @@ RSpec.describe CardEnricher do
         "name": "shock",
         "layout": "something",
         "cmc": 1,
+        "set": set,
         "image_uris": {
           "normal": "image"
         }
@@ -111,7 +25,15 @@ RSpec.describe CardEnricher do
     end
     let(:status) { 200 }
     let(:expected_response) do
-      CardSanitizer.sanitize_card(scryfall_response, 'shock').merge(user_provided_params)
+      Clients::ScryfallCard.new(
+        name: "shock",
+        layout: "something",
+        cmc: 1,
+        image_uri: "image",
+        color_identity: ["R"],
+        set: "SHD",
+        count: 1
+      )
     end
     let!(:scryfall_stub) do
       stub_request(:get, "#{Clients::Scryfall::BASE_URL}/cards/named?exact=Shock" + set_param)

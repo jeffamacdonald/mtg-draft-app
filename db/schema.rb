@@ -45,7 +45,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_01_12_050936) do
     t.string "custom_image", null: false
     t.string "custom_color_identity", null: false, array: true
     t.integer "custom_cmc", null: false
-    t.boolean "soft_delete", null: false
+    t.boolean "soft_delete", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["card_id"], name: "index_cube_cards_on_card_id"
