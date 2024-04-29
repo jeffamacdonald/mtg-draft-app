@@ -10,13 +10,26 @@
 
 class CubeCard < ApplicationRecord
   class CreationError < StandardError;end
+  include PgSearch::Model
   belongs_to :cube
   belongs_to :card
 
   validates :count, presence: true
 
+  pg_search_scope :search_by_card_text, associated_against: {
+    card: [:card_text]
+  }, ignoring: :accents
+
+  pg_search_scope :search_by_card_type, associated_against: {
+    card: [:type_line]
+  }, ignoring: :accents
+
   scope :active, -> { where(soft_delete: false) }
-  scope :sorted, -> { joins(:card).order(:custom_color_identity, :custom_cmc, "cards.name") }
+  scope :sorted, -> { order(:custom_color_identity, :custom_cmc) }
+  scope :with_cmc, ->(cmc) { where(custom_cmc: cmc) if cmc.present? }
+  scope :with_color, ->(color) { where("? = ANY (custom_color_identity)", color) if color.present? }
+  scope :with_card_text_matching, ->(card_text) { search_by_card_text(card_text) if card_text.present? }
+  scope :with_card_type_matching, ->(card_type) { search_by_card_type(card_type) if card_type.present? }
 
   delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
   delegate_missing_to :card

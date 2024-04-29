@@ -5,6 +5,11 @@ class CubesController < ApplicationController
 
   def show
     @cube = Cube.find(params[:id])
+    @cube_cards = @cube.cube_cards.active.sorted
+      .with_cmc(filter_params[:cmc])
+      .with_color(filter_params[:color])
+      .with_card_text_matching(filter_params[:card_text])
+      .with_card_type_matching(filter_params[:card_type])
   end
 
   def new
@@ -31,6 +36,12 @@ class CubesController < ApplicationController
   end
 
   private
+
+  helper_method def filter_params
+    return {} unless params[:filters].present?
+
+    params.require(:filters).permit(:cmc, :color, :card_text, :card_type)
+  end
 
   def create_params
     params.require(:cube).permit(
