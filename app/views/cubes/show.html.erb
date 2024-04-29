@@ -5,6 +5,7 @@
   <%= render(DisplayCardComponent.new(width: :xl, classes: "mb-2")) do %>
     <%= form_with url: cube_path(@cube), scope: :filters, local: false, method: :get, data: {:controller => "filterable"} do |f| %>
       <div id="search" class="row pt-1 pb-1">
+        <div class="col-2"></div>
         <div class="col-3">
           <%= f.label :card_text do %>
             <div class="fw-bold text-center">
@@ -21,15 +22,15 @@
           <% end %>
           <%= f.text_field :card_type, value: filter_params[:card_type], class: "d-block w-100", data: {action: "input->filterable#search", "filterable-target": "search"} %>
         </div>
-        <div class="col-3">
+        <div class="col-1">
           <%= f.label :cmc do %>
             <div class="fw-bold">
-              Converted Mana Cost
+              CMC
             </div>
           <% end %>
           <%= f.number_field :cmc, value: filter_params[:cmc], class: "d-block w-100", data: {action: "change->filterable#apply"} %>
         </div>
-        <div class="col-3">
+        <div class="col-1">
           <%= f.label :color do %>
             <div class="fw-bold">
               Color
@@ -37,6 +38,7 @@
           <% end %>
           <%= f.select :color, options_for_select({"any": ""}.merge(Card::ColorIdentity::COLOR_IDENTITIES.invert), selected: filter_params[:color]), {label: "Color"}, class: "d-block w-100", data: {action: "change->filterable#apply"} %>
         </div>
+        <div class="col-2"></div>
       </div>
     <% end %>
   <% end %>
