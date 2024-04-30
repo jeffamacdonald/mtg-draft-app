@@ -1,5 +1,5 @@
 <div class="d-flex flex-column">
   <% cube_sections.each do |cube_section| %>
-    <%= render(CubeCardListSectionComponent.new(cube_section:)) %>
+    <%= render(CubeCardListSectionComponent.new(cube_section:, context:)) %>
   <% end %>
 </div>

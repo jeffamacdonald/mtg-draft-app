@@ -11,10 +11,12 @@
     </div>
 
     <div class="row">
-      <div class="col-12">
-        <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { "Update" } %>
+      <div class="col-12 mt-2">
+        <%= render(ButtonComponent.new(variation: :primary)) { "Update" } %>
       </div>
     </div>
   <% end %>
-  <%= button_to("Delete", cube_card_path(@cube_card), method: :delete, class: "btn btn-danger mb-2") %>
+  <%= button_to("Delete", cube_card_path(@cube_card), method: :delete, class: "btn btn-danger mt-2") %>
+  <%= button_to("Cancel", cube_path(@cube_card.cube), method: :get, class: "btn btn-warning mt-2") %>
+
 <% end %> 

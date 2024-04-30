@@ -42,5 +42,5 @@
       </div>
     <% end %>
   <% end %>
-  <%= render(CubeCardListComponent.new(cube_cards: @cube_cards)) %>
+  <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: @cube)) %>
 </div>
