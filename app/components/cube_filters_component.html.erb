@@ -1,0 +1,40 @@
+<%= render(DisplayCardComponent.new(width: :xl)) do %>
+  <%= form_with url: url, scope: :filters, local: false, method: :get, data: {:controller => "filterable"} do |f| %>
+    <div id="search" class="row pt-1 pb-1">
+      <div class="col-2"></div>
+      <div class="col-3">
+        <%= f.label :card_text do %>
+          <div class="fw-bold text-center">
+            Card Text
+          </div>
+        <% end %>
+        <%= f.text_field :card_text, value: filter_params[:card_text], class: "d-block w-100", data: {action: "input->filterable#search", "filterable-target": "search"} %>
+      </div>
+      <div class="col-3">
+        <%= f.label :card_type do %>
+          <div class="fw-bold">
+            Card Type
+          </div>
+        <% end %>
+        <%= f.text_field :card_type, value: filter_params[:card_type], class: "d-block w-100", data: {action: "input->filterable#search", "filterable-target": "search"} %>
+      </div>
+      <div class="col-1">
+        <%= f.label :cmc do %>
+          <div class="fw-bold">
+            CMC
+          </div>
+        <% end %>
+        <%= f.number_field :cmc, value: filter_params[:cmc], class: "d-block w-100", data: {action: "change->filterable#apply"} %>
+      </div>
+      <div class="col-1">
+        <%= f.label :color do %>
+          <div class="fw-bold">
+            Color
+          </div>
+        <% end %>
+        <%= f.select :color, options_for_select({"any": ""}.merge(Card::ColorIdentity::COLOR_IDENTITIES.invert), selected: filter_params[:color]), {label: "Color"}, class: "d-block w-100", data: {action: "change->filterable#apply"} %>
+      </div>
+      <div class="col-2"></div>
+    </div>
+  <% end %>
+<% end %>

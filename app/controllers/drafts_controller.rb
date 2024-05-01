@@ -1,9 +1,14 @@
 class DraftsController < ApplicationController
-  before_action :find_draft, only: [:show, :edit, :update]
+  before_action :find_draft, only: [:show, :edit, :update, :start]
   def index
   end
 
   def show
+    @cube_cards = @draft.cube.cube_cards.active.sorted
+      .with_cmc(filter_params[:cmc])
+      .with_color(filter_params[:color])
+      .with_card_text_matching(filter_params[:card_text])
+      .with_card_type_matching(filter_params[:card_type])
   end
 
   def edit
@@ -15,6 +20,17 @@ class DraftsController < ApplicationController
   def update
     @draft.update(update_params)
     redirect_to draft_path(@draft)
+  end
+
+  def start
+    if @draft.status == "pending"
+      @draft.update!(status: "active")
+      @draft.set_participant_positions
+      redirect_to draft_path(@draft)
+    else
+      flash[:error] = "Can only start a pending draft."
+      redirect_to draft_path(@draft)
+    end
   end
 
   def new
@@ -35,6 +51,12 @@ class DraftsController < ApplicationController
   end
 
   private
+
+  helper_method def filter_params
+    return {} unless params[:filters].present?
+
+    params.require(:filters).permit(:cmc, :color, :card_text, :card_type)
+  end
 
   def create_params
     params.require(:draft).permit(

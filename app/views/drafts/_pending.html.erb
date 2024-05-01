@@ -3,8 +3,7 @@
 <% end %>
 <% if @draft.owner == current_user %>
   <div class="container text-center mb-2">
-    <%= form_with(model: @draft, local: true) do |f| %>
-      <%= f.hidden_field :status, value: DraftStatus.active %>
+    <%= form_with(url: start_draft_path(@draft)) do |f| %>
       <%= render(ButtonComponent.new) {"Start Draft"} %>
     <% end %>
   </div>
