@@ -10,7 +10,15 @@
         </tr>
       </thead>
       <tbody>
-        
+        <% draft.rounds.times do |round| %>
+          <tr>
+            <% draft.draft_participants.ordered.each do |participant| %>
+              <td>
+                <%= pick_for_round_and_participant(round, participant)&.name || "--" %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>
