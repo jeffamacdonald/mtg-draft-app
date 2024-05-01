@@ -7,10 +7,6 @@ class MagicCardComponent < ViewComponent::Base
   end
 
   def link_url
-    if context.is_a?(Cube)
-      edit_cube_card_path(@cube_card)
-    else
-
-    end
+    context.link_url(cube_card)
   end
 end

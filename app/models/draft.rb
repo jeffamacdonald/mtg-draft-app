@@ -51,6 +51,12 @@ class Draft < ApplicationRecord
     }.to_h
   end
 
+  # TODO: round is not here
+  # def active_participant_new
+  #   last_pick = participant_picks.maximum(:pick_number).to_i
+  #   ordered_participants.where(skipped: false).joins(:participant_picks).find_by("participant_picks.pick_number <= ?", last_pick - (round * draft_participants.count))
+  # end
+
   def active_participant(skipped = 0)
     last_pick = participant_picks.maximum(:pick_number).to_i + skipped
     if last_pick == 0
@@ -58,13 +64,23 @@ class Draft < ApplicationRecord
     end
     draft_participants.find do |drafter|
       if drafter.next_pick_number == last_pick + 1
-        if drafter.skipped
-          active_drafter = active_participant(skipped+1)
+        if drafter.skipped?
+          active_drafter = active_participant(skipped + 1)
         else
           active_drafter = drafter
         end
         break active_drafter
       end
+    end
+  end
+
+  private
+
+  def ordered_participants
+    if round.odd?
+      draft_participants.ordered
+    else
+      draft_participants.reversed
     end
   end
 end

@@ -10,11 +10,11 @@
         </tr>
       </thead>
       <tbody>
-        <% draft.rounds.times do |round| %>
+        <% draft.rounds.times do |idx| %>
           <tr>
             <% draft.draft_participants.ordered.each do |participant| %>
               <td>
-                <%= pick_for_round_and_participant(round, participant)&.name || "--" %>
+                <%= pick_for_round_and_participant(idx + 1, participant)&.name || "--" %>
               </td>
             <% end %>
           </tr>

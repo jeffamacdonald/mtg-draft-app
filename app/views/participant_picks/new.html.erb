@@ -1,0 +1,16 @@
+<%= render(DisplayCardComponent.new(width: :md)) do %>
+  <div class="card-header">ARE YOU SURE?</div>
+  <%= form_with(model: ParticipantPick.new) do |f| %>
+    <div class="pt-3 row justify-content-center">
+      <%= image_tag(@cube_card.image_url, class: "cube_card__img") %>
+    </div>
+    <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
+    <%= f.hidden_field :cube_card_id, value: @cube_card.id %>
+    <div class="row">
+      <div class="col-12">
+        <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { "Pick" } %>
+      </div>
+    </div>
+  <% end %>
+  <%= button_to("Cancel", draft_path(@draft_participant.draft), method: :get, class: "btn btn-warning mt-2") %>
+<% end %>

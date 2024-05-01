@@ -6,5 +6,5 @@
   <% end %>
   <%= render(PickListComponent.new(@draft)) %>
   <%= render(CubeFiltersComponent.new(url: draft_path(@draft), filter_params: filter_params)) %>
-  <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: @draft)) %>
+  <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: MagicCardContext.for_active_draft(@draft.draft_participants.find_by(user: current_user)))) %>
 <% end %>

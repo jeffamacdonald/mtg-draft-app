@@ -13,6 +13,7 @@ class DraftParticipant < ApplicationRecord
   has_many :cube_cards, :through => :participant_picks
 
   scope :ordered, -> { order(:draft_position) }
+  scope :reversed, -> { order(:draft_position, :desc) }
 
   def pick_card!(cube_card)
     round = next_pick_round
