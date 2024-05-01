@@ -4,4 +4,5 @@
   <%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
     <p class="h1"><%= @draft.name %></p>
   <% end %>
+  <%= render(PickListComponent.new(@draft)) %>
 <% end %>

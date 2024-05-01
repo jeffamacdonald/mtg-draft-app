@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe DraftParticipant do
-  describe '#pick_card' do
+  describe '#pick_card!' do
     let(:cube) { create :cube }
     let(:draft) { create :draft, cube: cube }
     let(:cube_card) { create :cube_card, cube: cube }
@@ -11,7 +11,7 @@ RSpec.describe DraftParticipant do
     end
     let!(:participant_14) { create :draft_participant, draft: draft, draft_position: 14 }
 
-    subject { participant_1.pick_card(cube_card.id) }
+    subject { participant_1.pick_card!(cube_card) }
 
     context 'when no cards are picked yet' do
       it 'picks card at round 1 pick 1' do

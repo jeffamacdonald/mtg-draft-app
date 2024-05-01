@@ -11,6 +11,9 @@ class ParticipantPick < ApplicationRecord
   delegate :card, :to => :cube_card
   validate :availability
 
+  scope :for_round, ->(round) { where(round: round) }
+  scope :ordered, -> { order(:pick_number) }
+
   private
 
   def availability
