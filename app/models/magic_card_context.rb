@@ -20,8 +20,18 @@ class MagicCardContext
   def link_url(cube_card)
     if cube.present?
       edit_cube_card_path(cube_card)
-    elsif draft_participant.skipped? || draft.active_participant == draft_participant
+    elsif draft_participant.skipped? || active_participant == draft_participant
       new_participant_pick_path(cube_card_id: cube_card.id, draft_participant_id: draft_participant.id)
     end
+  end
+
+  def picked?(cube_card)
+    draft_participant.present? && draft.card_picked?(cube_card)
+  end
+
+  private
+
+  def active_participant
+    @_active_participant ||= draft.active_participant
   end
 end

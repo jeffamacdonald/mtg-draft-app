@@ -24,7 +24,7 @@ class DraftsController < ApplicationController
 
   def start
     if @draft.status == "pending"
-      @draft.update!(status: "active")
+      @draft.update!(status: "active", active_round: 1)
       @draft.set_participant_positions
       redirect_to draft_path(@draft)
     else

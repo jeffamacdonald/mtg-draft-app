@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_26_233442) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_02_001405) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -72,7 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_26_233442) do
     t.uuid "surrogate_user_id"
     t.string "display_name", null: false
     t.integer "draft_position"
-    t.boolean "skipped"
+    t.boolean "skipped", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["draft_id", "draft_position"], name: "index_draft_participants_on_draft_id_and_draft_position", unique: true
@@ -91,6 +91,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_26_233442) do
     t.string "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "active_round"
     t.index ["cube_id"], name: "index_drafts_on_cube_id"
     t.index ["name"], name: "index_drafts_on_name"
     t.index ["status"], name: "index_drafts_on_status"

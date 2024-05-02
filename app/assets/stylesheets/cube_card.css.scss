@@ -9,6 +9,12 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+.cube_card__img__picked {
+  max-width: 100%;
+  border-radius: 9px;
+  opacity: 0.33;
+}
+
 .cube_card__list_section {
   display: flex;
   flex-direction: column;

@@ -99,7 +99,7 @@ RSpec.describe Draft do
     let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
     let!(:draft_participant_3) { create :draft_participant, draft_id: draft.id, draft_position: 3 }
 
-    subject { draft.active_participant }
+    subject { draft.active_participant_new }
 
     context 'when no picks have been made' do
       it 'draft position one is active drafter' do
@@ -108,6 +108,7 @@ RSpec.describe Draft do
     end
 
     context 'when picks have been made' do
+      let(:draft) { create :draft, active_round: 2 }
       let!(:participant_pick_1) do
         create :participant_pick,
           draft_participant_id: draft_participant_1.id,

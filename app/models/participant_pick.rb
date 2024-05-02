@@ -15,12 +15,26 @@ class ParticipantPick < ApplicationRecord
   scope :for_round, ->(round) { where(round: round) }
   scope :ordered, -> { order(:pick_number) }
 
+  after_save :update_draft_round
+
   private
 
   def availability
     draft.draft_participants.each do |participant|
       unless participant.participant_picks.select { |pick| pick.cube_card_id == cube_card_id }.empty?
         errors.add(:cube_card_id, 'Card Is Not Available')
+      end
+    end
+  end
+
+  def update_draft_round
+    return if pick_number == draft.draft_participants.count * draft.rounds
+
+    if draft.participant_picks.ordered.last == self
+      if pick_number % draft.draft_participants.count == 0
+        draft.update!(active_round: round + 1)
+      else
+        draft.update!(active_round: round)
       end
     end
   end

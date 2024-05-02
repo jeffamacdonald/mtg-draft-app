@@ -4,6 +4,7 @@
 # t.integer :rounds, null: false
 # t.integer :timer_minutes
 # t.string :status, null: false
+# t.integer :active_round
 # t.timestamps null: false
 
 class Draft < ApplicationRecord
@@ -51,36 +52,50 @@ class Draft < ApplicationRecord
     }.to_h
   end
 
-  # TODO: round is not here
-  # def active_participant_new
-  #   last_pick = participant_picks.maximum(:pick_number).to_i
-  #   ordered_participants.where(skipped: false).joins(:participant_picks).find_by("participant_picks.pick_number <= ?", last_pick - (round * draft_participants.count))
-  # end
+  def active_participant
+    if active_round == 1
+      first_round_active_participant
+    elsif last_pick_number % draft_participants.count == 0
+      edge_case_active_participant
+    else
+      standard_active_participant
+    end
+  end
 
-  def active_participant(skipped = 0)
-    last_pick = participant_picks.maximum(:pick_number).to_i + skipped
-    if last_pick == 0
-      return draft_participants.find_by(draft_position: 1)
-    end
-    draft_participants.find do |drafter|
-      if drafter.next_pick_number == last_pick + 1
-        if drafter.skipped?
-          active_drafter = active_participant(skipped + 1)
-        else
-          active_drafter = drafter
-        end
-        break active_drafter
-      end
-    end
+  def card_picked?(cube_card)
+    participant_picks.where(cube_card: cube_card).exists?
   end
 
   private
 
+  def last_pick_number
+    participant_picks.maximum(:pick_number)
+  end
+
+  def standard_active_participant
+    ordered_participants.find do |participant|
+      participant.participant_picks.ordered.last.pick_number < last_pick_number
+    end
+  end
+
+  def first_round_active_participant
+    ordered_participants
+      .left_outer_joins(:participant_picks)
+      .where(participant_picks: { id: nil })
+      .first
+  end
+
+  def edge_case_active_participant
+    ordered_participants.find do |participant|
+      participant.participant_picks.ordered.last.pick_number <= last_pick_number
+    end
+  end
+
   def ordered_participants
-    if round.odd?
-      draft_participants.ordered
+    if active_round.odd?
+      draft_participants.unskipped.ordered
     else
-      draft_participants.reversed
+      draft_participants.unskipped.reversed
     end
   end
 end
