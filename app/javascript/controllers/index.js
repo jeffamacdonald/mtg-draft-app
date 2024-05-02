@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import DelayedRemovalController from "./delayed_removal_controller"
+application.register("delayed-removal", DelayedRemovalController)
+
 import FilterableController from "./filterable_controller"
 application.register("filterable", FilterableController)
 
