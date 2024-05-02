@@ -54,7 +54,7 @@ module Import
 
     def create_new_cards!(scryfall_cards)
       scryfall_cards.each do |scryfall_card|
-        return if ::Card.where(name: scryfall_card.name).exists?
+        next if ::Card.where(name: scryfall_card.name).exists?
 
         scryfall_card.create_card!
       end
