@@ -63,3 +63,6 @@ Once you are attached to the container, when you hit the breakpoint the applicat
 ### Using the rails console
 
 Sometimes you'll just want to execute some ruby code inside the context of the application. To do that you need to enter the rails console. Run `docker-compose exec web rails c`.
+
+## Deployment
+TBD - look into Kamal and DigitalOcean droplets
