@@ -72,9 +72,17 @@ class Draft < ApplicationRecord
     participant_picks.maximum(:pick_number)
   end
 
+  def current_pick_number
+    num = last_pick_number + 1
+    while skipped_participants.any? { |participant| participant.next_pick_number == num }
+      num += 1
+    end
+    num
+  end
+
   def standard_active_participant
     ordered_participants.find do |participant|
-      participant.participant_picks.ordered.last.pick_number < last_pick_number
+      participant.next_pick_number == current_pick_number
     end
   end
 
@@ -97,5 +105,9 @@ class Draft < ApplicationRecord
     else
       draft_participants.unskipped.reversed
     end
+  end
+
+  def skipped_participants
+    draft_participants.skipped
   end
 end

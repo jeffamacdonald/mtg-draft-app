@@ -13,6 +13,7 @@ class DraftParticipant < ApplicationRecord
   has_many :cube_cards, :through => :participant_picks
 
   scope :unskipped, -> { where(skipped: false) }
+  scope :skipped, -> { where(skipped: true) }
   scope :ordered, -> { order(:draft_position) }
   scope :reversed, -> { order(draft_position: :desc) }
 
