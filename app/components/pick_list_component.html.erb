@@ -13,8 +13,9 @@
         <% draft.rounds.times do |idx| %>
           <tr>
             <% draft.draft_participants.ordered.each do |participant| %>
-              <td>
-                <%= pick_for_round_and_participant(idx + 1, participant)&.name || "--" %>
+              <% pick = pick_for_round_and_participant(idx + 1, participant) %>
+              <td class="<%= pick_classes(pick) %>">
+                <%= pick&.name || "--" %>
               </td>
             <% end %>
           </tr>

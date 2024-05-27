@@ -22,6 +22,24 @@ class Card
       end.join(" ")
     end
 
+    def background_class
+      if colorless?
+        "bg-gray"
+      elsif land?
+        "bg-peach"
+      elsif color_identities.count > 1
+        "bg-gold"
+      else
+        "bg-#{COLOR_IDENTITIES[color_identities.first]}"
+      end
+    end
+
+    def text_class
+      if black? && color_identities.count == 1
+        "text-white"
+      end
+    end
+
     def land?
       color_identities == ["L"]
     end

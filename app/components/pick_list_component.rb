@@ -20,7 +20,25 @@ class PickListComponent < ViewComponent::Base
 
   def active_participant_class(participant)
     if context.active_participant == participant
-      "bg-success"
+      "bg-cyan"
     end
+  end
+
+  def pick_classes(pick)
+    "#{pick_bg_class(pick)} #{pick_text_class(pick)}"
+  end
+
+  private
+
+  def pick_bg_class(pick)
+    return if pick.blank?
+
+    pick.color_identity.background_class
+  end
+
+  def pick_text_class(pick)
+    return if pick.blank?
+
+    pick.color_identity.text_class
   end
 end

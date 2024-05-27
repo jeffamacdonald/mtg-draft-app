@@ -8,7 +8,7 @@ class ParticipantPick < ApplicationRecord
   belongs_to :draft_participant
   belongs_to :cube_card
   delegate :draft, to: :draft_participant
-  delegate :card, to: :cube_card
+  delegate :card, :color_identity, to: :cube_card
   delegate :name, to: :card
   validate :availability
 
