@@ -211,6 +211,7 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.2.1)
+    redis (4.8.1)
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
@@ -301,6 +302,7 @@ DEPENDENCIES
   pg_search
   puma (~> 5.0)
   rails (~> 7.0.1)
+  redis (~> 4.0)
   rspec-rails
   sassc-rails
   sprockets-rails

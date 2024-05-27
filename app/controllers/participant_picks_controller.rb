@@ -8,6 +8,8 @@ class ParticipantPicksController < ApplicationController
     draft_participant = DraftParticipant.find(create_params[:draft_participant_id])
     cube_card = CubeCard.find(create_params[:cube_card_id])
     draft_participant.pick_card!(cube_card)
+    # ActionCable.server.broadcast(draft_participant.draft, {})
+    DraftChannel.broadcast_to(draft_participant.draft, {})
 
     redirect_to draft_path(draft_participant.draft)
   end
