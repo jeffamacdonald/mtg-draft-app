@@ -29,8 +29,6 @@ class MagicCardContext
     draft_participant.present? && draft.card_picked?(cube_card)
   end
 
-  private
-
   def active_participant
     @_active_participant ||= draft.active_participant
   end

@@ -9,6 +9,7 @@ class DraftsController < ApplicationController
       .with_color(filter_params[:color])
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
+    @context = MagicCardContext.for_active_draft(@draft.draft_participants.find_by(user: current_user))
   end
 
   def edit

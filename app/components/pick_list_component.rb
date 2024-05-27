@@ -1,8 +1,9 @@
 class PickListComponent < ViewComponent::Base
-  attr_reader :draft
+  attr_reader :draft, :context
 
-  def initialize(draft)
+  def initialize(draft:, context:)
     @draft = draft
+    @context = context
   end
 
   def pick_for_round_and_participant(round, participant)
@@ -15,5 +16,11 @@ class PickListComponent < ViewComponent::Base
 
   def round_of_last_pick
     draft.participant_picks.ordered.pluck(&:round).last
+  end
+
+  def active_participant_class(participant)
+    if context.active_participant == participant
+      "bg-success"
+    end
   end
 end
