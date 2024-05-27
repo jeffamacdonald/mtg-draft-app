@@ -4,8 +4,8 @@
 }
 
 .cube_card__img:hover {
-  transition-duration: 1s;
-  transform: scale(2);
+  transition-duration: 0.5s;
+  transform: scale(1.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -13,6 +13,11 @@
   max-width: 100%;
   border-radius: 9px;
   opacity: 0.33;
+}
+
+.cube_card__img__static {
+  max-width: 50%;
+  border-radius: 9px;
 }
 
 .cube_card__list_section {

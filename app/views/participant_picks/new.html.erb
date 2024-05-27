@@ -2,7 +2,7 @@
   <div class="card-header">ARE YOU SURE?</div>
   <%= form_with(model: ParticipantPick.new) do |f| %>
     <div class="pt-3 row justify-content-center">
-      <%= image_tag(@cube_card.image_url, class: "cube_card__img") %>
+      <%= image_tag(@cube_card.image_url, class: "cube_card__img__static") %>
     </div>
     <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
     <%= f.hidden_field :cube_card_id, value: @cube_card.id %>
