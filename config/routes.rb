@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   resources :drafts, only: [:index, :show, :edit, :update, :new, :create] do
     member do
@@ -11,6 +13,7 @@ Rails.application.routes.draw do
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   mount ActionCable.server => '/cable'
+  mount Sidekiq::Web => "/sidekiq"
 
   # Defines the root path route ("/")
   root to: "drafts#index"
