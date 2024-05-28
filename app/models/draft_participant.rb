@@ -20,11 +20,12 @@ class DraftParticipant < ApplicationRecord
   def pick_card!(cube_card)
     round = next_pick_round
     pick_number = calculate_pick_number(round)
-    ParticipantPick.create!(draft_participant: self, cube_card: cube_card,
+    pick = ParticipantPick.create!(draft_participant: self, cube_card: cube_card,
       round: round, pick_number: pick_number)
     if skipped? && draft.participant_picks.maximum(:pick_number) < next_pick_number
       update!(skipped: false)
     end
+    pick
   end
 
   def next_pick_number
