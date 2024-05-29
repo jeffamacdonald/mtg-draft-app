@@ -28,6 +28,7 @@ class DraftParticipant < ApplicationRecord
       end
     else
       draft.update!(last_pick_at: pick.created_at)
+      # TODO: kick off job to skip next drafter in X minutes
     end
     pick
   end

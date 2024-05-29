@@ -19,7 +19,8 @@ export default class extends Controller {
 
     if (secondsRemaining <= 0) {
       clearInterval(this.countdown);
-      this.countdownTarget.innerHTML = "Countdown is over!";
+      this.countdownTarget.innerHTML = "00:00:00";
+      this.countdownTarget.classList.add("text-red")
       return;
     }
 
