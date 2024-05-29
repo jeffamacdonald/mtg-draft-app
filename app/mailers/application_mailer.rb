@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "Never Noid <j.a.macdonald@gmail.com>"
+  default from: "Never Noid <mtgdraftapp@gmail.com>"
   layout "mailer"
 end
