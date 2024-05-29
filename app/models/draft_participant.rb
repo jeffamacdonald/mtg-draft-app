@@ -28,8 +28,7 @@ class DraftParticipant < ApplicationRecord
       end
     else
       draft.update!(last_pick_at: pick.created_at)
-      # TODO investigate weirdness around skipped drafters picking here
-      draft.enqueue_skip_job(self)
+      draft.enqueue_skip_job(draft.reload.active_participant)
     end
     pick
   end
