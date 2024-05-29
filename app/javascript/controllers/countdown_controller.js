@@ -30,11 +30,11 @@ export default class extends Controller {
 
     const hours = Math.floor(
       (secondsRemaining % secondsPerDay) / secondsPerHour
-    );
+    ).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
     const minutes = Math.floor(
       (secondsRemaining % secondsPerHour) / secondsPerMinute
-    );
-    const seconds = Math.floor(secondsRemaining % secondsPerMinute);
+    ).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+    const seconds = Math.floor(secondsRemaining % secondsPerMinute).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
 
     this.countdownTarget.innerHTML = `${hours}:${minutes}:${seconds}`;
   }

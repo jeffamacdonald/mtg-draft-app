@@ -28,7 +28,8 @@ class DraftParticipant < ApplicationRecord
       end
     else
       draft.update!(last_pick_at: pick.created_at)
-      # TODO: kick off job to skip next drafter in X minutes
+      # TODO investigate weirdness around skipped drafters picking here
+      draft.enqueue_skip_job(self)
     end
     pick
   end
@@ -37,10 +38,25 @@ class DraftParticipant < ApplicationRecord
     calculate_pick_number(next_pick_round)
   end
 
+  def edge_case?
+    draft_position == 1 || draft_position == draft.draft_participants.count
+  end
+
+  def last_pick
+    participant_picks.reload.last
+  end
+
+  def all_pick_numbers
+    pick_numbers = []
+    draft.rounds.times do |i|
+      pick_numbers << calculate_pick_number(i + 1)
+    end
+    pick_numbers
+  end
+
   private
 
   def next_pick_round
-    last_pick = participant_picks.reload.last
     last_pick.nil? ? 1 : last_pick.round + 1
   end
 

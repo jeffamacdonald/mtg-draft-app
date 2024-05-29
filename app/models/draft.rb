@@ -79,11 +79,21 @@ class Draft < ApplicationRecord
     timer_minutes.present? && last_pick.present? && last_pick.round > 2
   end
 
+  def enqueue_skip_job(draft_participant)
+    if timer_live?
+      SkipActiveParticipantJob.set(wait: timer_seconds).perform_later(self, draft_participant, last_pick_number)
+    end
+  end
+
   private
+
+  def timer_seconds
+    timer_minutes * 60
+  end
 
   def current_pick_number
     num = last_pick_number + 1
-    while skipped_participants.any? { |participant| participant.next_pick_number == num }
+    while skipped_participants.any? { |participant| participant.all_pick_numbers.include?(num) }
       num += 1
     end
     num
