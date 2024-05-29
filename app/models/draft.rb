@@ -5,6 +5,7 @@
 # t.integer :timer_minutes
 # t.string :status, null: false
 # t.integer :active_round
+# t.datetime :last_pick_at
 # t.timestamps null: false
 
 class Draft < ApplicationRecord
@@ -66,11 +67,19 @@ class Draft < ApplicationRecord
     participant_picks.where(cube_card: cube_card).exists?
   end
 
-  private
+  def last_pick
+    participant_picks.order(created_at: :desc).first
+  end
 
   def last_pick_number
     participant_picks.maximum(:pick_number)
   end
+
+  def timer_live?
+    timer_minutes.present? && last_pick.present? && last_pick.round > 2
+  end
+
+  private
 
   def current_pick_number
     num = last_pick_number + 1

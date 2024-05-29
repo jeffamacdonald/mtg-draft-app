@@ -1,0 +1,7 @@
+<%= render(DisplayCardComponent.new(width: :xs, classes: "mb-2")) do %>
+  <%= content_tag(:h1, "", data: {
+    controller: "countdown",
+    countdown_target: "countdown",
+    seconds_until_end_value: seconds_until_timer_end
+  }) %>
+<% end %>

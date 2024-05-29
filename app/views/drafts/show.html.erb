@@ -5,6 +5,7 @@
     <%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
       <p class="h1"><%= @draft.name %></p>
     <% end %>
+    <%= render(TimerComponent.new(draft: @draft)) %>
     <%= render(PickListComponent.new(draft: @draft, context: @context)) %>
     <%= render(CubeFiltersComponent.new(url: draft_path(@draft), filter_params: filter_params)) %>
     <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: @context)) %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_02_001405) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_29_054220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -92,6 +92,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_02_001405) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "active_round"
+    t.datetime "last_pick_at"
     t.index ["cube_id"], name: "index_drafts_on_cube_id"
     t.index ["name"], name: "index_drafts_on_name"
     t.index ["status"], name: "index_drafts_on_status"

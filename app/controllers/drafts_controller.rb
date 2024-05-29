@@ -42,6 +42,7 @@ class DraftsController < ApplicationController
       @draft = Draft.create(
         name: create_params[:name],
         rounds: create_params[:rounds],
+        timer_minutes: create_params[:timer_minutes],
         cube: Cube.find(create_params[:cube_id]),
         owner: current_user,
         status: DraftStatus.pending
@@ -63,7 +64,8 @@ class DraftsController < ApplicationController
     params.require(:draft).permit(
       :name,
       :rounds,
-      :cube_id
+      :cube_id,
+      :timer_minutes
     )
   end
 

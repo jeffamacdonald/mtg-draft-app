@@ -4,6 +4,7 @@ class DisplayCardComponent < ViewComponent::Base
   attr_reader :classes
 
   WIDTHS = {
+    xs: "col-md-2",
     sm: "col-md-4",
     md: "col-md-6",
     lg: "col-md-8",

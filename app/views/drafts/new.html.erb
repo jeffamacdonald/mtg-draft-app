@@ -12,6 +12,10 @@
           <%= f.text_field :rounds, class: "d-block" %>
         </div>
         <div class="col-12">
+          <%= f.label :timer_minutes, "Pick Timer in Minutes", class: "fw-bold" %>
+          <%= f.number_field :timer_minutes, class: "d-block" %>
+        </div>
+        <div class="col-12">
           <%= f.label :cube_id, "Cube", class: "fw-bold" %>
           <%= f.collection_select :cube_id, Cube.where(owner: current_user).order(:name), :id, :name, {}, {class: "d-block"} %>
         </div>
