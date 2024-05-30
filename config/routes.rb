@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :cube_cards, only: [:edit, :update, :destroy]
   resources :draft_participants, only: [:new, :create]
   resources :participant_picks, only: [:new, :create]
-  devise_for :users
+  devise_for :users, :controllers => { registrations: "users/registrations" }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   mount ActionCable.server => '/cable'
   authenticate :user, lambda { |u| u.admin? } do
