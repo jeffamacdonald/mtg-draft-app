@@ -28,6 +28,7 @@ export default class extends Controller {
     const secondsPerHour = 3600;
     const secondsPerMinute = 60;
 
+    const days = Math.floor(secondsRemaining / secondsPerDay);
     const hours = Math.floor(
       (secondsRemaining % secondsPerDay) / secondsPerHour
     ).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
@@ -36,6 +37,12 @@ export default class extends Controller {
     ).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
     const seconds = Math.floor(secondsRemaining % secondsPerMinute).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
 
-    this.countdownTarget.innerHTML = `${hours}:${minutes}:${seconds}`;
+    if (days === 1) {
+      this.countdownTarget.innerHTML = `1 day ${hours}:${minutes}:${seconds}`;
+    } else if (days > 1) {
+      this.countdownTarget.innerHTML = `${days} days ${hours}:${minutes}:${seconds}`;
+    } else {
+      this.countdownTarget.innerHTML = `${hours}:${minutes}:${seconds}`;
+    }
   }
 }

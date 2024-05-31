@@ -57,6 +57,7 @@ gem 'faraday_middleware'
 gem "view_component"
 gem "pg_search"
 gem "sidekiq"
+gem "holidays"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

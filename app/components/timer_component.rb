@@ -16,6 +16,6 @@ class TimerComponent < ViewComponent::Base
   end
 
   def timer_end
-    draft.last_pick_at + draft.timer_minutes.minutes
+    TimerCalculator.new(draft.last_pick_at, draft.timer_minutes).calculate_target_end
   end
 end

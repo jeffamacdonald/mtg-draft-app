@@ -18,39 +18,10 @@ class Draft < ApplicationRecord
 
   scope :pending, -> { where(status: DraftStatus.pending) }
 
-  def create_participants(user_ids)
-    existing_user_ids = draft_participants.map(&:user_id)
-    users = User.find(user_ids.reject{|id| existing_user_ids.include? id})
-    draft_participant_hashes = users.map do |user|
-      {
-        :draft_id => id,
-        :user_id => user.id,
-        :display_name => user.username,
-        :created_at => Time.now,
-        :updated_at => Time.now
-      }
-    end
-    DraftParticipant.insert_all(draft_participant_hashes)
-  end
-
   def set_participant_positions
     draft_participants.shuffle.each.with_index do |participant, i|
       participant.update(draft_position: i + 1)
     end
-  end
-
-  def display_draft
-    self.attributes.merge({
-      :active_participant => self.active_participant
-    })
-  end
-
-  def display_card_pool
-    cube.display_cube.map { |k,v|
-      [k,v.map do |card|
-        card.attributes.merge({:is_drafted => participant_picks.find_by(cube_card_id: card.id).present? })
-      end]
-    }.to_h
   end
 
   def active_participant
@@ -81,14 +52,14 @@ class Draft < ApplicationRecord
 
   def enqueue_skip_job(draft_participant)
     if timer_live?
-      SkipActiveParticipantJob.set(wait: timer_seconds).perform_later(self, draft_participant, last_pick_number)
+      SkipActiveParticipantJob.set(wait: seconds_until_skip).perform_later(self, draft_participant, last_pick_number)
     end
   end
 
   private
 
-  def timer_seconds
-    timer_minutes * 60
+  def seconds_until_skip
+    TimerCalculator.new(last_pick_at, timer_minutes).calculate_target_end.to_i - Time.now.to_i
   end
 
   def current_pick_number
