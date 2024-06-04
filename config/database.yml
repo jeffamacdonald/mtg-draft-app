@@ -93,7 +93,7 @@ production:
   database: mtg_draft_app_production
   username: <%= ENV.fetch('POSTGRES_USERNAME', "postgres") %>
   password: <%= ENV.fetch('POSTGRES_PASSWORD', "postgres") %>
-  host: <%= ENV.fetch("DB_HOST"), "pg" %>
+  host: <%= ENV.fetch("DB_HOST", "pg") %>
   port: <%= ENV.fetch('POSTGRES_PORT', 5432) %>
   # username: mtg_draft_app
   # password: <%= ENV["MTG_DRAFT_APP_DATABASE_PASSWORD"] %>
