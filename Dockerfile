@@ -10,7 +10,8 @@ ENV RAILS_ENV="production" \
     BUNDLE_WITHOUT="development" \
     EMAIL_USERNAME=${EMAIL_USERNAME} \
     EMAIL_PASSWORD==${EMAIL_PASSWORD} \
-    HOSTNAME=${HOSTNAME}
+    HOSTNAME=${HOSTNAME} \
+    SECRET_KEY_BASE=${RAILS_MASTER_KEY}
 
 # Install dependencies
 RUN apk add --no-cache bash \
@@ -39,7 +40,7 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Compile assets
-RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile --trace
+RUN bundle exec rails assets:precompile --trace
 
 # Start the Rails server
 EXPOSE 3000
