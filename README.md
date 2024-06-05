@@ -66,3 +66,8 @@ Sometimes you'll just want to execute some ruby code inside the context of the a
 
 ## Deployment
 TBD - look into Kamal and DigitalOcean droplets
+### DockerHub
+
+To push latest build to dockerhub
+1. docker build -t jeffamacdonald/mtg-draft-app:v0.1 .
+2. docker push jeffamacdonald/mtg-draft-app:v0.1

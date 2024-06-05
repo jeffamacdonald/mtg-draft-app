@@ -42,14 +42,16 @@ Rails.application.configure do
   # config.action_mailer.perform_caching = false
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_options = {from: "mtgdraftapp@gmail.com"}
+  config.action_mailer.default_options = {from: "comms@nevernoid.xyz"}
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-  address:             'smtp.gmail.com',
-  port:                 587,
-  user_name:            Rails.application.credentials.gmail.user_name,
-  password:             Rails.application.credentials.gmail.password,
-  authentication:       'plain',
+  address:             'smtp.zoho.com',
+  port:                 465,
+  user_name:            ENV.fetch("EMAIL_USERNAME"),
+  password:             ENV.fetch("EMAIL_PASSWORD"),
+  authentication:       :login,
+  ssl:                  true,
+  tls:                  true,
   enable_starttls_auto: true }
 
   # Print deprecation notices to the Rails logger.
