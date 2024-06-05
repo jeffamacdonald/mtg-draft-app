@@ -11,7 +11,7 @@ ENV RAILS_ENV="production" \
     EMAIL_USERNAME=${EMAIL_USERNAME} \
     EMAIL_PASSWORD==${EMAIL_PASSWORD} \
     HOSTNAME=${HOSTNAME} \
-    SECRET_KEY_BASE=${RAILS_MASTER_KEY}
+    RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
 
 # Install dependencies
 RUN apk add --no-cache bash \
