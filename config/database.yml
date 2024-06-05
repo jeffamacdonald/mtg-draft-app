@@ -18,14 +18,18 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV["RAILS_MAX_THREADS"] || 5 %>
-  username: <%= ENV.fetch('POSTGRES_USERNAME', "postgres") %>
+  username: <%= ENV.fetch('POSTGRES_USER', "postgres") %>
   password: <%= ENV.fetch('POSTGRES_PASSWORD', "postgres") %>
-  host: pg
+  host: <%= ENV.fetch("DB_HOST", "pg") %>
   port: <%= ENV.fetch('POSTGRES_PORT', 5432) %>
 
 development:
   <<: *default
   database: mtg_draft_app_development
+  username: postgres
+  password: postgres
+  host: pg
+  port: 5432
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -91,9 +95,5 @@ test:
 production:
   <<: *default
   database: mtg_draft_app_production
-  username: <%= ENV.fetch('POSTGRES_USERNAME', "postgres") %>
-  password: <%= ENV.fetch('POSTGRES_PASSWORD', "postgres") %>
-  host: <%= ENV.fetch("DB_HOST", "pg") %>
-  port: <%= ENV.fetch('POSTGRES_PORT', 5432) %>
   # username: mtg_draft_app
   # password: <%= ENV["MTG_DRAFT_APP_DATABASE_PASSWORD"] %>

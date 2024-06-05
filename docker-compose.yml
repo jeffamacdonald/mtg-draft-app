@@ -6,7 +6,7 @@ services:
     ports:
       - 127.0.0.1:${POSTGRES_PORT:-5432}:5432
     environment:
-      - POSTGRES_USERNAME=${POSTGRES_USERNAME:-postgres}
+      - POSTGRES_USERNAME=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
 
   redis:
