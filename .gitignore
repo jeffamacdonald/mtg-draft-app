@@ -39,3 +39,5 @@
 /.env
 
 /Dockerfile.dev
+
+/config/credentials/production.key
