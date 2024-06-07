@@ -15,6 +15,7 @@ servers:
       traefik.http.routers.mtgdraftapp.tls.certresolver: letsencrypt
       traefik.http.routers.mtgdraftapp.tls.domains[0].main: nevernoid.xyz
       traefik.http.routers.mtgdraftapp.tls.domains[0].sans: www.nevernoid.xyz
+      traefik.http.services.mtgdraftapp.loadbalancer.server.port: 3000
     options:
       network: "private"
 
