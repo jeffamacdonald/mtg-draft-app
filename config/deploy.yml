@@ -115,6 +115,7 @@ traefik:
 # Configure a custom healthcheck (default is /up on port 3000)
 healthcheck:
   interval: 10s
+  max_attempts: 10
 #   path: /healthz
 #   port: 4000
 
