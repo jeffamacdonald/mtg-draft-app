@@ -48,19 +48,19 @@ env:
     - REDIS_URL
     - POSTGRES_USER
     - POSTGRES_PASSWORD
-    - EMAIL_USERNAME
-    - EMAIL_PASSWORD
 
 # Use a different ssh user than root
 ssh:
   user: root
 
 # Configure builder setup.
-# builder:
-#   args:
-#     RUBY_VERSION: 3.2.0
-#   secrets:
-#     - GITHUB_TOKEN
+builder:
+  secrets:
+    - RAILS_MASTER_KEY
+    - DB_HOST
+    - REDIS_URL
+    - POSTGRES_USER
+    - POSTGRES_PASSWORD
 #   remote:
 #     arch: amd64
 #     host: ssh://app@192.168.0.1
