@@ -112,7 +112,8 @@ traefik:
     certificatesResolvers.letsencrypt.acme.httpchallenge.entrypoint: web
 
 # Configure a custom healthcheck (default is /up on port 3000)
-# healthcheck:
+healthcheck:
+  interval: 10s
 #   path: /healthz
 #   port: 4000
 
