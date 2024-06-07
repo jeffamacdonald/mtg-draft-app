@@ -17,6 +17,8 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => "/sidekiq"
   end
 
+  get '/up', to: 'health#up'
+
   # Defines the root path route ("/")
   root to: "drafts#index"
 end
