@@ -10,12 +10,12 @@ servers:
     hosts:
       - 165.232.128.212
     labels:
-      traefik.http.routers.mtgdraftapp.rule: "Host(`nevernoid.xyz`) || Host(`www.nevernoid.xyz`)"
-      traefik.http.routers.mtgdraftapp.entrypoints: websecure
-      traefik.http.routers.mtgdraftapp.tls.certresolver: letsencrypt
-      traefik.http.routers.mtgdraftapp.tls.domains[0].main: nevernoid.xyz
-      traefik.http.routers.mtgdraftapp.tls.domains[0].sans: www.nevernoid.xyz
-      traefik.http.services.mtgdraftapp.loadbalancer.server.port: 3000
+      traefik.http.routers.mtg-draft-app.rule: "Host(`nevernoid.xyz`) || Host(`www.nevernoid.xyz`)"
+      traefik.http.routers.mtg-draft-app.entrypoints: websecure
+      traefik.http.routers.mtg-draft-app.tls.certresolver: letsencrypt
+      traefik.http.routers.mtg-draft-app.tls.domains[0].main: nevernoid.xyz
+      traefik.http.routers.mtg-draft-app.tls.domains[0].sans: www.nevernoid.xyz
+      traefik.http.services.mtg-draft-app.loadbalancer.server.port: 3000
     options:
       network: "private"
 
