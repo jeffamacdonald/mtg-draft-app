@@ -11,6 +11,7 @@ ENV RAILS_ENV="production" \
 
 # Install dependencies
 RUN apk add --no-cache bash \
+      curl \
       build-base \
       nodejs \
       postgresql-dev \
