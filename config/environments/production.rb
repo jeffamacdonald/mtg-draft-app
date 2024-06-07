@@ -71,8 +71,8 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
   address:             'smtp.zoho.com',
   port:                 465,
-  user_name:            ENV.fetch("EMAIL_USERNAME"),
-  password:             ENV.fetch("EMAIL_PASSWORD"),
+  user_name:            Rails.application.credentials.zoho.user_name,
+  password:             Rails.application.credentials.zoho.password,
   authentication:       :login,
   ssl:                  true,
   tls:                  true,
@@ -101,8 +101,8 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_cable.url = "ws://#{ENV.fetch("HOSTNAME")}:3000/cable"
+  config.action_cable.url = "ws://165.232.128.212:3000/cable"
   config.action_cable.allowed_request_origins = [/https:\/\/*/]
 
-  config.action_mailer.default_url_options = { host: ENV.fetch("HOSTNAME"), port: 3000 }
+  config.action_mailer.default_url_options = { host: "165.232.128.212", port: 3000 }
 end
