@@ -37,7 +37,6 @@ RUN bundle exec bootsnap precompile app/ lib/
 
 RUN echo $RAILS_ENV
 RUN echo $RAILS_MASTER_KEY
-RUN echo RAILS_MASTER_KEY
 
 # Compile assets
 RUN bundle exec rails assets:precompile --trace
