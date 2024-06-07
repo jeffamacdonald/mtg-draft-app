@@ -35,11 +35,8 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-RUN echo $RAILS_ENV
-RUN echo $RAILS_MASTER_KEY
-
 # Compile assets
-RUN bundle exec rails assets:precompile --trace
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile --trace
 
 # Start the Rails server
 EXPOSE 3000

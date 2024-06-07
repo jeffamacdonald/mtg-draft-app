@@ -42,7 +42,6 @@ env:
     RACK_ENV: production
     RAILS_LOG_TO_STDOUT: true
     RAILS_SERVE_STATIC_FILES: true
-    RAILS_MASTER_KEY: blah
   secret:
     - RAILS_MASTER_KEY
     - DB_HOST
@@ -56,12 +55,10 @@ ssh:
 
 # Configure builder setup.
 # builder:
+#   args:
+#     RUBY_VERSION: 3.2.0
 #   secrets:
-#     - RAILS_MASTER_KEY
-#     - DB_HOST
-#     - REDIS_URL
-#     - POSTGRES_USER
-#     - POSTGRES_PASSWORD
+#     - GITHUB_TOKEN
 #   remote:
 #     arch: amd64
 #     host: ssh://app@192.168.0.1
