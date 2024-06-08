@@ -95,5 +95,5 @@ test:
 production:
   <<: *default
   database: mtg_draft_app_production
-  # username: mtg_draft_app
+  username: mtg_draft_app
   # password: <%= ENV["MTG_DRAFT_APP_DATABASE_PASSWORD"] %>
