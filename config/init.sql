@@ -1,1 +1,0 @@
-CREATE DATABASE mtg_draft_app_production;

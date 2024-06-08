@@ -72,13 +72,10 @@ accessories:
     port: 5432
     env:
       clear:
-        POSTGRES_USER: mtg_draft_app
         POSTGRES_DB: mtg_draft_app_production
       secret:
         - POSTGRES_USER
         - POSTGRES_PASSWORD
-    files:
-      - config/init.sql:/docker-entrypoint-initdb.d/setup.sql
     directories:
       - data:/var/lib/postgresql/data
     options:
