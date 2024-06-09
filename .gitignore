@@ -36,7 +36,7 @@
 /node_modules
 
 /.byebug_history
-/.env
+/.env*
 
 /Dockerfile.dev
 
