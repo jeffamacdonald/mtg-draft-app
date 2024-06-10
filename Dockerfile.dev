@@ -4,6 +4,14 @@ FROM ruby:3.3.0-alpine
 # Set the working directory in the container
 WORKDIR /app
 
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development" \
+    EMAIL_USERNAME=${EMAIL_USERNAME} \
+    EMAIL_PASSWORD==${EMAIL_PASSWORD} \
+    HOSTNAME=${HOSTNAME}
+
 # Install dependencies
 RUN apk add --no-cache bash \
       build-base \
@@ -27,8 +35,12 @@ RUN yarn install
 # Copy the rest of the application code
 COPY . .
 
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
+
 # Compile assets
-RUN bundle exec rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile --trace
 
 # Start the Rails server
-CMD ["rails", "server", "-b", "0.0.0.0"]
+EXPOSE 3000
+CMD ["./bin/rails", "server"]

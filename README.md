@@ -65,9 +65,16 @@ Once you are attached to the container, when you hit the breakpoint the applicat
 Sometimes you'll just want to execute some ruby code inside the context of the application. To do that you need to enter the rails console. Run `docker-compose exec web rails c`.
 
 ## Deployment
-TBD - look into Kamal and DigitalOcean droplets
 ### DockerHub
 
-To push latest build to dockerhub
+To push latest build to dockerhub (kamal deploy will do this itself, but in case you need to push without deploying)
 1. docker build -t jeffamacdonald/mtg-draft-app:v0.1 .
 2. docker push jeffamacdonald/mtg-draft-app:v0.1
+
+### Kamal Deploy
+
+To deploy the application:
+1. Ensure all production environment variables are set in your .env file
+2. Push environment variables to the digital ocean VPS with `kamal env push`
+3. Ensure all changes are commited to the remote repository
+4. Deploy with `kamal deploy`
