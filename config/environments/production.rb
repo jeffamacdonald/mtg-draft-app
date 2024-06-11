@@ -58,7 +58,7 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   config.session_store :redis_store,
-                       url: "redis://165.232.128.212:6379/0/session",
+                       url: "redis://165.232.128.212:6379/1/session",
                        expire_after: 180.days,
                        key: "_app_session",
                        domain: "165.232.128.212",
