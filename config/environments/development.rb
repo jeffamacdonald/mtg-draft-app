@@ -73,16 +73,6 @@ Rails.application.configure do
   config.assets.quiet = true
   config.assets.digest = false
 
-  config.session_store :redis_store,
-                       url: "redis://127.0.0.1:6379/1/session",
-                       expire_after: 180.days,
-                       key: "_app_session_development",
-                       domain: "localhost",
-                       threadsafe: true,
-                       secure: false,
-                       same_site: :lax,
-                       httponly: true
-
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
