@@ -1,4 +1,11 @@
 class CubesController < ApplicationController
+  before_action :log_session_size
+
+  def log_session_size
+    logger.info "Session size: #{session.to_hash.size} bytes"
+    logger.info "Session: #{session.to_hash}"
+  end
+
   def index
     @user_cubes = current_user.cubes
   end
