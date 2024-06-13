@@ -16,7 +16,7 @@ class DckParser
   private
 
   def parse_file
-    File.open(dck_file).each do |line|
+    open_file_content.each do |line|
       count, set, num, name = split_line(line)
       validate_name(name)
       validate_count(count&.to_i, name)
@@ -71,6 +71,15 @@ class DckParser
       name.gsub("//", " // ")
     else
       name
+    end
+  end
+
+  def open_file_content
+    if dck_file.attached?
+      file_path = ActiveStorage::Blob.service.send(:path_for, dck_file.key)
+      File.open(file_path)
+    else
+      raise "No file attached"
     end
   end
 end

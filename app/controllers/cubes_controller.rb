@@ -17,13 +17,15 @@ class CubesController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      import_cards, invalid_records = DckParser.new(create_params[:import_file]).call
+      cube = Cube.create(create_params)
+      file = create_params[:import_file]
+      cube.import_file.attachment.blob.upload(file.tempfile.open)
+      import_cards, invalid_records = DckParser.new(cube.import_file).call
       if invalid_records.present?
         error_messages = invalid_records.map { |record| "#{record.name}: #{record.error_message}"}.join(", ")
         flash[:error] = "Failed to import cube: #{error_messages}"
         redirect_to new_cube_path
       else
-        cube = Cube.new(name: create_params[:name], owner: current_user)
         importer = Import::DckFile.new(import_cards, cube)
         if importer.import
           redirect_to cubes_path
@@ -47,6 +49,6 @@ class CubesController < ApplicationController
     params.require(:cube).permit(
       :name,
       :import_file
-    )
+    ).merge(owner: current_user)
   end
 end
