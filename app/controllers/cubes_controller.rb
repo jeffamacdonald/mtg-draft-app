@@ -1,11 +1,4 @@
 class CubesController < ApplicationController
-  before_action :log_session_size
-
-  def log_session_size
-    logger.info "Session size: #{session.to_hash.size} bytes"
-    logger.info "Session: #{session.to_hash}"
-  end
-
   def index
     @user_cubes = current_user.cubes
   end
@@ -30,7 +23,7 @@ class CubesController < ApplicationController
       import_cards, invalid_records = DckParser.new(cube.import_file).call
       if invalid_records.present?
         error_messages = invalid_records.map { |record| "#{record.name}: #{record.error_message}"}.join(", ")
-        flash[:error] = "Failed to import cube: #{error_messages}"
+        flash[:error] = "Failed to import cube: #{error_messages.truncate_bytes(3000)}"
         redirect_to new_cube_path
       else
         importer = Import::DckFile.new(import_cards, cube)
