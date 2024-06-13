@@ -19,18 +19,31 @@ class CubesController < ApplicationController
     ActiveRecord::Base.transaction do
       cube = Cube.create(create_params)
       file = create_params[:import_file]
+      logger.info "Before attach file: Session size: #{request.session.to_hash.size} bytes"
+      logger.info "Before attach file: Session data: #{request.session.to_hash}"
+
       cube.import_file.attachment.blob.upload(file.tempfile.open)
       import_cards, invalid_records = DckParser.new(cube.import_file).call
       if invalid_records.present?
         error_messages = invalid_records.map { |record| "#{record.name}: #{record.error_message}"}.join(", ")
         flash[:error] = "Failed to import cube: #{error_messages.truncate_bytes(3000)}"
+        logger.info "Invalid records: Session size: #{request.session.to_hash.size} bytes"
+        logger.info "Invalid records: Session data: #{request.session.to_hash}"
+
         redirect_to new_cube_path
       else
         importer = Import::DckFile.new(import_cards, cube)
         if importer.import
+          logger.info "Before redirect: Session size: #{request.session.to_hash.size} bytes"
+          logger.info "Before redirect: Session data: #{request.session.to_hash}"
+
           redirect_to cubes_path
         else
           flash[:error] = importer.errors.join(" ")
+
+          logger.info "Importer errors: Session size: #{request.session.to_hash.size} bytes"
+          logger.info "Importer errors: Session data: #{request.session.to_hash}"
+
           redirect_to new_cube_path
         end
       end
