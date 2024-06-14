@@ -33,7 +33,8 @@ class DckParser
   end
 
   def split_line(line)
-    line.gsub("\n","").gsub("\r","").split(Regexp.union([' [',':','] ']))
+    initial_split = line.gsub("\n","").gsub("\r","").split(Regexp.union([' [','] ']))
+    [initial_split[0], initial_split[1].split(":").first, initial_split[2]]
   end
 
   def valid?(name)
