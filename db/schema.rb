@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_12_124834) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_14_023057) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -79,7 +79,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_12_124834) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["card_id"], name: "index_cube_cards_on_card_id"
-    t.index ["cube_id", "card_id"], name: "index_cube_cards_on_cube_id_and_card_id", unique: true
     t.index ["cube_id"], name: "index_cube_cards_on_cube_id"
     t.index ["custom_color_identity"], name: "index_cube_cards_on_custom_color_identity"
     t.index ["soft_delete"], name: "index_cube_cards_on_soft_delete"

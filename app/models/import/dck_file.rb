@@ -63,30 +63,34 @@ module Import
     def create_cube_cards_from_existing_list!(import_cards)
       import_cards.each do |import_card|
         existing_cube_card = CubeCard.joins(:card).find_by(card: { name: import_card.name }, custom_set: import_card.set)
-        CubeCard.create!(
-          cube: cube,
-          card: existing_cube_card.card,
-          count: import_card.count,
-          custom_image: existing_cube_card.custom_image,
-          custom_cmc: existing_cube_card.cmc,
-          custom_color_identity: existing_cube_card.card.color_identity.color_identities,
-          custom_set: import_card.set
-        )
+        import_card.count.times do
+          CubeCard.create!(
+            cube: cube,
+            card: existing_cube_card.card,
+            count: import_card.count,
+            custom_image: existing_cube_card.custom_image,
+            custom_cmc: existing_cube_card.cmc,
+            custom_color_identity: existing_cube_card.card.color_identity.color_identities,
+            custom_set: import_card.set
+          )
+        end
       end
     end
 
     def create_cube_cards_from_scryfall_list!(scryfall_cards)
       scryfall_cards.each do |scryfall_card|
         existing_card = ::Card.find_by(name: scryfall_card.name)
-        CubeCard.create!(
-          cube: cube,
-          card: existing_card,
-          count: scryfall_card.count,
-          custom_image: scryfall_card.image_uri,
-          custom_cmc: existing_card.cmc,
-          custom_color_identity: existing_card.color_identity.color_identities,
-          custom_set: scryfall_card.set
-        )
+        scryfall_card.count.times do
+          CubeCard.create!(
+            cube: cube,
+            card: existing_card,
+            count: scryfall_card.count,
+            custom_image: scryfall_card.image_uri,
+            custom_cmc: existing_card.cmc,
+            custom_color_identity: existing_card.color_identity.color_identities,
+            custom_set: scryfall_card.set
+          )
+        end
       end
     end
   end
