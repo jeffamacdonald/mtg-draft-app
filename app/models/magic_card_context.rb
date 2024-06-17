@@ -1,7 +1,7 @@
 class MagicCardContext
   include Rails.application.routes.url_helpers
 
-  attr_reader :cube, :draft_participant
+  attr_reader :cube, :draft_participant, :participant_picks
   delegate :draft, to: :draft_participant
 
   def self.for_cube(cube)
@@ -15,6 +15,7 @@ class MagicCardContext
   def initialize(cube:, draft_participant:)
     @cube = cube
     @draft_participant = draft_participant
+    @participant_picks = draft&.participant_picks
   end
 
   def link_url(cube_card)
@@ -26,7 +27,7 @@ class MagicCardContext
   end
 
   def picked?(cube_card)
-    draft_participant.present? && draft.card_picked?(cube_card)
+    participant_picks.map(&:cube_card).include? cube_card
   end
 
   def active_participant
