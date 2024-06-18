@@ -11,6 +11,7 @@ class CubesController < ApplicationController
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
     @text_only = filter_params[:text_only] == "1"
+    @is_owner = @cube.owner == current_user
   end
 
   def new

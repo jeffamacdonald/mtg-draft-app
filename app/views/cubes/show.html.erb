@@ -3,5 +3,5 @@
 <% end %>
 <div class="container">
   <%= render(CubeFiltersComponent.new(url: cube_path(@cube), filter_params: filter_params)) %>
-  <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: MagicCardContext.for_cube(@cube, @text_only))) %>
+  <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: MagicCardContext.for_cube(cube: @cube, text_only: @text_only, is_owner: @is_owner))) %>
 </div>
