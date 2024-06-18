@@ -9,7 +9,7 @@ class DraftsController < ApplicationController
       .with_color(filter_params[:color])
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
-    @context = MagicCardContext.for_active_draft(@draft.draft_participants.find_by(user: current_user))
+    @context = MagicCardContext.for_active_draft(@draft.draft_participants.find_by(user: current_user), filter_params[:text_only] == "1")
   end
 
   def edit
@@ -57,7 +57,7 @@ class DraftsController < ApplicationController
   helper_method def filter_params
     return {} unless params[:filters].present?
 
-    params.require(:filters).permit(:cmc, :color, :card_text, :card_type)
+    params.require(:filters).permit(:cmc, :color, :card_text, :card_type, :text_only)
   end
 
   def create_params

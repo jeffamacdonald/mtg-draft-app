@@ -1,4 +1,8 @@
 class CubeCardsController < ApplicationController
+  def show
+    @cube_card = CubeCard.find params[:id]
+  end
+
   def edit
     @cube_card = CubeCard.find params[:id]
   end

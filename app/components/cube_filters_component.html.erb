@@ -1,8 +1,7 @@
 <%= render(DisplayCardComponent.new(width: :xl)) do %>
   <%= form_with url: url, scope: :filters, local: false, method: :get, data: {:controller => "filterable"} do |f| %>
-    <div id="search" class="row pt-1 pb-1">
-      <div class="col-2"></div>
-      <div class="col-3">
+    <div id="search" class="d-flex flex-sm-row flex-column p-2 justify-content-center gap-2">
+      <div class="col-sm-3 flex-fill">
         <%= f.label :card_text do %>
           <div class="fw-bold text-center">
             Card Text
@@ -10,7 +9,7 @@
         <% end %>
         <%= f.text_field :card_text, value: filter_params[:card_text], class: "d-block w-100", data: {action: "input->filterable#search", "filterable-target": "search"} %>
       </div>
-      <div class="col-3">
+      <div class="col-sm-2 flex-fill">
         <%= f.label :card_type do %>
           <div class="fw-bold">
             Card Type
@@ -18,7 +17,7 @@
         <% end %>
         <%= f.text_field :card_type, value: filter_params[:card_type], class: "d-block w-100", data: {action: "input->filterable#search", "filterable-target": "search"} %>
       </div>
-      <div class="col-1">
+      <div class="col-sm-1 flex-fill">
         <%= f.label :cmc do %>
           <div class="fw-bold">
             CMC
@@ -26,7 +25,7 @@
         <% end %>
         <%= f.number_field :cmc, value: filter_params[:cmc], class: "d-block w-100", data: {action: "change->filterable#apply"} %>
       </div>
-      <div class="col-1">
+      <div class="col-sm-1 flex-fill">
         <%= f.label :color do %>
           <div class="fw-bold">
             Color
@@ -34,7 +33,15 @@
         <% end %>
         <%= f.select :color, options_for_select({"any": ""}.merge(Card::ColorIdentity::COLOR_IDENTITIES.invert), selected: filter_params[:color]), {label: "Color"}, class: "d-block w-100", data: {action: "change->filterable#apply"} %>
       </div>
-      <div class="col-2"></div>
+      <%= f.hidden_field :text_only, value: filter_params[:text_only] %>
     </div>
+  <% end %>
+  <%= form_with url: url, scope: :filters, local: false, method: :get do |f| %>
+    <%= f.hidden_field :card_text, value: filter_params[:card_text] %>
+    <%= f.hidden_field :card_type, value: filter_params[:card_type] %>
+    <%= f.hidden_field :cmc, value: filter_params[:cmc] %>
+    <%= f.hidden_field :color, value: filter_params[:color] %>
+    <%= f.hidden_field :text_only, value: switch_view_value %>
+    <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { switch_view_label } %>
   <% end %>
 <% end %>

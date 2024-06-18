@@ -1,0 +1,13 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= render(ButtonComponent.new(classes: "ms-auto", variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+        <div class="text-center"><%= @cube_card.name.upcase %></div>
+        <div class="pt-3 row justify-content-center mb-4">
+          <%= image_tag(@cube_card.image_url, class: "cube_card__img__static") %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

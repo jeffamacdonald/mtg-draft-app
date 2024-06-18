@@ -18,6 +18,14 @@ class MagicCardComponent < ViewComponent::Base
     end
   end
 
+  def text_only_class
+    if context.picked?(cube_card)
+      "text-decoration-line-through"
+    else
+      ""
+    end
+  end
+
   def show_link?
     link_url.present? && !context.picked?(cube_card)
   end

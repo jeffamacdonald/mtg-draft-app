@@ -4,17 +4,18 @@ class MagicCardContext
   attr_reader :cube, :draft_participant
   delegate :draft, to: :draft_participant
 
-  def self.for_cube(cube)
-    new(cube:, draft_participant: nil)
+  def self.for_cube(cube, text_only)
+    new(cube:, draft_participant: nil, text_only:)
   end
 
-  def self.for_active_draft(draft_participant)
-    new(cube: nil, draft_participant:)
+  def self.for_active_draft(draft_participant, text_only)
+    new(cube: nil, draft_participant:, text_only:)
   end
 
-  def initialize(cube:, draft_participant:)
+  def initialize(cube:, draft_participant:, text_only:)
     @cube = cube
     @draft_participant = draft_participant
+    @text_only = text_only
   end
 
   def link_url(cube_card)
@@ -33,5 +34,9 @@ class MagicCardContext
 
   def active_participant
     @_active_participant ||= draft.active_participant
+  end
+
+  def text_only?
+    @text_only
   end
 end

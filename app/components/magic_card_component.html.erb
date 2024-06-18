@@ -1,11 +1,21 @@
 <% if show_link? %>
   <%= link_to link_url, class: "col-md-2" do %>
     <div class="d-flex">
-      <%= image_tag(cube_card.image_url, class: "flex-fill #{css_class}") %>
+      <% if context.text_only? %>
+        <div class="text-start <%= text_only_class %>">
+          <%= cube_card.name %>
+        </div>
+      <% else %>
+        <%= image_tag(cube_card.image_url, class: "flex-fill #{css_class}") %>
+      <% end %>
     </div>
   <% end %>
 <% else %>
   <div class="d-flex col-md-2">
-    <%= image_tag(cube_card.image_url, class: "flex-fill #{css_class}") %>
+    <% if context.text_only? %>
+      <%= render(ButtonComponent.new(url: cube_card_path(cube_card), classes: "text-start #{text_only_class}", variation: :link, data: { turbo_frame: "modal" })) { cube_card.name } %>
+    <% else %>
+      <%= image_tag(cube_card.image_url, class: "flex-fill #{css_class}") %>
+    <% end %>
   </div>
 <% end %>
