@@ -23,4 +23,16 @@
       </ul>
     </section>
   <% end %>
+  <% if @spectator_drafts.present? %>
+    <h4 class="card-title">Drafts You Can Spectate</h4>
+    <section>
+      <ul class="list-unstyled text-center">
+        <% @spectator_drafts.each do |spectator_draft| %>
+          <li>
+            <%= render(ButtonComponent.new(url: draft_path(spectator_draft), variation: :link)) { spectator_draft.name } %>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
 </div>

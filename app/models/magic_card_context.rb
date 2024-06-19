@@ -1,25 +1,27 @@
 class MagicCardContext
   include Rails.application.routes.url_helpers
 
-  attr_reader :cube, :draft_participant
-  delegate :draft, to: :draft_participant
+  attr_reader :cube, :draft_participant, :draft
 
   def self.for_cube(cube:, text_only:, is_owner:)
-    new(cube:, draft_participant: nil, text_only:, is_owner:)
+    new(cube:, draft: nil, draft_participant: nil, text_only:, is_owner:)
   end
 
-  def self.for_active_draft(draft_participant:, text_only:)
-    new(cube: nil, draft_participant:, text_only:, is_owner: true)
+  def self.for_active_draft(draft:, draft_participant:, text_only:)
+    new(cube: nil, draft:, draft_participant:, text_only:, is_owner: true)
   end
 
-  def initialize(cube:, draft_participant:, text_only:, is_owner:)
+  def initialize(cube:, draft:, draft_participant:, text_only:, is_owner:)
     @cube = cube
+    @draft = draft
     @draft_participant = draft_participant
     @text_only = text_only
     @is_owner = is_owner
   end
 
   def link_url(cube_card)
+    return unless cube.present? || draft_participant.present?
+
     if cube.present? && is_owner?
       edit_cube_card_path(cube_card)
     elsif draft_participant.present? && (draft_participant.skipped? || active_participant == draft_participant)
@@ -30,7 +32,7 @@ class MagicCardContext
   end
 
   def picked?(cube_card)
-    return false unless draft_participant.present?
+    return false unless draft.present?
 
     draft.participant_picks.map(&:cube_card).include? cube_card
   end
