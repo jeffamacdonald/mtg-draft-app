@@ -11,6 +11,7 @@ RSpec.describe DckParser do
         f.close
       end
     end
+    let(:cube) { create(:cube) }
     let(:expected_cards) do
       [
         Import::Card.new(count: 1, set: "LEB", name: "Lightning Bolt"),
@@ -21,11 +22,15 @@ RSpec.describe DckParser do
       []
     end
 
+    before do
+      cube.import_file.attach(file.open)
+    end
+
     after do
       file.unlink
     end
 
-    subject { described_class.new(file.path).call }
+    subject { described_class.new(cube.import_file).call }
 
     context 'when file is valid' do
       it 'parses cards' do
