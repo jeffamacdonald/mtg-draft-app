@@ -11,6 +11,8 @@ class DraftParticipant < ApplicationRecord
   belongs_to :user
   has_many :participant_picks
   has_many :cube_cards, :through => :participant_picks
+  has_many :surrogate_draft_participants
+  has_many :surrogate_participants, through: :surrogate_draft_participants
 
   scope :unskipped, -> { where(skipped: false) }
   scope :skipped, -> { where(skipped: true) }

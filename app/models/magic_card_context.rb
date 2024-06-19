@@ -24,6 +24,8 @@ class MagicCardContext
       edit_cube_card_path(cube_card)
     elsif draft_participant.present? && (draft_participant.skipped? || active_participant == draft_participant)
       new_participant_pick_path(cube_card_id: cube_card.id, draft_participant_id: draft_participant.id)
+    elsif draft_participant.present? && active_participant.surrogate_participants.include?(draft_participant)
+      new_participant_pick_path(cube_card_id: cube_card.id, draft_participant_id: active_participant.id)
     end
   end
 

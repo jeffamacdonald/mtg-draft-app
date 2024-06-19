@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_14_023057) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_19_212224) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -138,6 +138,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_14_023057) do
     t.index ["round"], name: "index_participant_picks_on_round"
   end
 
+  create_table "surrogate_draft_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "draft_participant_id"
+    t.uuid "surrogate_participant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["draft_participant_id"], name: "index_surrogate_draft_participants_on_draft_participant_id"
+    t.index ["surrogate_participant_id"], name: "index_surrogate_draft_participants_on_surrogate_participant_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -166,4 +175,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_14_023057) do
   add_foreign_key "drafts", "users"
   add_foreign_key "participant_picks", "cube_cards"
   add_foreign_key "participant_picks", "draft_participants"
+  add_foreign_key "surrogate_draft_participants", "draft_participants"
+  add_foreign_key "surrogate_draft_participants", "draft_participants", column: "surrogate_participant_id"
 end

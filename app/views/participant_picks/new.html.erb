@@ -1,5 +1,8 @@
 <%= render(DisplayCardComponent.new(width: :md)) do %>
   <div class="card-header">ARE YOU SURE?</div>
+  <% if @draft_participant.user != current_user %>
+    <div class="text-danger">Picking for <%= @draft_participant.display_name %></div>
+  <% end %>
   <%= form_with(model: ParticipantPick.new) do |f| %>
     <div class="pt-3 row justify-content-center">
       <%= image_tag(@cube_card.image_url, class: "cube_card__img__static") %>
