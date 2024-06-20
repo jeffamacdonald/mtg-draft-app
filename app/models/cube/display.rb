@@ -58,7 +58,8 @@ class Cube
 
     def sort_land(cube_cards)
       cube_cards&.sort_by do |cube_card|
-        [cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{U}") ? 0 : 1,
+        [cube_card.type_line.split(" ").first == "Land" && cube_card.type_line.split(" ").count > 4 ? 0 : 1,
+        cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{U}") ? 0 : 1,
         cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Island") ? 0 : 1,
         cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{B}") ? 0 : 1,
         cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Swamp") ? 0 : 1,
@@ -79,9 +80,14 @@ class Cube
         cube_card.card_text.include?("{R}") && cube_card.card_text.include?("{G}") ? 0 : 1,
         cube_card.card_text.include?("Mountain") && cube_card.card_text.include?("Forest") ? 0 : 1,
         cube_card.card_text.include?("any color") ? 0 : 1,
+        cube_card.card_text.include?("any type") ? 0 : 1,
         cube_card.card_text.include?("basic land card") ? 0 : 1,
         cube_card.card_text.include?("Add {C}") ? 0 : 1,
-        cube_card.card_text.include?("{T}: Add") ? 0 : 1]
+        cube_card.card_text.include?("{W}") || cube_card.card_text.include?("Plains") ? 0 : 1,
+        cube_card.card_text.include?("{U}") || cube_card.card_text.include?("Island") ? 0 : 1,
+        cube_card.card_text.include?("{B}") || cube_card.card_text.include?("Swamp") ? 0 : 1,
+        cube_card.card_text.include?("{R}") || cube_card.card_text.include?("Mountain") ? 0 : 1,
+        cube_card.card_text.include?("{G}") || cube_card.card_text.include?("Forest") ? 0 : 1]
       end
     end
   end
