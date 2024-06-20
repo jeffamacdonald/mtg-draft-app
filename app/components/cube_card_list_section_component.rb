@@ -15,4 +15,20 @@ class CubeCardListSectionComponent < ViewComponent::Base
       "flex-row"
     end
   end
+
+  def size_class
+    if context.image_size == "lg"
+      "col-md col-6"
+    else
+      "col-md col-3"
+    end
+  end
+
+  def row_size
+    if context.image_size == "sm"
+      8
+    else
+      6
+    end
+  end
 end

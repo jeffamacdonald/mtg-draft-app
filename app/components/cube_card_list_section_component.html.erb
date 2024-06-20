@@ -1,10 +1,18 @@
 <% if cards.present? %>
   <%= render(DisplayCardComponent.new(width: :xl)) do %>
     <div class="card-header fw-bold"><%= title %></div>
-    <div class="d-flex flex-wrap <%= css_class %>">
-      <% cards.each do |cube_card| %>
-        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
-      <% end %>
-    </div>
+    <% cards.each_slice(row_size) do |cube_cards| %>
+      <div class="d-flex flex-wrap <%= css_class %>">
+        <% cube_cards.each do |cube_card| %>
+          <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+        <% end %>
+        <% if cube_cards.size < row_size %>
+          <% (row_size - cube_cards.size).times do %>
+            <div class="<%= size_class %>">
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
