@@ -1,5 +1,5 @@
 <% if show_link? %>
-  <%= link_to link_url, class: "col-md-2" do %>
+  <%= link_to link_url, class: size_class do %>
     <div class="d-flex">
       <% if context.text_only? %>
         <div class="text-start <%= text_only_class %>">
@@ -11,7 +11,7 @@
     </div>
   <% end %>
 <% else %>
-  <div class="d-flex col-md-2">
+  <div class="d-flex <%= size_class %>">
     <% if context.text_only? %>
       <%= render(ButtonComponent.new(url: cube_card_path(cube_card), classes: "text-start #{text_only_class}", variation: :link, data: { turbo_frame: "modal" })) { cube_card.name } %>
     <% else %>

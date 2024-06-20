@@ -1,22 +1,23 @@
 class MagicCardContext
   include Rails.application.routes.url_helpers
 
-  attr_reader :cube, :draft_participant, :draft
+  attr_reader :cube, :draft_participant, :draft, :image_size
 
-  def self.for_cube(cube:, text_only:, is_owner:)
-    new(cube:, draft: nil, draft_participant: nil, text_only:, is_owner:)
+  def self.for_cube(cube:, text_only:, is_owner:, image_size:)
+    new(cube:, draft: nil, draft_participant: nil, text_only:, is_owner:, image_size:)
   end
 
-  def self.for_active_draft(draft:, draft_participant:, text_only:)
-    new(cube: nil, draft:, draft_participant:, text_only:, is_owner: true)
+  def self.for_active_draft(draft:, draft_participant:, text_only:, image_size:)
+    new(cube: nil, draft:, draft_participant:, text_only:, is_owner: true, image_size:)
   end
 
-  def initialize(cube:, draft:, draft_participant:, text_only:, is_owner:)
+  def initialize(cube:, draft:, draft_participant:, text_only:, is_owner:, image_size:)
     @cube = cube
     @draft = draft
     @draft_participant = draft_participant
     @text_only = text_only
     @is_owner = is_owner
+    @image_size = image_size || "lg"
   end
 
   def link_url(cube_card)

@@ -12,6 +12,7 @@ class CubesController < ApplicationController
       .with_card_type_matching(filter_params[:card_type])
     @text_only = filter_params[:text_only] == "1"
     @is_owner = @cube.owner == current_user
+    @image_size = filter_params[:image_size]
   end
 
   def new
@@ -45,7 +46,7 @@ class CubesController < ApplicationController
   helper_method def filter_params
     return {} unless params[:filters].present?
 
-    params.require(:filters).permit(:cmc, :color, :card_text, :card_type, :text_only)
+    params.require(:filters).permit(:cmc, :color, :card_text, :card_type, :text_only, :image_size)
   end
 
   def create_params

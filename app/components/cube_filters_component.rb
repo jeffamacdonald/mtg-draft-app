@@ -10,9 +10,25 @@ class CubeFiltersComponent < ViewComponent::Base
 
   def switch_view_label
     if text_only?
-      "Image View"
+      "Large Image View"
     else
       "Text View"
+    end
+  end
+
+  def image_view_size
+    if filter_params[:image_size] == "sm"
+      "lg"
+    else
+      "sm"
+    end
+  end
+
+  def image_view_label
+    if filter_params[:image_size] == "sm"
+      "Large Image View"
+    else
+      "Small Image View"
     end
   end
 

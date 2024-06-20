@@ -10,6 +10,14 @@ class MagicCardComponent < ViewComponent::Base
     context.link_url(cube_card)
   end
 
+  def size_class
+    if context.image_size == "lg"
+      "col-md-2"
+    else
+      "col-md-1"
+    end
+  end
+
   def css_class
     if context.picked?(cube_card)
       "cube_card__img__picked"

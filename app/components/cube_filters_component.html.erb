@@ -36,12 +36,23 @@
       <%= f.hidden_field :text_only, value: filter_params[:text_only] %>
     </div>
   <% end %>
-  <%= form_with url: url, scope: :filters, local: false, method: :get do |f| %>
-    <%= f.hidden_field :card_text, value: filter_params[:card_text] %>
-    <%= f.hidden_field :card_type, value: filter_params[:card_type] %>
-    <%= f.hidden_field :cmc, value: filter_params[:cmc] %>
-    <%= f.hidden_field :color, value: filter_params[:color] %>
-    <%= f.hidden_field :text_only, value: switch_view_value %>
-    <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { switch_view_label } %>
-  <% end %>
+  <div class="d-flex flex-row justify-content-center gap-2">
+    <%= form_with url: url, scope: :filters, local: false, method: :get do |f| %>
+      <%= f.hidden_field :card_text, value: filter_params[:card_text] %>
+      <%= f.hidden_field :card_type, value: filter_params[:card_type] %>
+      <%= f.hidden_field :cmc, value: filter_params[:cmc] %>
+      <%= f.hidden_field :color, value: filter_params[:color] %>
+      <%= f.hidden_field :text_only, value: switch_view_value %>
+      <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { switch_view_label } %>
+    <% end %>
+    <%= form_with url: url, scope: :filters, local: false, method: :get do |f| %>
+      <%= f.hidden_field :card_text, value: filter_params[:card_text] %>
+      <%= f.hidden_field :card_type, value: filter_params[:card_type] %>
+      <%= f.hidden_field :cmc, value: filter_params[:cmc] %>
+      <%= f.hidden_field :color, value: filter_params[:color] %>
+      <%= f.hidden_field :text_only, value: false %>
+      <%= f.hidden_field :image_size, value: image_view_size %>
+      <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { image_view_label } %>
+    <% end %>
+  </div>
 <% end %>
