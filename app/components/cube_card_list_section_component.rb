@@ -7,4 +7,12 @@ class CubeCardListSectionComponent < ViewComponent::Base
     @cube_section = cube_section
     @context = context
   end
+
+  def css_class
+    if context.text_only?
+      "flex-sm-row flex-column"
+    else
+      "flex-row"
+    end
+  end
 end
