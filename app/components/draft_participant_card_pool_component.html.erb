@@ -1,0 +1,45 @@
+<%= render(DisplayCardComponent.new(width: :xl)) do %>
+  <div class="card-header fw-bold"><%= draft_participant.display_name %>'s Card Pool</div>
+  <div class="d-flex flex-row justify-content-start d-inline-flex ">
+    <div class="flex-column">
+      <% zero_cost_cards.each do |cube_card| %>
+        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+      <% end %>
+    </div>
+    <div class="flex-column">
+      <% one_cost_cards.each do |cube_card| %>
+        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+      <% end %>
+    </div>
+    <div class="flex-column">
+      <% two_cost_cards.each do |cube_card| %>
+        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+      <% end %>
+    </div>
+    <div class="flex-column">
+      <% three_cost_cards.each do |cube_card| %>
+        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+      <% end %>
+    </div>
+    <div class="flex-column">
+      <% four_cost_cards.each do |cube_card| %>
+        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+      <% end %>
+    </div>
+    <div class="flex-column">
+      <% five_cost_cards.each do |cube_card| %>
+        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+      <% end %>
+    </div>
+    <div class="flex-column">
+      <% six_cost_cards.each do |cube_card| %>
+        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+      <% end %>
+    </div>
+    <div class="flex-column">
+      <% seven_plus_cost_cards.each do |cube_card| %>
+        <%= render(MagicCardComponent.new(cube_card: cube_card, context: context)) %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

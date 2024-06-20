@@ -11,6 +11,8 @@ class MagicCardComponent < ViewComponent::Base
   end
 
   def size_class
+    return unless context.image_size.present?
+
     if context.image_size == "lg"
       "col-md col-6"
     else

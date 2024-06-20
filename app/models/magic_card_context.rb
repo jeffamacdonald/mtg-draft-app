@@ -11,13 +11,17 @@ class MagicCardContext
     new(cube: nil, draft:, draft_participant:, text_only:, is_owner: true, image_size:)
   end
 
+  def self.for_view_only
+    new(cube: nil, draft: nil, draft_participant: nil, text_only: nil, is_owner: false, image_size: nil)
+  end
+
   def initialize(cube:, draft:, draft_participant:, text_only:, is_owner:, image_size:)
     @cube = cube
     @draft = draft
     @draft_participant = draft_participant
     @text_only = text_only
     @is_owner = is_owner
-    @image_size = image_size || "lg"
+    @image_size = image_size
   end
 
   def link_url(cube_card)

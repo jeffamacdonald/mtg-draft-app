@@ -18,6 +18,10 @@ class DraftParticipantsController < ApplicationController
     redirect_to draft_path(@draft_participant.draft)
   end
 
+  def picks
+    @draft_participant = DraftParticipant.find(params[:id])
+  end
+
   private
 
   def create_params

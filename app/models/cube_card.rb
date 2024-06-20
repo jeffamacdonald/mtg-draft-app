@@ -30,6 +30,7 @@ class CubeCard < ApplicationRecord
   scope :with_color, ->(color) { where("? = ANY (custom_color_identity)", color) if color.present? }
   scope :with_card_text_matching, ->(card_text) { search_by_card_text(card_text) if card_text.present? }
   scope :with_card_type_matching, ->(card_type) { search_by_card_type(card_type) if card_type.present? }
+  scope :with_cmc_greater_than, -> (cmc) { where("custom_cmc > ?", cmc) }
 
   delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
   delegate_missing_to :card

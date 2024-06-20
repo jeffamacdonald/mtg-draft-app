@@ -1,0 +1,4 @@
+<%= render(DraftParticipantCardPoolComponent.new(draft_participant: @draft_participant)) %>
+<div class="d-flex justify-content-center">
+  <%= button_to("Back", draft_path(@draft_participant.draft), method: :get, class: "btn btn-warning mt-2") %>
+</div>

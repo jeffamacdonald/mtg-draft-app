@@ -12,7 +12,7 @@ class CubesController < ApplicationController
       .with_card_type_matching(filter_params[:card_type])
     @text_only = filter_params[:text_only] == "1"
     @is_owner = @cube.owner == current_user
-    @image_size = filter_params[:image_size]
+    @image_size = filter_params[:image_size] || "lg"
   end
 
   def new

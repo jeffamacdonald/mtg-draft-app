@@ -8,7 +8,11 @@ Rails.application.routes.draw do
   end
   resources :cubes, only: [:index, :show, :edit, :new, :create]
   resources :cube_cards, only: [:show, :edit, :update, :destroy]
-  resources :draft_participants, only: [:new, :create, :edit, :update]
+  resources :draft_participants, only: [:new, :create, :edit, :update] do
+    member do
+      get :picks
+    end
+  end
   resources :surrogate_draft_participants, only: [:new, :create]
   resources :participant_picks, only: [:new, :create]
   devise_for :users, :controllers => { registrations: "users/registrations" }
