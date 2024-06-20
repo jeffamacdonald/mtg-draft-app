@@ -25,7 +25,7 @@ class CubeCard < ApplicationRecord
   }, ignoring: :accents
 
   scope :active, -> { where(soft_delete: false) }
-  scope :sorted, -> { includes(:card).order(:custom_cmc, Arel.sql("cards.type_line LIKE '\%Creature\%' DESC"), "cards.name") }
+  scope :sorted, -> { joins('LEFT OUTER JOIN cards ON cube_cards.card_id = cards.id').order(:custom_cmc, Arel.sql("cards.type_line LIKE '\%Creature\%' DESC"), "cards.name") }
   scope :with_cmc, ->(cmc) { where(custom_cmc: cmc) if cmc.present? }
   scope :with_color, ->(color) { where("? = ANY (custom_color_identity)", color) if color.present? }
   scope :with_card_text_matching, ->(card_text) { search_by_card_text(card_text) if card_text.present? }
