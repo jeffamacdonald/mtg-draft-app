@@ -1,5 +1,5 @@
 <% if cards.present? %>
-  <%= render(DisplayCardComponent.new(width: :xl)) do %>
+  <%= render(DisplayCardComponent.new(width: :xxl)) do %>
     <div class="card-header fw-bold"><%= title %></div>
     <% cards.each_slice(row_size) do |cube_cards| %>
       <div class="d-flex flex-wrap <%= css_class %>">
