@@ -1,0 +1,25 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= form_with(model: SurrogateDraftParticipant.new, data: { controller: "form-redirect", action: "turbo:submit-end->form-redirect#next" }) do |f| %>
+          <div class="modal-header">
+            <h5 class="modal-title">Add Surrogate</h5>
+            <%= render(ButtonComponent.new(variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              Add surrogate drafter to pick for you?
+              <%= f.select :surrogate_participant_id, @available_surrogates.collect { |surrogate| [surrogate.display_name, surrogate.id] }, {label: "Surrogate"} %>
+              <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <%= f.submit "Add", class: "btn btn-primary btn-block" %>
+            <%= render(ButtonComponent.new(url: "#", variation: :secondary, data: { controller: "modal", action: "modal#close"})) {"Cancel"} %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

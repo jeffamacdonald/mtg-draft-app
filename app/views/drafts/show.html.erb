@@ -5,6 +5,11 @@
     <%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
       <p class="h1"><%= @draft.name %></p>
     <% end %>
+    <% if @context.draft_participant.present? %>
+      <div class="d-flex mb-2 justify-content-center">
+        <%= render(ButtonComponent.new(url: edit_draft_participant_path(@context.draft_participant), variation: :primary)) { "Draft Participant Settings" } %>
+      </div>
+    <% end %>
     <%= render(TimerComponent.new(draft: @draft)) %>
     <%= render(PickListComponent.new(draft: @draft, context: @context)) %>
     <%= render(CubeFiltersComponent.new(url: draft_path(@draft), filter_params: filter_params)) %>
