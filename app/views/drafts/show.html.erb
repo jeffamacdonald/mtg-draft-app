@@ -11,7 +11,7 @@
       </div>
     <% end %>
     <%= render(TimerComponent.new(draft: @draft)) %>
-    <div class="d-flex flex-md-row flex-column">
+    <div class="d-flex flex-md-row flex-column w-100">
       <%= render(PickListComponent.new(draft: @draft, context: @context)) %>
       <div class="col-md-2">
         <%= render(DraftChatComponent.new(draft: @draft, draft_chat_messages: @draft_chat_messages)) %>
