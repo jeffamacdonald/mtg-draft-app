@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import ChatController from "./chat_controller"
+application.register("chat", ChatController)
+
 import CountdownController from "./countdown_controller"
 application.register("countdown", CountdownController)
 

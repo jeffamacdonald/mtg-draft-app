@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_19_212224) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_21_195203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -91,6 +91,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_212224) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_cubes_on_name"
     t.index ["user_id"], name: "index_cubes_on_user_id"
+  end
+
+  create_table "draft_chat_messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.uuid "draft_id"
+    t.string "text", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["draft_id"], name: "index_draft_chat_messages_on_draft_id"
+    t.index ["user_id"], name: "index_draft_chat_messages_on_user_id"
   end
 
   create_table "draft_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

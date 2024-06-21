@@ -10,6 +10,7 @@ class DraftsController < ApplicationController
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
     @context = MagicCardContext.for_active_draft(draft: @draft, draft_participant: @draft.draft_participants.find_by(user: current_user), text_only: filter_params[:text_only] == "1", image_size: filter_params[:image_size] || "lg")
+    @draft_chat_messages = @draft.draft_chat_messages.order(created_at: :desc)
   end
 
   def edit

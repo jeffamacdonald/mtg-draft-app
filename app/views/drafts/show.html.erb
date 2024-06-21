@@ -11,7 +11,12 @@
       </div>
     <% end %>
     <%= render(TimerComponent.new(draft: @draft)) %>
-    <%= render(PickListComponent.new(draft: @draft, context: @context)) %>
+    <div class="d-flex flex-row">
+      <%= render(PickListComponent.new(draft: @draft, context: @context)) %>
+      <div class="col-md-2">
+        <%= render(DraftChatComponent.new(draft_chat_messages: @draft_chat_messages)) %>
+      </div>
+    </div>
     <%= render(CubeFiltersComponent.new(url: draft_path(@draft), filter_params: filter_params)) %>
     <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: @context)) %>
   <% end %>
