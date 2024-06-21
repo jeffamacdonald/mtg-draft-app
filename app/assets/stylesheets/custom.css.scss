@@ -20,13 +20,12 @@
   border-radius: 9px;
 }
 
-.cube_card__list_section {
-  display: flex;
-  flex-direction: column;
-  margin: 10px 0px 10px 0px;
+.chat_box {
+  height: 200px;
 }
 
-.cube_card__list_section_cards {
-  display: flex;
-  flex-direction: row;
+@media screen and (min-width:576px) {
+  .chat_box {
+    height: 500px;
+  }
 }

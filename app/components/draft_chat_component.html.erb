@@ -8,7 +8,7 @@
       <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { "Send" } %>
     <% end %>
   </div>
-  <div class="d-flex flex-column bg-white overflow-auto" style="height: 300px;">
+  <div class="d-flex flex-column bg-white overflow-auto chat_box">
     <%= helpers.turbo_stream_from "draft_chat_messages" %>
     <div id="draft_chat_messages">
       <%= render draft_chat_messages %>
