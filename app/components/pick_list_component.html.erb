@@ -4,6 +4,7 @@
     <table class="table table-bordered">
       <thead>
         <tr>
+          <th scope="col" class="fw-bold">Rd</th>
           <% draft.draft_participants.ordered.each do |participant| %>
             <th scope="col" class=<%= active_participant_class(participant) %>>
               <%= render(ButtonComponent.new(url: picks_draft_participant_path(participant), variation: :link)) { participant.display_name } %>
@@ -14,6 +15,7 @@
       <tbody>
         <% draft.rounds.times do |idx| %>
           <tr>
+            <td class="fw-bold"><%= idx + 1 %></td>
             <% draft.draft_participants.ordered.each do |participant| %>
               <% pick = pick_for_round_and_participant(idx + 1, participant) %>
               <td class="<%= pick_classes(pick) %>">

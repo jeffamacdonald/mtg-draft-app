@@ -1,3 +1,3 @@
-<div class="text-start text-wrap">
+<div class="text-start text-wrap <%= current_user == draft_chat_message.user ? "text-primary" : "" %>">
   <span class="fw-bold"><%= draft_chat_message.participant_name %></span>: <%= draft_chat_message.text %>
 </div>
