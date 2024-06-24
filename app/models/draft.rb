@@ -19,6 +19,11 @@ class Draft < ApplicationRecord
 
   scope :pending, -> { where(status: DraftStatus.pending) }
 
+
+
+# TODO: SPECS
+
+
   def set_participant_positions
     draft_participants.shuffle.each.with_index do |participant, i|
       participant.update(draft_position: i + 1)

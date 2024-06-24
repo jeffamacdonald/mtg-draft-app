@@ -35,7 +35,7 @@ class Card
     end
 
     def text_class
-      if black? && color_identities.count == 1
+      if background_class == "bg-black"
         "text-white"
       end
     end

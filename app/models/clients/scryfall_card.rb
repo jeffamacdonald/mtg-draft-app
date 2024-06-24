@@ -17,10 +17,12 @@ module Clients
       )
     end
 
+    private
+
     def parse_color_identity
       if type_line.include? "Land"
         ['L']
-      elsif color_identity.empty?
+      elsif color_identity.blank?
         ['C']
       else
         color_identity
