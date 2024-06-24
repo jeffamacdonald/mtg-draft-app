@@ -11,7 +11,14 @@
   <div class="d-flex flex-column bg-white overflow-auto chat_box">
     <%= helpers.turbo_stream_from "draft_chat_messages" %>
     <div id="draft_chat_messages">
-      <%= render draft_chat_messages %>
+      <% draft_chat_messages.slice_when { |i, j| i.created_at.to_date != j.created_at.to_date }.each do |messages| %>
+        <% unless messages_from_today?(messages) %>
+          <div class="seperator fw-bold">
+            <span><%= messages.first.created_at.strftime("%a, %b %d") %></span>
+          </div>
+        <% end %>
+        <%= render messages %>
+      <% end %>
     </div>
   </div>
 <% end %>

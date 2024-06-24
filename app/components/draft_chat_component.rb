@@ -7,4 +7,8 @@ class DraftChatComponent < ViewComponent::Base
     @draft = draft
     @draft_chat_messages = draft_chat_messages
   end
+
+  def messages_from_today?(messages)
+    messages.first.created_at.to_date == Date.today
+  end
 end
