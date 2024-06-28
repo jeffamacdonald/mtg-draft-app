@@ -19,11 +19,6 @@ class Draft < ApplicationRecord
 
   scope :pending, -> { where(status: DraftStatus.pending) }
 
-
-
-# TODO: SPECS
-
-
   def set_participant_positions
     draft_participants.shuffle.each.with_index do |participant, i|
       participant.update(draft_position: i + 1)
@@ -40,20 +35,12 @@ class Draft < ApplicationRecord
     end
   end
 
-  def card_picked?(cube_card)
-    participant_picks.where(cube_card: cube_card).exists?
-  end
-
-  def last_pick
-    participant_picks.order(created_at: :desc).first
-  end
-
   def last_pick_number
     participant_picks.maximum(:pick_number)
   end
 
   def timer_live?
-    timer_minutes.present? && last_pick.present? && last_pick.round > 2
+    timer_minutes.present? && current_round > 2
   end
 
   def enqueue_skip_job(draft_participant)
@@ -63,6 +50,10 @@ class Draft < ApplicationRecord
   end
 
   private
+
+  def current_round
+    last_pick_number / draft_participants.count + 1
+  end
 
   def seconds_until_skip
     TimerCalculator.new(last_pick_at, timer_minutes).calculate_target_end.to_i - Time.now.to_i

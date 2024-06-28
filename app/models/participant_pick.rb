@@ -29,13 +29,8 @@ class ParticipantPick < ApplicationRecord
 
   def update_draft_round
     return if pick_number == draft.draft_participants.count * draft.rounds
+    return unless draft.participant_picks.ordered.last == self
 
-    if draft.participant_picks.ordered.last == self
-      if pick_number % draft.draft_participants.count == 0
-        draft.update!(active_round: round + 1)
-      else
-        draft.update!(active_round: round)
-      end
-    end
+    draft.update!(active_round: (pick_number / draft.draft_participants.count) + 1)
   end
 end

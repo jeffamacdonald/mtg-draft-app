@@ -7,7 +7,7 @@ class MagicCardComponent < ViewComponent::Base
   end
 
   def link_url
-    context.link_url(cube_card)
+    route_display_card_path(cube_card_id: cube_card.id, draft_id: context.draft&.id)
   end
 
   def size_class
@@ -34,9 +34,5 @@ class MagicCardComponent < ViewComponent::Base
     else
       ""
     end
-  end
-
-  def show_link?
-    link_url.present? && !context.picked?(cube_card)
   end
 end

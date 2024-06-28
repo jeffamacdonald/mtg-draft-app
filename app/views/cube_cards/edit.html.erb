@@ -1,22 +1,29 @@
-<%= render(DisplayCardComponent.new(width: :md)) do %>
-  <div class="card-header">UPDATE <%= @cube_card.name.upcase %></div>
-  <%= form_with(model: @cube_card, local: true) do |f| %>
-    <div class="pt-3 row justify-content-center">
-      <div class="col-6 text-start d-grid gap-2">
-        <div>
-          <%= f.label :custom_color_identity, "Color Identity", class: "fw-bold" %>
-          <%= f.select :custom_color_identity, Card::ColorIdentity::COLOR_IDENTITIES.invert, {}, { multiple: true, class: "form-control" } %>
-        </div>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= render(ButtonComponent.new(classes: "ms-auto", variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+        <div class="text-center">UPDATE <%= @cube_card.name.upcase %></div>
+        <%= form_with(model: @cube_card, local: true) do |f| %>
+          <div class="pt-3 row justify-content-center">
+            <div class="col-6 text-start d-grid gap-2">
+              <div>
+                <%= f.label :custom_color_identity, "Color Identity", class: "fw-bold" %>
+                <%= f.select :custom_color_identity, Card::ColorIdentity::COLOR_IDENTITIES.invert, {}, { multiple: true, class: "form-control" } %>
+              </div>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+            <%= render(ButtonComponent.new(variation: :primary, classes: "col-2 mt-2", data: { turbo: false })) { "Update" } %>
+          </div>
+        <% end %>
+        <%= form_with(url: cube_card_path(@cube_card), method: :delete) do |f| %>
+          <div class="row justify-content-center">
+            <%= render(ButtonComponent.new(variation: :danger, classes: "col-2 mt-2 mb-2", data: { turbo: false })) { "Delete" } %>
+          </div>
+        <% end %>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-12 mt-2">
-        <%= render(ButtonComponent.new(variation: :primary)) { "Update" } %>
-      </div>
-    </div>
-  <% end %>
-  <%= button_to("Delete", cube_card_path(@cube_card), method: :delete, class: "btn btn-danger mt-2") %>
-  <%= button_to("Cancel", cube_path(@cube_card.cube), method: :get, class: "btn btn-warning mt-2") %>
-
-<% end %> 
+  </div>
+<% end %>

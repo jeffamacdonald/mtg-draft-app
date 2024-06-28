@@ -8,6 +8,11 @@ Rails.application.routes.draw do
   end
   resources :cubes, only: [:index, :show, :edit, :new, :create]
   resources :cube_cards, only: [:show, :edit, :update, :destroy]
+  resource :display_card do
+    member do
+      get :route
+    end
+  end
   resources :draft_participants, only: [:new, :create, :edit, :update] do
     member do
       get :picks

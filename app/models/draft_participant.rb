@@ -55,6 +55,10 @@ class DraftParticipant < ApplicationRecord
     pick_numbers
   end
 
+  def can_pick_for?(draft_participant)
+    draft_participant == self || draft_participant.surrogate_participants.include?(self)
+  end
+
   private
 
   def next_pick_round

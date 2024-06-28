@@ -1,19 +1,23 @@
-<%= render(DisplayCardComponent.new(width: :md)) do %>
-  <div class="card-header">ARE YOU SURE?</div>
-  <% if @draft_participant.user != current_user %>
-    <div class="text-danger">Picking for <%= @draft_participant.display_name %></div>
-  <% end %>
-  <%= form_with(model: ParticipantPick.new) do |f| %>
-    <div class="pt-3 row justify-content-center">
-      <%= image_tag(@cube_card.image_url, class: "cube_card__img__static") %>
-    </div>
-    <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
-    <%= f.hidden_field :cube_card_id, value: @cube_card.id %>
-    <div class="row">
-      <div class="col-12">
-        <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { "Pick" } %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= render(ButtonComponent.new(classes: "ms-auto", variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+        <div class="text-center">ARE YOU SURE?</div>
+        <% if @draft_participant.user != current_user %>
+          <div class="text-center text-danger">Picking for <%= @draft_participant.display_name %></div>
+        <% end %>
+        <%= form_with(model: ParticipantPick.new) do |f| %>
+          <div class="pt-3 row justify-content-center">
+            <%= image_tag(@cube_card.image_url, class: "cube_card__img__static") %>
+          </div>
+          <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
+          <%= f.hidden_field :cube_card_id, value: @cube_card.id %>
+          <div class="row justify-content-center">
+            <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2 col-2", data: { turbo: false })) { "Pick" } %>
+          </div>
+        <% end %>
       </div>
     </div>
-  <% end %>
-  <%= button_to("Back", draft_path(@draft_participant.draft), method: :get, class: "btn btn-warning mt-2") %>
+  </div>
 <% end %>

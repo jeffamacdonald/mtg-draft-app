@@ -131,4 +131,70 @@ RSpec.describe DraftParticipant do
       end
     end
   end
+
+  context "#edge_case?" do
+    let(:draft) { create :draft }
+    let!(:first_participant) { create :draft_participant, draft:, draft_position: 1 }
+    let!(:second_participant) { create :draft_participant, draft:, draft_position: 2 }
+    let!(:other_participants) do
+      7.times{ |i| create :draft_participant, draft:, draft_position: i+3 }
+    end
+    let!(:last_participant) { create :draft_participant, draft:, draft_position: 10 }
+
+    context "when participant is first pick" do
+      it "returns true" do
+        expect(first_participant.edge_case?).to eq true
+      end
+    end
+
+    context "when participant is last pick" do
+      it "returns true" do
+        expect(last_participant.edge_case?).to eq true
+      end
+    end
+
+    context "when participant is in the middle" do
+      it "returns false" do
+        expect(second_participant.edge_case?).to eq false
+      end
+    end
+  end
+
+  describe "#all_pick_numbers" do
+    let(:draft) { create :draft, rounds: 10 }
+    let!(:first_participant) { create :draft_participant, draft:, draft_position: 1 }
+    let!(:other_participants) do
+      9.times{ |i| create :draft_participant, draft:, draft_position: i+2 }
+    end
+
+    it "returns all pick numbers for participant" do
+      expect(first_participant.all_pick_numbers).to match_array [1, 20, 21, 40, 41, 60, 61, 80, 81, 100]
+    end
+  end
+
+  describe "#can_pick_for?" do
+    let(:draft) { create :draft }
+    let(:draft_participant) { create :draft_participant, draft: }
+    let(:other_participant) { create :draft_participant, draft: }
+
+    context "when draft participant is self" do
+      it "returns true" do
+        expect(draft_participant.can_pick_for?(draft_participant)).to eq true
+      end
+    end
+
+    context "when draft participant has self as a surrogate" do
+      let!(:surrogate_draft_participant) { create :surrogate_draft_participant, draft_participant: other_participant, surrogate_participant: draft_participant }
+
+      it "returns true" do
+        expect(draft_participant.can_pick_for?(other_participant)).to eq true
+      end
+    end
+
+    context "when draft participant does not have self as a surrogate" do
+      it "returns false" do
+        expect(draft_participant.can_pick_for?(other_participant)).to eq false
+      end
+    end
+  end
 end

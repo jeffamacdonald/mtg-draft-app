@@ -6,6 +6,7 @@ class ButtonComponent < ViewComponent::Base
   VARIATIONS = {
     primary: "#{base_button_classes} btn-primary",
     secondary: "#{base_button_classes} btn-secondary",
+    danger: "#{base_button_classes} btn-danger",
     light: "#{base_button_classes} btn-light",
     dark: "#{base_button_classes} btn-dark",
     link: "#{base_button_classes} btn-link",
