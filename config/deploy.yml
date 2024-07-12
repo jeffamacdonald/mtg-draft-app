@@ -87,6 +87,9 @@ accessories:
     port: 6379
     directories:
       - data:/data
+    volumes:
+      - "./redis.conf:/usr/local/etc/redis/redis.conf"
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     options:
       network: "private"
 
