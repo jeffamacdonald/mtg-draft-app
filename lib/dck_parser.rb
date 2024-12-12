@@ -59,7 +59,7 @@ class DckParser
   end
 
   def validate_set(set, name)
-    if set.blank? || !set.length.between?(3,4)
+    if set.blank? || !set.length.between?(3,5)
       invalid_records << Import::InvalidRecord.new(
         name: "#{name || "N/A"}",
         error_message: "Set Invalid"

@@ -36,7 +36,7 @@ class Draft < ApplicationRecord
   end
 
   def last_pick_number
-    participant_picks.maximum(:pick_number)
+    participant_picks.maximum(:pick_number) || 0
   end
 
   def timer_live?
