@@ -13,7 +13,7 @@ ENV RAILS_ENV="production" \
 RUN apk add --no-cache bash \
       curl \
       build-base \
-      gcomopat \
+      gcompat \
       nodejs \
       postgresql-dev \
       postgresql-client \
