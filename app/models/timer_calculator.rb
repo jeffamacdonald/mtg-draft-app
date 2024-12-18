@@ -1,6 +1,9 @@
 class TimerCalculator
   attr_reader :pick_time, :timer_minutes
 
+  START_TIME = 8
+  END_TIME = 18
+
   def initialize(pick_time, timer_minutes)
     @pick_time = pick_time.in_time_zone("Pacific Time (US & Canada)")
     @timer_minutes = timer_minutes
@@ -18,9 +21,9 @@ class TimerCalculator
 
   def timer_start
     # Can only match first two conditions if today is not day_off?
-    if first_date_time_on_the_clock.hour < 9
+    if first_date_time_on_the_clock.hour < START_TIME
       today_start_time
-    elsif first_date_time_on_the_clock.hour > 16
+    elsif first_date_time_on_the_clock.hour >= END_TIME
       next_available_start_time
     else
       first_date_time_on_the_clock
@@ -28,11 +31,11 @@ class TimerCalculator
   end
 
   def today_start_time
-    start_of_day + 9.hours
+    start_of_day + START_TIME.hours
   end
 
   def day_end_time
-    timer_start.beginning_of_day + 17.hours
+    timer_start.beginning_of_day + END_TIME.hours
   end
 
   def start_of_day
@@ -66,14 +69,14 @@ class TimerCalculator
   def next_date_time_available
     date_time = pick_time
     while day_off?(date_time)
-      # Set to next day at 9am
-      date_time = (date_time + 1.day).beginning_of_day + 9.hours
+      # Set to next day at 8am
+      date_time = (date_time + 1.day).beginning_of_day + START_TIME.hours
     end
     date_time
   end
 
   def next_available_start_time
-    date_time = start_of_day + 33.hours
+    date_time = start_of_day + 24.hours + START_TIME.hours
     while day_off?(date_time)
       date_time += 1.day
     end

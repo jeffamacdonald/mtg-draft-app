@@ -19,7 +19,6 @@ export default class extends Controller {
     });
     if (this.hasSearchTarget) {
       var value = this.searchTarget.value;
-      this.searchTarget.focus();
       this.searchTarget.value = "";
       this.searchTarget.value = value;
     }
