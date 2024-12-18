@@ -25,7 +25,7 @@ RUN apk add --no-cache bash \
 # Install gems
 RUN gem install bundler:2.3.3
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
+RUN bundle install --verbose
 
 # Install yarn
 COPY package.json yarn.lock ./
