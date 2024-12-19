@@ -1,23 +1,25 @@
 <%= render(DisplayCardComponent.new(width: :xl)) do %>
-  <div class="card-header fw-bold">CHAT</div>
-  <div class="form-group">
-    <%= form_with(model: DraftChatMessage.new, remote: true, class: "d-flex flex-column", data: { controller: :chat, action: "turbo:submit-end->chat#clear" } ) do |f| %>
-      <%= f.hidden_field :draft_id, value: draft.id %>
-      <%= f.text_field :text, class: "form-control", autocomplete: 'off' %>
-
-      <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { "Send" } %>
-    <% end %>
-  </div>
-  <div class="d-flex flex-column bg-white overflow-auto chat_box">
-    <%= helpers.turbo_stream_from "draft_chat_messages" %>
-    <div id="draft_chat_messages">
-      <% draft_chat_messages.slice_when { |i, j| i.created_at.to_date != j.created_at.to_date }.each do |messages| %>
-        <% unless messages_from_today?(messages) %>
-          <div class="seperator fw-bold">
-            <span><%= messages.first.created_at.strftime("%a, %b %d") %></span>
-          </div>
+  <div data-controller="chat">
+    <div class="card-header fw-bold">CHAT</div>
+    <div data-chat-target="messages" class="d-flex flex-column align-items-end bg-white overflow-auto chat_box position-relative">
+      <%= helpers.turbo_stream_from "draft_chat_messages" %>
+      <div id="draft_chat_messages">
+        <% draft_chat_messages.sort_by(&:created_at).slice_when { |i, j| i.created_at.to_date != j.created_at.to_date }.each do |messages| %>
+          <% unless messages_from_today?(messages) %>
+            <div class="seperator fw-bold">
+              <span><%= messages.first.created_at.strftime("%a, %b %d") %></span>
+            </div>
+          <% end %>
+          <%= render messages %>
         <% end %>
-        <%= render messages %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form_with(model: DraftChatMessage.new, remote: true, class: "d-flex flex-column", data: { chat_target: "submit", action: "turbo:submit-end->chat#clear" } ) do |f| %>
+        <%= f.hidden_field :draft_id, value: draft.id %>
+        <%= f.text_field :text, class: "form-control", autocomplete: 'off' %>
+
+        <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { "Send" } %>
       <% end %>
     </div>
   </div>

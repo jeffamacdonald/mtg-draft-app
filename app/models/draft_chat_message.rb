@@ -6,7 +6,7 @@
 class DraftChatMessage < ApplicationRecord
   belongs_to :user
   belongs_to :draft
-  after_create_commit { broadcast_prepend_to "draft_chat_messages" }
+  after_create_commit { broadcast_append_to "draft_chat_messages" }
 
   def participant_name
     draft.draft_participants.find_by(user: user)&.display_name || user.username
