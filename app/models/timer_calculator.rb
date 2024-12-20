@@ -76,7 +76,7 @@ class TimerCalculator
   end
 
   def next_available_start_time
-    date_time = start_of_day + 24.hours + START_TIME.hours
+    date_time = pick_time.beginning_of_day + 24.hours + START_TIME.hours
     while day_off?(date_time)
       date_time += 1.day
     end

@@ -44,8 +44,8 @@ RSpec.describe TimerCalculator, type: :model do
 
       context "when pick starts after 5pm" do
         it "target end date time is timer minutes past 8am tomorrow" do
-          # tuesday
-          travel_to Time.new(2024, 05, 7, 19, 00, 00, "-07:00") do
+          # thursday
+          travel_to Time.new(2024, 05, 9, 19, 00, 00, "-07:00") do
             pick_time = Time.zone.now.in_time_zone("Pacific Time (US & Canada)")
             timer_minutes = 120
             expected_end_time = Time.zone.now.in_time_zone("Pacific Time (US & Canada)").beginning_of_day + 1.day + 10.hours
