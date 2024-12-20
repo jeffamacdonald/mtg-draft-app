@@ -6,6 +6,7 @@ export default class extends Controller {
 
   connect() {
     this.secondsUntilEnd = this.countdownTarget.dataset.secondsUntilEndValue;
+    console.log(this.secondsUntilEnd);
 
     const now = new Date().getTime();
     this.endTime = new Date(now + this.secondsUntilEnd * 1000);
@@ -14,10 +15,7 @@ export default class extends Controller {
   }
 
   countdown() {
-    const now = new Date();
-    const secondsRemaining = (this.endTime - now) / 1000;
-
-    if (secondsRemaining <= 0) {
+    if (this.secondsUntilEnd <= 0) {
       clearInterval(this.countdown);
       this.countdownTarget.innerHTML = "00:00:00";
       this.countdownTarget.classList.add("text-red")
@@ -28,14 +26,14 @@ export default class extends Controller {
     const secondsPerHour = 3600;
     const secondsPerMinute = 60;
 
-    const days = Math.floor(secondsRemaining / secondsPerDay);
+    const days = Math.floor(this.secondsUntilEnd / secondsPerDay);
     const hours = Math.floor(
-      (secondsRemaining % secondsPerDay) / secondsPerHour
+      (this.secondsUntilEnd % secondsPerDay) / secondsPerHour
     ).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
     const minutes = Math.floor(
-      (secondsRemaining % secondsPerHour) / secondsPerMinute
+      (this.secondsUntilEnd % secondsPerHour) / secondsPerMinute
     ).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
-    const seconds = Math.floor(secondsRemaining % secondsPerMinute).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+    const seconds = Math.floor(this.secondsUntilEnd % secondsPerMinute).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
 
     if (days === 1) {
       this.countdownTarget.innerHTML = `1 day ${hours}:${minutes}:${seconds}`;
