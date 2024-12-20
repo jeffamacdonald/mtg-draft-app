@@ -3,7 +3,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <%= render(ButtonComponent.new(classes: "ms-auto", variation: :close, data: { controller: "modal", action: "modal#close"})) %>
-        <div class="text-center">UPDATE <%= @cube_card.name.upcase %></div>
+        <div class="text-center"><%= @cube_card.name %></div>
         <%= form_with(model: @cube_card, local: true) do |f| %>
           <div class="pt-3 row justify-content-center">
             <div class="col-6 text-start d-grid gap-2">
