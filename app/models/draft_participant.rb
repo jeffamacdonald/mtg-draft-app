@@ -24,6 +24,7 @@ class DraftParticipant < ApplicationRecord
     pick_number = calculate_pick_number(round)
     pick = ParticipantPick.create!(draft_participant: self, cube_card: cube_card,
       round: round, pick_number: pick_number)
+    DraftChatMessage.create!(participant_pick: pick, user: user, draft: draft, text: "n/a")
     if skipped?
       if draft.last_pick_number < next_pick_number
         update!(skipped: false)

@@ -1,3 +1,7 @@
 <div class="text-start text-wrap">
-  <span class="fw-bold"><%= draft_chat_message.participant_name %></span>: <%= draft_chat_message.text %>
+  <% if draft_chat_message.participant_pick.present? %>
+    <span class="fw-bold text-cyan"><%= "#{draft_chat_message.participant_name} has picked #{draft_chat_message.participant_pick.name}" %></span>
+  <% else %>
+    <span class="fw-bold"><%= draft_chat_message.participant_name %></span>: <%= draft_chat_message.text %>
+  <% end %>
 </div>
