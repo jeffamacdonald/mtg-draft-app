@@ -3,3 +3,6 @@ months:
   - name: Christmas Eve
     regions: [us]
     mday: 24
+  - name: New Years Eve
+    regions: [us]
+    mday: 31
