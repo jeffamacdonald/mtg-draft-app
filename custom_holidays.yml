@@ -1,0 +1,5 @@
+months:
+  12:
+  - name: Christmas Eve
+    regions: [us]
+    mday: 24
