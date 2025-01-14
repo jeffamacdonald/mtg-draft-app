@@ -69,7 +69,7 @@ module Import
             card: existing_cube_card.card,
             count: import_card.count,
             custom_image: existing_cube_card.custom_image,
-            custom_cmc: existing_cube_card.cmc,
+            custom_cmc: existing_cube_card.card.cmc,
             custom_color_identity: existing_cube_card.card.color_identity.color_identities,
             custom_set: import_card.set
           )

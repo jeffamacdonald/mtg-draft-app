@@ -13,14 +13,24 @@
         </tr>
       </thead>
       <tbody>
-        <% draft.rounds.times do |idx| %>
+        <% draft.participant_picks.order(:pick_number).group_by(&:round).each do |round, picks| %>
           <tr>
-            <td class="fw-bold"><%= idx + 1 %></td>
-            <% draft.draft_participants.ordered.each do |participant| %>
-              <% pick = pick_for_round_and_participant(idx + 1, participant) %>
+            <td class="fw-bold"><%= round %></td>
+            <% picks.each do |pick| %>
               <td class="<%= pick_classes(pick) %>">
-                <%= pick&.name || "--" %>
+                <%= pick.name %>
               </td>
+            <% end %>
+            <% (draft.draft_participants.count - (picks.count % draft.draft_participants.count)).times do %>
+              <td>--</td>
+            <% end %>
+          </tr>
+        <% end %>
+        <% draft.rounds_left.times do |idx| %>
+          <tr>
+            <td class="fw-bold"><%= draft.active_round + idx + 1 %></td>
+            <% draft.draft_participants.count.times do %>
+              <td>--</td>
             <% end %>
           </tr>
         <% end %>

@@ -49,6 +49,11 @@ class Draft < ApplicationRecord
     end
   end
 
+  def rounds_left
+    return rounds unless active_round.present?
+    rounds - active_round
+  end
+
   private
 
   def current_round

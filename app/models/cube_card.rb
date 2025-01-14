@@ -33,7 +33,6 @@ class CubeCard < ApplicationRecord
   scope :with_cmc_greater_than, -> (cmc) { where("custom_cmc > ?", cmc) }
 
   delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
-  delegate_missing_to :card
 
   def color_identity
     Card::ColorIdentity.new(custom_color_identity)

@@ -144,14 +144,12 @@ RSpec.describe Import::DckFile do
       end
       let!(:bolt_cube_card) do
         create(:cube_card,
-          name: "Lightning Bolt",
           custom_set: "LEA",
           card: bolt_card
         )
       end
       let!(:bob_cube_card) do
         create(:cube_card,
-          name: "Dark Confidant",
           custom_set: "MMA",
           card: bob_card
         )
@@ -182,7 +180,6 @@ RSpec.describe Import::DckFile do
         end
         let!(:bolt_cube_card) do
           create(:cube_card,
-            name: "Lightning Bolt",
             custom_set: "LEB",
             custom_image: "custom_img",
             card: bolt_card
@@ -190,7 +187,6 @@ RSpec.describe Import::DckFile do
         end
         let!(:bob_cube_card) do
           create(:cube_card,
-            name: "Dark Confidant",
             custom_set: "RAV",
             custom_image: "custom_img",
             card: bob_card

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Cube::Display do
   describe '#sections' do
     let(:cube) { create(:cube) }
-    let(:display) { Cube::Display.new(cube.cube_cards) }
+    let(:display) { Cube::Display.new(cube.cube_cards.joins(:card).select("cube_cards.*", "cards.name", "cards.type_line", "cards.card_text")) }
     let!(:white_card) { create :cube_card, color_identity: ["W"], cube: cube }
     let!(:blue_card) { create :cube_card, color_identity: ["U"], cube: cube }
     let!(:black_card) { create :cube_card, color_identity: ["B"], cube: cube }

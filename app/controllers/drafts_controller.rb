@@ -4,13 +4,26 @@ class DraftsController < ApplicationController
   end
 
   def show
-    @cube_cards = @draft.cube.cube_cards.active.sorted
+    @cube_cards = @draft.cube.cube_cards
+      .select(
+        "cube_cards.*",
+        "cards.name",
+        "cards.type_line",
+        "cards.card_text"
+      )
+      .active.sorted
       .with_cmc(filter_params[:cmc])
       .with_color(filter_params[:color])
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
     @context = MagicCardContext.for_active_draft(draft: @draft, draft_participant: @draft.draft_participants.find_by(user: current_user), text_only: filter_params[:text_only] == "1", image_size: filter_params[:image_size] || "lg")
-    @draft_chat_messages = @draft.draft_chat_messages.order(created_at: :desc)
+    @draft_chat_messages = @draft.draft_chat_messages
+      .joins(:user)
+      .select(
+        "draft_chat_messages.*",
+        "users.username AS username"
+      )
+      .order(created_at: :desc)
   end
 
   def edit

@@ -5,7 +5,14 @@ class CubesController < ApplicationController
 
   def show
     @cube = Cube.find(params[:id])
-    @cube_cards = @cube.cube_cards.active.sorted
+    @cube_cards = @cube.cube_cards
+      .select(
+        "cube_cards.*",
+        "cards.name",
+        "cards.type_line",
+        "cards.card_text"
+      )
+      .active.sorted
       .with_cmc(filter_params[:cmc])
       .with_color(filter_params[:color])
       .with_card_text_matching(filter_params[:card_text])

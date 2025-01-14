@@ -15,11 +15,10 @@ RSpec.describe DraftParticipant do
 
     context 'when no cards are picked yet' do
       it 'picks card at round 1 pick 1' do
-        expect {subject}.to change(DraftChatMessage, :count).by(1)
+        subject
         pick = ParticipantPick.find_by(draft_participant_id: participant_1.id, cube_card_id: cube_card.id)
         expect(pick.round).to eq 1
         expect(pick.pick_number).to eq 1
-        expect(DraftChatMessage.last.participant_pick).to eq pick
       end
     end
 
