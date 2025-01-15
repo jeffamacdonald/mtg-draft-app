@@ -8,7 +8,7 @@ class TimerComponent < ViewComponent::Base
   end
 
   def render?
-    draft.timer_live?
+    draft.timer_live? && draft.active?
   end
 
   def seconds_until_timer_end
