@@ -31,7 +31,7 @@ class DraftParticipant < ApplicationRecord
     else
       draft.update!(last_pick_at: pick.created_at)
       if pick_number == draft.draft_participants.count * draft.rounds
-        draft.update!(status: DraftStatus.completed)
+        draft.completed!
       else
         draft.enqueue_skip_job(draft.reload.active_participant)
       end
