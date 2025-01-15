@@ -100,9 +100,9 @@ class DraftsController < ApplicationController
 
   def set_display_defaults
     if filter_params[:text_only].present? || filter_params[:image_size].present?
-      default_display = filter_params[:text_only] == "1" ? "text" : "image"
-      image_size = filter_params[:image_size] || current_user.default_image_size
-      current_user.update!(default_display: default_display, default_image_size: image_size, secret_key: ENV.fetch("REGISTRATION_SECRET"))
+      current_user.default_display = filter_params[:text_only] == "1" ? "text" : "image"
+      current_user.default_image_size = filter_params[:image_size] || current_user.default_image_size
+      current_user.save!(validate: false)
     end
   end
 end
