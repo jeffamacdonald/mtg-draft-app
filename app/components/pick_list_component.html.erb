@@ -22,7 +22,7 @@
                 <%= pick.name %>
               </td>
             <% end %>
-            <% (draft.draft_participants.count - (draft.draft_participants.count % picks.count)).times do %>
+            <% (draft.draft_participants.count - (draft.draft_participants.count - picks.count)).times do %>
               <td>--</td>
             <% end %>
           </tr>

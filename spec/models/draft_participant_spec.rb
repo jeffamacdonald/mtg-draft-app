@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe DraftParticipant do
   describe '#pick_card!' do
     let(:cube) { create :cube }
-    let(:draft) { create :draft, cube: cube }
+    let(:rounds) { 40 }
+    let(:draft) { create :draft, cube: cube, rounds: rounds }
     let(:cube_card) { create :cube_card, cube: cube }
     let!(:participant_1) { create :draft_participant, draft: draft, draft_position: 1 }
     let!(:other_participants) do
@@ -33,10 +34,24 @@ RSpec.describe DraftParticipant do
       end
 
       it 'picks card at round 2 pick 28' do
+        expect(SkipActiveParticipantJob).to receive(:set).and_call_original
         subject
         pick = ParticipantPick.find_by(draft_participant_id: participant_1.id, cube_card_id: cube_card.id)
         expect(pick.round).to eq 2
         expect(pick.pick_number).to eq 28
+      end
+
+      context "when it is the last pick" do
+        let(:rounds) { 2 }
+
+        it "does not enqueue a skip job and completes the draft" do
+          expect(SkipActiveParticipantJob).not_to receive(:set)
+          subject
+          pick = ParticipantPick.find_by(draft_participant_id: participant_1.id, cube_card_id: cube_card.id)
+          expect(pick.round).to eq 2
+          expect(pick.pick_number).to eq 28
+          expect(draft.reload.status).to eq DraftStatus.completed
+        end
       end
 
       context 'when participant is skipped' do
