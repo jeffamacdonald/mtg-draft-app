@@ -16,12 +16,13 @@
         <% draft.participant_picks.order(:pick_number).group_by(&:round).each do |round, picks| %>
           <tr>
             <td class="fw-bold"><%= round %></td>
-            <% picks.each do |pick| %>
+            <% sorted_picks = picks.first.round % 2 == 0 ? picks.reverse : picks %>
+            <% sorted_picks.each do |pick| %>
               <td class="<%= pick_classes(pick) %>">
                 <%= pick.name %>
               </td>
             <% end %>
-            <% (draft.draft_participants.count - (picks.count % draft.draft_participants.count)).times do %>
+            <% (draft.draft_participants.count - (draft.draft_participants.count % picks.count)).times do %>
               <td>--</td>
             <% end %>
           </tr>
