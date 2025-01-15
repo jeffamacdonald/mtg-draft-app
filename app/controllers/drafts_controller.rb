@@ -1,5 +1,6 @@
 class DraftsController < ApplicationController
   before_action :find_draft, only: [:show, :edit, :update, :start]
+  before_action :set_display_defaults, only: [:show]
   def index
   end
 
@@ -16,7 +17,11 @@ class DraftsController < ApplicationController
       .with_color(filter_params[:color])
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
-    @context = MagicCardContext.for_active_draft(draft: @draft, draft_participant: @draft.draft_participants.find_by(user: current_user), text_only: filter_params[:text_only] == "1", image_size: filter_params[:image_size] || "lg")
+    @context = MagicCardContext.for_active_draft(
+      draft: @draft, 
+      draft_participant: @draft.draft_participants.find_by(user: current_user), 
+      text_only: current_user.default_display == "text", 
+      image_size: current_user.default_image_size)
     @draft_chat_messages = @draft.draft_chat_messages
       .joins(:user)
       .select(
@@ -91,5 +96,13 @@ class DraftsController < ApplicationController
 
   def find_draft
     @draft = Draft.find params[:id]
+  end
+
+  def set_display_defaults
+    if filter_params[:text_only].present? || filter_params[:image_size].present?
+      default_display = filter_params[:text_only] == "1" ? "text" : "image"
+      image_size = filter_params[:image_size] || current_user.default_image_size
+      current_user.update!(default_display: default_display, default_image_size: image_size, secret_key: ENV.fetch("REGISTRATION_SECRET"))
+    end
   end
 end

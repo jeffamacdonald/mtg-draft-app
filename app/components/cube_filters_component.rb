@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class CubeFiltersComponent < ViewComponent::Base
-  attr_reader :url, :filter_params
+  attr_reader :url, :filter_params, :user
 
-  def initialize(url:, filter_params:)
+  def initialize(url:, filter_params:, user:)
     @url = url
     @filter_params = filter_params
+    @user = user
   end
 
   def switch_view_label
@@ -17,7 +18,7 @@ class CubeFiltersComponent < ViewComponent::Base
   end
 
   def image_view_size
-    if filter_params[:image_size] == "sm"
+    if user.default_image_size == "sm"
       "lg"
     else
       "sm"
@@ -25,7 +26,7 @@ class CubeFiltersComponent < ViewComponent::Base
   end
 
   def image_view_label
-    if filter_params[:image_size] == "sm"
+    if user.default_image_size == "sm"
       "Large Image View"
     else
       "Small Image View"
@@ -43,6 +44,6 @@ class CubeFiltersComponent < ViewComponent::Base
   private
 
   def text_only?
-    filter_params[:text_only] == "1"
+    user.default_display == "text"
   end
 end

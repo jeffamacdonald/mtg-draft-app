@@ -17,7 +17,7 @@
         <%= render(DraftChatComponent.new(draft: @draft, draft_chat_messages: @draft_chat_messages)) %>
       </div>
     </div>
-    <%= render(CubeFiltersComponent.new(url: draft_path(@draft), filter_params: filter_params)) %>
+    <%= render(CubeFiltersComponent.new(url: draft_path(@draft), filter_params: filter_params, user: current_user)) %>
     <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: @context)) %>
   <% end %>
 </div>

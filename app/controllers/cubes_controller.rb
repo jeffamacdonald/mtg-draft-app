@@ -1,4 +1,6 @@
 class CubesController < ApplicationController
+  before_action :set_display_defaults, only: [:show]
+
   def index
     @user_cubes = current_user.cubes
   end
@@ -17,8 +19,8 @@ class CubesController < ApplicationController
       .with_color(filter_params[:color])
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
-    @text_only = filter_params[:text_only] == "1"
-    @image_size = filter_params[:image_size] || "lg"
+    @text_only = current_user.default_display == "text" 
+    @image_size = current_user.default_image_size
   end
 
   def new
@@ -60,5 +62,13 @@ class CubesController < ApplicationController
       :name,
       :import_file
     ).merge(owner: current_user)
+  end
+
+  def set_display_defaults
+    if filter_params[:text_only].present? || filter_params[:image_size].present?
+      default_display = filter_params[:text_only] == "1" ? "text" : "image"
+      image_size = filter_params[:image_size] || current_user.default_image_size
+      current_user.update!(default_display: default_display, default_image_size: image_size, secret_key: ENV.fetch("REGISTRATION_SECRET"))
+    end
   end
 end
