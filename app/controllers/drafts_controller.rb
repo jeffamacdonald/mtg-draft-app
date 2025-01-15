@@ -99,10 +99,14 @@ class DraftsController < ApplicationController
   end
 
   def set_display_defaults
+    Rails.logger("checking to set display defaults")
     if filter_params[:text_only].present? || filter_params[:image_size].present?
+      Rails.logger("starting to set display defaults")
       default_display = filter_params[:text_only] == "1" ? "text" : "image"
       image_size = filter_params[:image_size] || current_user.default_image_size
+      Rails.logger("setting default_display: #{default_display}, default_image_size: #{image_size}")
       current_user.update!(default_display: default_display, default_image_size: image_size, secret_key: ENV.fetch("REGISTRATION_SECRET"))
+      Rails.logger("display defaults set")
     end
   end
 end
