@@ -10,9 +10,7 @@ class ParticipantPicksController < ApplicationController
     pick = draft_participant.pick_card!(cube_card)
 
     draft = draft_participant.reload.draft
-
-    # Refresh all browsers
-    DraftChannel.broadcast_to(draft, {})
+    
     # Email next participant
     new_active_participant = draft.active_participant
     if new_active_participant.user != current_user

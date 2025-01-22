@@ -1,23 +1,16 @@
-<div data-controller="draft" data-draft-draft-id-value="<%= @draft.id %>">
-  <% if @draft.status == DraftStatus.pending %>
-    <%= render "pending" %>
-  <% else %>
-    <%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
-      <p class="h1"><%= @draft.name %></p>
-    <% end %>
-    <% if @context.draft_participant.present? %>
-      <div class="d-flex mb-2 justify-content-center">
-        <%= render(ButtonComponent.new(url: edit_draft_participant_path(@context.draft_participant), variation: :primary)) { "Draft Participant Settings" } %>
-      </div>
-    <% end %>
-    <%= render(TimerComponent.new(draft: @draft)) %>
-    <div class="d-flex flex-md-row flex-column w-100">
-      <%= render(PickListComponent.new(draft: @draft, context: @context)) %>
-      <div class="col-md-2">
-        <%= render(DraftChatComponent.new(draft: @draft, draft_chat_messages: @draft_chat_messages)) %>
-      </div>
-    </div>
-    <%= render(CubeFiltersComponent.new(url: draft_path(@draft), filter_params: filter_params, user: current_user)) %>
-    <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: @context)) %>
+<% if @draft.status == DraftStatus.pending %>
+  <%= render "pending" %>
+<% else %>
+  <%= turbo_stream_from current_user %>
+  <%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
+    <p class="h1"><%= @draft.name %></p>
   <% end %>
-</div>
+  <% if @context.draft_participant.present? %>
+    <div class="d-flex mb-2 justify-content-center">
+      <%= render(ButtonComponent.new(url: edit_draft_participant_path(@context.draft_participant), variation: :primary)) { "Draft Participant Settings" } %>
+    </div>
+  <% end %>
+  <div id="draft_<%= @draft.id %>_show_body">
+    <%= render 'drafts/show_body', draft: @draft, context: @context, draft_chat_messages: @draft_chat_messages, filter_params: filter_params, cube_cards: @cube_cards %>
+  </div>
+<% end %>

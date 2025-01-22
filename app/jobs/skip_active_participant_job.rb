@@ -12,8 +12,7 @@ class SkipActiveParticipantJob < ApplicationJob
 
       new_active_participant = draft.reload.active_participant
       PickMailer.skipped_email(draft_participant, new_active_participant.user).deliver_now
-      # Refresh all browsers
-      DraftChannel.broadcast_to(draft, {})
+      Broadcast::DraftUpdateJob.perform_later(draft)
 
       # Enqueue next skip
       draft.enqueue_skip_job(new_active_participant)

@@ -29,7 +29,7 @@ RSpec.describe SkipActiveParticipantJob, type: :job do
       it "skips drafter, updates draft last_pick_at, emails next active participant, broadcasts to draft channel, and enqueues the next skip job" do
         expect(PickMailer).to receive(:skipped_email).with(dp2, dp1.user).and_call_original
         expect_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
-        expect(DraftChannel).to receive(:broadcast_to).with(draft, {})
+        expect(Broadcast::DraftUpdateJob).to receive(:perform_later).with(draft)
         expect(draft).to receive(:enqueue_skip_job).with(dp1)
 
         expect {
@@ -44,7 +44,7 @@ RSpec.describe SkipActiveParticipantJob, type: :job do
         it "increments draft active_round" do
           expect(PickMailer).to receive(:skipped_email).with(dp1, dp2.user).and_call_original
           expect_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
-          expect(DraftChannel).to receive(:broadcast_to).with(draft, {})
+          expect(Broadcast::DraftUpdateJob).to receive(:perform_later).with(draft)
           expect(draft).to receive(:enqueue_skip_job).with(dp2)
 
           expect {
