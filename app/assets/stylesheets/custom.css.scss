@@ -52,3 +52,8 @@
 .seperator > span:after{
     left: 100%;
 }
+
+.small-table, 
+.small-table tbody, .small-table tr , .small-table td, .small-table th  {
+    padding: 0.2rem;
+}

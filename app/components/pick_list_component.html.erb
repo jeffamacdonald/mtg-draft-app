@@ -1,51 +1,53 @@
-<%= render(DisplayCardComponent.new(width: :xxl, classes: "mb-2")) do %>
-  <div class="card-header">PICKS</div>
-  <div class="table-responsive">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th scope="col" class="fw-bold">Rd</th>
-          <% draft.draft_participants.ordered.each do |participant| %>
-            <th scope="col" class=<%= active_participant_class(participant) %>>
-              <%= render(ButtonComponent.new(url: picks_draft_participant_path(participant), variation: :link)) { participant.display_name } %>
-            </th>
+<div id="draft_<%= draft.id %>_pick_list">
+  <%= render(DisplayCardComponent.new(width: :xxl, classes: "mb-2")) do %>
+    <div class="card-header">PICKS</div>
+    <div class="table-responsive fs-6">
+      <table class="small-table table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col" class="fw-bold">Rd</th>
+            <% draft.draft_participants.ordered.each do |participant| %>
+              <th scope="col" class=<%= active_participant_class(participant) %>>
+                <%= render(ButtonComponent.new(url: picks_draft_participant_path(participant), variation: :link)) { participant.display_name } %>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% draft.participant_picks.order(:pick_number).group_by(&:round).each do |round, picks| %>
+            <tr>
+              <td class="fw-bold"><%= round %></td>
+              <% if round % 2 == 0 %>
+                <% (draft.draft_participants.count - picks.count).times do %>
+                  <td>--</td>
+                <% end %>
+                <% picks.reverse.each do |pick| %>
+                  <td class="<%= pick_classes(pick) %>">
+                    <%= pick.name %>
+                  </td>
+                <% end %>
+              <% else %>
+                <% picks.each do |pick| %>
+                  <td class="<%= pick_classes(pick) %>">
+                    <%= pick.name %>
+                  </td>
+                <% end %>
+                <% (draft.draft_participants.count - picks.count).times do %>
+                  <td>--</td>
+                <% end %>
+              <% end %>
+            </tr>
           <% end %>
-        </tr>
-      </thead>
-      <tbody>
-        <% draft.participant_picks.order(:pick_number).group_by(&:round).each do |round, picks| %>
-          <tr>
-            <td class="fw-bold"><%= round %></td>
-            <% if round % 2 == 0 %>
-              <% (draft.draft_participants.count - picks.count).times do %>
+          <% draft.rounds_left.times do |idx| %>
+            <tr>
+              <td class="fw-bold"><%= draft.active_round + idx + 1 %></td>
+              <% draft.draft_participants.count.times do %>
                 <td>--</td>
               <% end %>
-              <% picks.reverse.each do |pick| %>
-                <td class="<%= pick_classes(pick) %>">
-                  <%= pick.name %>
-                </td>
-              <% end %>
-            <% else %>
-              <% picks.each do |pick| %>
-                <td class="<%= pick_classes(pick) %>">
-                  <%= pick.name %>
-                </td>
-              <% end %>
-              <% (draft.draft_participants.count - picks.count).times do %>
-                <td>--</td>
-              <% end %>
-            <% end %>
-          </tr>
-        <% end %>
-        <% draft.rounds_left.times do |idx| %>
-          <tr>
-            <td class="fw-bold"><%= draft.active_round + idx + 1 %></td>
-            <% draft.draft_participants.count.times do %>
-              <td>--</td>
-            <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-<% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
