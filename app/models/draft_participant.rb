@@ -64,6 +64,12 @@ class DraftParticipant < ApplicationRecord
     draft_participant == self || draft_participant.surrogate_participants.include?(self)
   end
 
+  def cardpool
+    cube_cards.map do |cube_card|
+      cube_card.card.name
+    end
+  end
+
   private
 
   def next_pick_round
