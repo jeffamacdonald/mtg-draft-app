@@ -4,6 +4,9 @@
 # t.string :phone
 # t.string   :reset_password_token
 # t.datetime :reset_password_sent_at
+# t.string :default_display, null: false, default: "image"
+# t.string :default_image_size, null: false, default: "lg"
+# t.string :pick_list_size, null: false, default: ""
 # t.timestamps null: false
 
 class User < ApplicationRecord

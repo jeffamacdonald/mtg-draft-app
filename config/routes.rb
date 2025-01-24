@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :drafts, only: [:index, :show, :edit, :update, :new, :create] do
     member do
       post :start
+      post :pick_list_size
     end
   end
   resources :cubes, only: [:index, :show, :edit, :new, :create]

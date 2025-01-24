@@ -1,5 +1,5 @@
 class DraftsController < ApplicationController
-  before_action :find_draft, only: [:show, :edit, :update, :start]
+  before_action :find_draft, only: [:show, :edit, :update, :start, :pick_list_size]
   before_action :set_display_defaults, only: [:show]
   def index
   end
@@ -69,6 +69,11 @@ class DraftsController < ApplicationController
       @draft.draft_participants.create(user: current_user, display_name: current_user.username)
       redirect_to drafts_path
     end
+  end
+
+  def pick_list_size
+    current_user.update!(pick_list_size: params[:text_size], secret_key: ENV.fetch("REGISTRATION_SECRET"))
+    redirect_to draft_path(@draft)
   end
 
   private

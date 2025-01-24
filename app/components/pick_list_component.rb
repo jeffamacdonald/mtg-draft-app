@@ -1,9 +1,10 @@
 class PickListComponent < ViewComponent::Base
-  attr_reader :draft, :context
+  attr_reader :draft, :context, :font_size
 
-  def initialize(draft:, context:)
+  def initialize(draft:, context:, font_size:)
     @draft = draft
     @context = context
+    @font_size = font_size || ""
   end
 
   def pick_for_round_and_participant(round, participant)
