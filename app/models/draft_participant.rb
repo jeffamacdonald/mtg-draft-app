@@ -65,7 +65,7 @@ class DraftParticipant < ApplicationRecord
   end
 
   def cardpool
-    cube_cards.map do |cube_card|
+    cube_cards.sort_by(&:custom_cmc).map do |cube_card|
       cube_card.card.name
     end
   end
