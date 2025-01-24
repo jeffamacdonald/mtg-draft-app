@@ -1,5 +1,6 @@
 class DraftsController < ApplicationController
   before_action :find_draft, only: [:show, :edit, :update, :start, :pick_list_size]
+  before_action :set_context, only: [:show, :pick_list_size]
   before_action :set_display_defaults, only: [:show]
   def index
   end
@@ -17,11 +18,6 @@ class DraftsController < ApplicationController
       .with_color(filter_params[:color])
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
-    @context = MagicCardContext.for_active_draft(
-      draft: @draft, 
-      draft_participant: @draft.draft_participants.find_by(user: current_user), 
-      text_only: current_user.default_display == "text", 
-      image_size: current_user.default_image_size)
     @draft_chat_messages = @draft.draft_chat_messages
       .joins(:user)
       .select(
@@ -73,7 +69,16 @@ class DraftsController < ApplicationController
 
   def pick_list_size
     current_user.update!(pick_list_size: params[:text_size], secret_key: ENV.fetch("REGISTRATION_SECRET"))
-    redirect_to draft_path(@draft)
+    
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "draft_#{@draft.id}_pick_list",
+          render_to_string(PickListComponent.new(draft: @draft, context: @context))
+        )
+      end
+      format.html { redirect_to draft_path(@draft) }
+    end
   end
 
   private
@@ -109,5 +114,13 @@ class DraftsController < ApplicationController
       current_user.default_image_size = filter_params[:image_size] || current_user.default_image_size
       current_user.save!(validate: false)
     end
+  end
+
+  def set_context
+    @context = MagicCardContext.for_active_draft(
+      draft: @draft, 
+      draft_participant: @draft.draft_participants.find_by(user: current_user), 
+      text_only: current_user.default_display == "text", 
+      image_size: current_user.default_image_size)
   end
 end
