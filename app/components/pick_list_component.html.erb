@@ -1,19 +1,25 @@
 <div id="draft_<%= draft.id %>_pick_list">
   <%= render(DisplayCardComponent.new(width: :xxl, classes: "mb-2")) do %>
     <div class="card-header">
-      <div class="position-absolute d-flex flex-row">
-        <div class="fw-bold">Text Size: </div>
-        <div class="px-1">
-          <%= button_to "sm", pick_list_size_draft_path(draft), params: {text_size: "small-text"}, method: :post %>
+      <div class="d-flex flex-row">
+        <div class="col-md-4 col-12 d-flex flex-row">
+          <div class="fw-bold">Text Size: </div>
+          <div class="px-1">
+            <%= button_to "sm", pick_list_size_draft_path(draft), params: {text_size: "small-text"}, method: :post %>
+          </div>
+          <div class="px-1">
+            <%= button_to "med", pick_list_size_draft_path(draft), params: {text_size: "med-text"}, method: :post %>
+          </div>
+          <div class="px-1">
+            <%= button_to "lg", pick_list_size_draft_path(draft), params: {text_size: ""}, method: :post %>
+          </div>
         </div>
-        <div class="px-1">
-          <%= button_to "med", pick_list_size_draft_path(draft), params: {text_size: "med-text"}, method: :post %>
+        <div class="col-md-4 d-md-inline d-none">
+          PICKS
         </div>
-        <div class="px-1">
-          <%= button_to "lg", pick_list_size_draft_path(draft), params: {text_size: ""}, method: :post %>
+        <div class="col-md-4 d-md-inline d-none">
         </div>
       </div>
-      PICKS
     </div>
     <div class="table-responsive fs-6">
       <table class="small-table table table-bordered <%= font_size %>">
