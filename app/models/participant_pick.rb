@@ -3,6 +3,7 @@
 # t.integer :pick_number, null: false
 # t.integer :round, null: false
 # t.string :comment
+# t.boolean :skipped
 # t.timestamps null: false
 
 class ParticipantPick < ApplicationRecord
