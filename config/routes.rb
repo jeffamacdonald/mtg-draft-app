@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     end
   end
   resources :surrogate_draft_participants, only: [:new, :create]
-  resources :participant_picks, only: [:new, :create]
+  resources :participant_picks, only: [:new, :create, :update]
   resources :draft_chat_messages, only: [:create]
   devise_for :users, :controllers => { registrations: "users/registrations" }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

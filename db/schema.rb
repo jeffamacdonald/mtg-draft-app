@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_24_071426) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_29_193348) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -130,7 +130,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_24_071426) do
     t.string "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "active_round"
     t.datetime "last_pick_at"
     t.index ["cube_id"], name: "index_drafts_on_cube_id"
     t.index ["name"], name: "index_drafts_on_name"
@@ -145,6 +144,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_24_071426) do
     t.integer "round", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "comment", default: ""
+    t.boolean "skipped", default: false
     t.index ["cube_card_id"], name: "index_participant_picks_on_cube_card_id"
     t.index ["draft_participant_id"], name: "index_participant_picks_on_draft_participant_id"
     t.index ["round"], name: "index_participant_picks_on_round"

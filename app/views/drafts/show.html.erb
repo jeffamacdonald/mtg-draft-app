@@ -1,3 +1,4 @@
+<%= turbo_stream_from @draft %>
 <% if @draft.status == DraftStatus.pending %>
   <%= render "pending" %>
 <% else %>

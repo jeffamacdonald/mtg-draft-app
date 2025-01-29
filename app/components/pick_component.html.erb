@@ -1,0 +1,39 @@
+<% if participant_pick.cube_card.present? || participant_pick.skipped? %>
+  <td id="participant_pick_<%= participant_pick.id %>" class="<%= pick_classes %>">
+    <%= participant_pick.name || "SKIPPED" %>
+  </td>
+<% else %>
+  <td
+    id="participant_pick_<%= participant_pick.id %>"
+    data-controller="inline-edit"
+    data-inline-edit-value="<%= participant_pick.comment %>"
+    data-action="click->inline-edit#toggleEdit"
+  >
+    <span data-inline-edit-target="text"><%= helpers.auto_link(participant_pick.comment, :html => { :target => '_blank' }) %></span>
+    <form 
+      data-inline-edit-target="form" 
+      action="<%= participant_pick_path(participant_pick) %>" 
+      method="patch" 
+      style="display: none;" 
+      data-turbo-frame="participant_pick_<%= participant_pick.id %>"
+    >
+      <input 
+        type="text" 
+        name="participant_pick[comment]" 
+        value="<%= participant_pick.comment %>" 
+        class="form-control"
+      />
+      <input 
+        type="hidden" 
+        name="_method" 
+        value="patch" 
+      />
+      <input 
+        type="hidden" 
+        name="authenticity_token" 
+        value="<%= form_authenticity_token %>" 
+      />
+      <button type="submit" style="display: none;"></button>
+    </form>
+  </td>
+<% end %>

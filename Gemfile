@@ -53,12 +53,13 @@ gem "sassc-rails"
 # gem "image_processing", "~> 1.2"
 
 gem "devise"
-gem 'faraday'
-gem 'faraday_middleware'
+gem "faraday"
+gem "faraday_middleware"
 gem "view_component"
 gem "pg_search"
 gem "sidekiq"
 gem "holidays"
+gem "rails_autolink"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

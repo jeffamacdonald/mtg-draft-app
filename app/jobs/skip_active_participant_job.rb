@@ -1,21 +1,20 @@
 class SkipActiveParticipantJob < ApplicationJob
   queue_as :default
 
-  def perform(draft, draft_participant, last_pick_number)
-    if draft.active_participant.id == draft_participant.id && draft.last_pick_number == last_pick_number
-      # Increment active round if skipping the last pick in a round
-      if draft_participant.edge_case? && draft_participant.last_pick.pick_number != draft.last_pick_number
-        draft.update!(active_round: [draft.active_round + 1, draft.rounds].min)
-      end
+  def perform(participant_pick)
+    draft = participant_pick.draft
+    if draft.active_pick == participant_pick
+      draft_participant = participant_pick.draft_participant
       draft_participant.update!(skipped: true)
+      participant_pick.update!(skipped: true)
       draft.update!(last_pick_at: draft_participant.reload.updated_at)
-
-      new_active_participant = draft.reload.active_participant
-      PickMailer.skipped_email(draft_participant, new_active_participant.user).deliver_now
+      unless draft_participant == draft.reload.active_participant
+        PickMailer.skipped_email(draft_participant, draft.reload.active_participant.user).deliver_now
+      end
       Broadcast::DraftUpdateJob.perform_later(draft)
 
       # Enqueue next skip
-      draft.enqueue_skip_job(new_active_participant)
+      draft.enqueue_skip_job
     end
   end
 end

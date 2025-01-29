@@ -1,4 +1,4 @@
-<div id="draft_<%= draft.id %>_pick_list">
+<div id="draft_<%= draft.id %>_pick_list" data-turbo-frame>
   <%= render(DisplayCardComponent.new(width: :xxl, classes: "mb-2")) do %>
     <div class="card-header">
       <div class="d-flex flex-row">
@@ -37,32 +37,9 @@
           <% draft.participant_picks.order(:pick_number).group_by(&:round).each do |round, picks| %>
             <tr>
               <td class="fw-bold"><%= round %></td>
-              <% if round % 2 == 0 %>
-                <% (draft.draft_participants.count - picks.count).times do %>
-                  <td>--</td>
-                <% end %>
-                <% picks.reverse.each do |pick| %>
-                  <td class="<%= pick_classes(pick) %>">
-                    <%= pick.name %>
-                  </td>
-                <% end %>
-              <% else %>
-                <% picks.each do |pick| %>
-                  <td class="<%= pick_classes(pick) %>">
-                    <%= pick.name %>
-                  </td>
-                <% end %>
-                <% (draft.draft_participants.count - picks.count).times do %>
-                  <td>--</td>
-                <% end %>
-              <% end %>
-            </tr>
-          <% end %>
-          <% draft.rounds_left.times do |idx| %>
-            <tr>
-              <td class="fw-bold"><%= draft.active_round + idx + 1 %></td>
-              <% draft.draft_participants.count.times do %>
-                <td>--</td>
+              <% sorted_picks = round % 2 == 0 ? picks.reverse : picks %>
+              <% sorted_picks.each do |pick| %>
+                <%= render 'drafts/pick', pick: pick %>
               <% end %>
             </tr>
           <% end %>

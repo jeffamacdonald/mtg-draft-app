@@ -40,8 +40,9 @@ class DraftsController < ApplicationController
 
   def start
     if @draft.status == "pending"
-      @draft.update!(status: "active", active_round: 1)
-      @draft.set_participant_positions
+      @draft.set_participant_positions!
+      @draft.setup_picks!
+      @draft.update!(status: "active")
       redirect_to draft_path(@draft)
     else
       flash[:error] = "Can only start a pending draft."
