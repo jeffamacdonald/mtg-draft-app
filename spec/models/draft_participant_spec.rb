@@ -3,8 +3,7 @@ require 'rails_helper'
 RSpec.describe DraftParticipant do
   describe '#pick_card!' do
     let(:cube) { create :cube }
-    let(:rounds) { 40 }
-    let(:draft) { create :draft, cube: cube, rounds: rounds }
+    let(:draft) { create :draft, cube: cube }
     let(:cube_card) { create :cube_card, cube: cube }
     let!(:participant_1) { create :draft_participant, draft: draft, draft_position: 1 }
     let!(:other_participants) do
@@ -15,83 +14,77 @@ RSpec.describe DraftParticipant do
     subject { participant_1.pick_card!(cube_card) }
 
     context 'when no cards are picked yet' do
-      it 'picks card at round 1 pick 1' do
+      let!(:participant_pick_1) { create :participant_pick, draft_participant: participant_1, cube_card_id: nil, round: 1, pick_number: 1 }
+
+      it 'updates active pick, updates last pick at, enqueues skip job, and broadcasts updates' do
+        allow(participant_1).to receive(:draft).and_return(draft)
+        expect(draft).to receive(:enqueue_skip_job)
+        expect(Broadcast::DraftUpdateJob).to receive(:perform_later).with(draft)
+
         subject
-        pick = ParticipantPick.find_by(draft_participant_id: participant_1.id, cube_card_id: cube_card.id)
-        expect(pick.round).to eq 1
-        expect(pick.pick_number).to eq 1
+        
+        expect(participant_pick_1.reload.cube_card).to eq cube_card
+        expect(draft.reload.last_pick_at).to eq participant_pick_1.updated_at
+      end
+    end
+    
+    context "when it is the last pick" do
+      let!(:old_participant_pick) { create :participant_pick, draft_participant: participant_1, round: draft.rounds - 1, pick_number: 1 }
+      let!(:participant_pick) { create :participant_pick, draft_participant: participant_1, cube_card_id: nil, round: draft.rounds, pick_number: draft.rounds * 14 }
+
+      it "does not enqueue a skip job and completes the draft" do
+        allow(participant_1).to receive(:draft).and_return(draft)
+        expect(draft).not_to receive(:enqueue_skip_job)
+        expect(SkipActiveParticipantJob).not_to receive(:set)
+
+        subject
+
+        expect(participant_pick.reload.cube_card).to eq cube_card
+        expect(draft.reload.status).to eq DraftStatus.completed
       end
     end
 
-    context 'when cards are previously picked' do
-      let(:previous_cube_card) { create :cube_card, cube_id: cube.id }
-      let!(:participant_pick) do
+    context 'when participant is skipped' do
+      let!(:participant_1) { create :draft_participant, draft: draft, draft_position: 1, skipped: true }
+      let!(:participant_pick_1) do
         create :participant_pick,
         draft_participant_id: participant_1.id,
-        cube_card_id: previous_cube_card.id,
+        cube_card_id: nil,
         round: 1,
-        pick_number: 1
+        pick_number: 1,
+        skipped: true
       end
 
-      it 'picks card at round 2 pick 28' do
-        expect(SkipActiveParticipantJob).to receive(:set).and_call_original
+      it 'after pick participant is no longer skipped' do
         subject
-        pick = ParticipantPick.find_by(draft_participant_id: participant_1.id, cube_card_id: cube_card.id)
-        expect(pick.round).to eq 2
-        expect(pick.pick_number).to eq 28
+
+        expect(participant_pick_1.reload.cube_card).to eq cube_card
+        expect(participant_pick_1.skipped).to eq false
+        expect(participant_1.skipped?).to be false
       end
 
-      context "when it is the last pick" do
-        let(:rounds) { 2 }
-
-        it "does not enqueue a skip job and completes the draft" do
-          expect(SkipActiveParticipantJob).not_to receive(:set)
-          subject
-          pick = ParticipantPick.find_by(draft_participant_id: participant_1.id, cube_card_id: cube_card.id)
-          expect(pick.round).to eq 2
-          expect(pick.pick_number).to eq 28
-          expect(draft.reload.status).to eq DraftStatus.completed
+      context 'when participant is behind multiple picks' do
+        let!(:participant_pick_2) do
+          create :participant_pick,
+          draft_participant_id: participant_1.id,
+          cube_card_id: nil,
+          round: 2,
+          pick_number: 28,
+          skipped: true
         end
-      end
-
-      context 'when participant is skipped' do
-        let!(:participant_1) { create :draft_participant, draft: draft, draft_position: 1, skipped: true }
-
-        it 'after pick participant is no longer skipped' do
-          subject
-          expect(participant_1.skipped?).to be false
+        let!(:participant_pick_3) do
+          create :participant_pick,
+          draft_participant_id: participant_14.id,
+          round: 3,
+          pick_number: 42
         end
 
-        context 'when participant is behind multiple picks' do
-          let(:previous_cube_card_1) { create :cube_card, cube_id: cube.id }
-          let(:previous_cube_card_2) { create :cube_card, cube_id: cube.id }
-          let(:previous_cube_card_3) { create :cube_card, cube_id: cube.id }
-          let!(:participant_pick_1) do
-            create :participant_pick,
-            draft_participant_id: participant_14.id,
-            cube_card_id: previous_cube_card_1.id,
-            round: 1,
-            pick_number: 14
-          end
-          let!(:participant_pick_2) do
-            create :participant_pick,
-            draft_participant_id: participant_14.id,
-            cube_card_id: previous_cube_card_2.id,
-            round: 2,
-            pick_number: 15
-          end
-          let!(:participant_pick_3) do
-            create :participant_pick,
-            draft_participant_id: participant_14.id,
-            cube_card_id: previous_cube_card_3.id,
-            round: 3,
-            pick_number: 42
-          end
+        it 'after pick participant is still skipped' do
+          subject
 
-          it 'after pick participant is still skipped' do
-            subject
-            expect(participant_1.skipped?).to be true
-          end
+          expect(participant_pick_1.reload.cube_card).to eq cube_card
+          expect(participant_pick_1.skipped).to eq false
+          expect(participant_1.skipped?).to be true
         end
       end
     end

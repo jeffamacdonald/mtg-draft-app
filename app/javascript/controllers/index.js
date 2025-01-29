@@ -22,5 +22,8 @@ application.register("filterable", FilterableController)
 import FormRedirectController from "./form_redirect_controller"
 application.register("form-redirect", FormRedirectController)
 
+import InlineEditController from "./inline_edit_controller"
+application.register("inline-edit", InlineEditController)
+
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)

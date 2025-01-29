@@ -21,21 +21,22 @@ class DraftParticipant < ApplicationRecord
 
   def pick_card!(cube_card)
     round = next_pick_round
-    pick_number = calculate_pick_number(round)
-    pick = ParticipantPick.create!(draft_participant: self, cube_card: cube_card,
-      round: round, pick_number: pick_number)
+    pick = ParticipantPick.find_by(draft_participant: self,
+      round: round)
+    pick.update!(cube_card: cube_card, skipped: false)
     if skipped?
       if draft.last_pick_number < next_pick_number
         update!(skipped: false)
       end
     else
-      draft.update!(last_pick_at: pick.created_at)
-      if pick_number == draft.draft_participants.count * draft.rounds
+      draft.update!(last_pick_at: pick.updated_at)
+      if pick.pick_number == draft.draft_participants.count * draft.rounds
         draft.completed!
       else
-        draft.enqueue_skip_job(draft.reload.active_participant)
+        draft.enqueue_skip_job
       end
     end
+    
     Broadcast::DraftUpdateJob.perform_later(draft)
     pick
   end
@@ -49,7 +50,7 @@ class DraftParticipant < ApplicationRecord
   end
 
   def last_pick
-    participant_picks.reload.last
+    participant_picks.reload.where.not(cube_card_id: nil).order(:pick_number).last
   end
 
   def all_pick_numbers
@@ -70,12 +71,6 @@ class DraftParticipant < ApplicationRecord
     end
   end
 
-  private
-
-  def next_pick_round
-    last_pick.nil? ? 1 : last_pick.round + 1
-  end
-
   def calculate_pick_number(round)
     total_drafters = draft.draft_participants.count
     if round % 2 == 1
@@ -85,34 +80,9 @@ class DraftParticipant < ApplicationRecord
     end
   end
 
-  # def broadcast_updates
-  #   draft.users.each do |user|
-  #     context = MagicCardContext.for_active_draft(
-  #       draft: draft, 
-  #       draft_participant: draft.draft_participants.find_by(user: user), 
-  #       text_only: user.default_display == "text", 
-  #       image_size: user.default_image_size)
-  #     chat_messages = draft.draft_chat_messages
-  #       .joins(:user)
-  #       .select(
-  #         "draft_chat_messages.*",
-  #         "users.username AS username"
-  #       )
-  #       .order(created_at: :desc)
-  #     cube_cards = draft.cube.cube_cards
-  #       .select(
-  #         "cube_cards.*",
-  #         "cards.name",
-  #         "cards.type_line",
-  #         "cards.card_text"
-  #       )
-  #       .active.sorted
-  #     Turbo::StreamsChannel.broadcast_replace_to(
-  #       user,
-  #       target: "draft_#{draft.id}_show_body",
-  #       partial: "drafts/show_body",
-  #       locals: { draft: draft, context: context, draft_chat_messages: chat_messages, filter_params: {}, cube_cards: cube_cards }
-  #     )
-  #   end
-  # end
+  private
+
+  def next_pick_round
+    last_pick.nil? ? 1 : last_pick.round + 1
+  end
 end
