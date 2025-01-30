@@ -12,6 +12,6 @@
     </div>
   <% end %>
   <div id="draft_<%= @draft.id %>_show_body">
-    <%= render 'drafts/show_body', draft: @draft, context: @context, draft_chat_messages: @draft_chat_messages, filter_params: filter_params, cube_cards: @cube_cards %>
+    <%= render 'drafts/show_body', draft: @draft, context: @context, filter_params: filter_params, cube_cards: @cube_cards %>
   </div>
 <% end %>

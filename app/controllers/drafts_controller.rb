@@ -18,13 +18,6 @@ class DraftsController < ApplicationController
       .with_color(filter_params[:color])
       .with_card_text_matching(filter_params[:card_text])
       .with_card_type_matching(filter_params[:card_type])
-    @draft_chat_messages = @draft.draft_chat_messages
-      .joins(:user)
-      .select(
-        "draft_chat_messages.*",
-        "users.username AS username"
-      )
-      .order(created_at: :desc)
   end
 
   def edit
