@@ -37,7 +37,7 @@ class Draft < ApplicationRecord
   end
 
   def active_participant
-    active_pick.draft_participant
+    active_pick&.draft_participant
   end
 
   def last_pick_number
@@ -66,6 +66,6 @@ class Draft < ApplicationRecord
   end
 
   def active_round
-    active_pick.round
+    active_pick&.round
   end
 end
