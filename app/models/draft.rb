@@ -48,7 +48,7 @@ class Draft < ApplicationRecord
   end
 
   def timer_live?
-    timer_minutes.present? && active_round > 2
+    active? && timer_minutes.present? && active_round > 2
   end
 
   def enqueue_skip_job
@@ -66,6 +66,6 @@ class Draft < ApplicationRecord
   end
 
   def active_round
-    active_pick&.round
+    active_pick.round
   end
 end

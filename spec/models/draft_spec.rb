@@ -231,7 +231,7 @@ RSpec.describe Draft do
 
   describe "#timer_live?" do
     let(:timer_minutes) { nil }
-    let(:draft) { create :draft, timer_minutes: }
+    let(:draft) { create :draft, timer_minutes: timer_minutes, status: DraftStatus.active }
     let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: 1 }
     let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
     let!(:participant_pick_1) do
@@ -293,12 +293,22 @@ RSpec.describe Draft do
         it "returns true" do
           expect(draft.timer_live?).to eq true
         end
+
+        context "when draft is completed" do
+          before do
+            draft.completed!
+          end
+
+          it "returns false" do
+            expect(draft.timer_live?).to eq false
+          end
+        end
       end
     end
   end
 
   describe "#enqueue_skip_job" do
-    let(:draft) { create :draft }
+    let(:draft) { create :draft, status: DraftStatus.active }
     let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: 1 }
     let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
     let!(:participant_pick_1) do
