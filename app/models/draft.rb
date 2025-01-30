@@ -66,6 +66,6 @@ class Draft < ApplicationRecord
   end
 
   def active_round
-    active_pick.round
+    active_pick&.round
   end
 end
