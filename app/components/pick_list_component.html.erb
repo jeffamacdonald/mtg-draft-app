@@ -27,7 +27,7 @@
           <tr>
             <th scope="col" class="fw-bold">Rd</th>
             <% draft.draft_participants.ordered.each do |participant| %>
-              <th scope="col" class=<%= active_participant_class(participant) %>>
+              <th scope="col" class="pick-list-header <%= active_participant_class(participant) %>">
                 <%= render(ButtonComponent.new(url: picks_draft_participant_path(participant), variation: :link, classes: font_size)) { participant.display_name } %>
               </th>
             <% end %>
