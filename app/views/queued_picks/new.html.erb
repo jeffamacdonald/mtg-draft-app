@@ -1,0 +1,21 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= render(ButtonComponent.new(classes: "ms-auto", variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+        <div class="text-center"><%= @cube_card.card.name %></div>
+        <%= form_with(model: QueuedPick.new) do |f| %>
+          <div class="pt-3 row justify-content-center">
+            <%= image_tag(@cube_card.image_url, class: "cube_card__img__static") %>
+          </div>
+          <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
+          <%= f.hidden_field :cube_card_id, value: @cube_card.id %>
+          <%= f.hidden_field :priority_number, value: (@draft_participant.queued_picks.maximum(:priority_number) || 0) + 1 %>
+          <div class="row justify-content-center">
+            <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2 col-4", disabled: @draft_participant.queued_picks.any? { |qp| qp.cube_card_id == @cube_card.id })) { "Add to Queue" } %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

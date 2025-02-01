@@ -4,12 +4,15 @@
 # t.string :display_name, null: false
 # t.integer :draft_position
 # t.boolean :skipped
+# t.boolean :queue_active, null: false, default: true
+# t.integer :queue_minute_delay, null: false, default: 0
 # t.timestamps null: false
 
 class DraftParticipant < ApplicationRecord
   belongs_to :draft
   belongs_to :user
   has_many :participant_picks
+  has_many :queued_picks
   has_many :cube_cards, :through => :participant_picks
   has_many :surrogate_draft_participants
   has_many :surrogate_participants, through: :surrogate_draft_participants
