@@ -15,6 +15,7 @@ RSpec.describe DraftParticipant do
 
     context 'when no cards are picked yet' do
       let!(:participant_pick_1) { create :participant_pick, draft_participant: participant_1, cube_card_id: nil, round: 1, pick_number: 1 }
+      let!(:participant_pick_2) { create :participant_pick, draft_participant: participant_14, cube_card_id: nil, round: 1, pick_number: 2 }
 
       it 'updates active pick, updates last pick at, enqueues skip job, and broadcasts updates' do
         allow(participant_1).to receive(:draft).and_return(draft)

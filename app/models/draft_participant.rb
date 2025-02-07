@@ -37,9 +37,11 @@ class DraftParticipant < ApplicationRecord
         draft.completed!
       else
         draft.enqueue_skip_job
+        draft.active_pick.enqueue_auto_pick_job
       end
     end
     
+    RemoveQueuedPicksJob.perform_later(pick)
     Broadcast::DraftUpdateJob.perform_later(draft)
     pick
   end

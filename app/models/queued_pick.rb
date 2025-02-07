@@ -6,4 +6,14 @@
 class QueuedPick < ApplicationRecord
   belongs_to :draft_participant
   belongs_to :cube_card
+
+  def handle_cube_card_picked!
+    ActiveRecord::Base.transaction do
+      lower_priority_picks = draft_participant.queued_picks.where("priority_number > ?", priority_number).order(:priority_number)
+      lower_priority_picks.each do |qp|
+        qp.update!(priority_number: qp.priority_number - 1)
+      end
+      self.destroy!
+    end
+  end
 end

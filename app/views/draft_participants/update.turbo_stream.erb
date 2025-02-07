@@ -1,0 +1,11 @@
+<turbo-stream action="replace" target="flash">
+  <template>
+    <div id="flash" class="sticky z-50 px-16 rounded-lg top-2" >
+      <% flash.each do |key, message| %>
+        <div class="alert <%= key == "error" ? "alert-danger" : "alert-success" %> fade show" data-controller="delayed-removal" data-delayed-removal-delay-value=<%= key == "error" ? "10000" : "4000" %>>
+          <strong><%= key.upcase %>:</strong> <%= message %>
+        </div>
+      <% end %>
+    </div>
+  </template>
+</turbo-stream>

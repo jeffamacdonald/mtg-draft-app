@@ -1,0 +1,43 @@
+<%= render(DisplayCardComponent.new(width: :xl, classes: "mb-2")) do %>
+	<div class="card-header">Queue Settings</div>
+	<div>
+		<%= form_with(model: @draft_participant, data: { turbo: true }) do |f| %>
+	    <div class="d-flex flex-md-row flex-column justify-content-around align-items-center gap-2">
+	    	<div>
+		      <%= f.check_box :queue_active, value: @draft_participant.queue_active, checked_value: true, unchecked_value:false %>
+		      <%= f.label :queue_active do %>
+		        <div class="fw-bold text-center">
+		          Active?
+		        </div>
+		      <% end %>
+		    </div>
+		    <div>
+		    	<%= f.label :queue_minute_delay do %>
+		        <div class="fw-bold text-center">
+		          Pick Delay In Minutes
+		        </div>
+		      <% end %>
+		      <%= f.number_field :queue_minute_delay, value: @draft_participant.queue_minute_delay %>
+		    </div>
+	      <%= render(ButtonComponent.new(classes: "my-1")) {"Update"} %>
+	    </div>
+	  <% end %>
+	</div>
+<% end %>
+
+<%= render(DisplayCardComponent.new(width: :xl, classes: "mb-2")) do %>
+	<div class="card-header">Queued Picks</div>
+	<div class="d-flex flex-row flex-wrap gap-2" data-controller="drag-drop" data-drag-drop-update-url-value="<%= update_order_queued_picks_path(draft_participant) %>">
+		<% draft_participant.queued_picks.order(:priority_number).each.with_index do |queued_pick, i| %>
+			<div id="<%= queued_pick.id %>_border" class="border <%= border_color(i) %> px-md-4 pb-md-4">
+				<div class="d-flex flex-row">
+					<div id="<%= queued_pick.id %>_priority_number"><%= queued_pick.priority_number %></div>
+					<%= render(ButtonComponent.new(url: queued_pick_path(queued_pick), classes: "ms-auto btn-sm", variation: :close, method: :delete, data: { turbo_method: :delete, turbo_stream: true })) { "" } %>
+				</div>
+				<div data-queued-pick-id="<%= queued_pick.id %>" class="draggable-item">
+					<%= image_tag(queued_pick.cube_card.image_url, class: "queue-card-img") %>
+				</div>
+			</div>
+		<% end %>
+	</div>
+<% end %>

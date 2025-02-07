@@ -17,6 +17,10 @@ class ParticipantPick < ApplicationRecord
   scope :for_round, ->(round) { where(round: round) }
   scope :ordered, -> { order(:pick_number) }
 
+  def enqueue_auto_pick_job
+    PickNextQueuedPickJob.set(wait: seconds_until_auto_pick).perform_later(self)
+  end
+
   private
 
   def availability
@@ -27,5 +31,10 @@ class ParticipantPick < ApplicationRecord
         errors.add(:cube_card_id, 'Card Is Not Available')
       end
     end
+  end
+
+  def seconds_until_auto_pick
+    # Add 60 seconds to avoid race conditions
+    (draft_participant.queue_minute_delay * 60) + 60
   end
 end

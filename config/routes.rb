@@ -17,11 +17,16 @@ Rails.application.routes.draw do
   resources :draft_participants, only: [:new, :create, :edit, :update] do
     member do
       get :picks
+      get :pick_queue
     end
   end
   resources :surrogate_draft_participants, only: [:new, :create]
   resources :participant_picks, only: [:new, :create, :update]
-  resources :queued_picks, only: [:new, :create]
+  resources :queued_picks, only: [:new, :create, :destroy] do
+    collection do
+      patch :update_order
+    end
+  end
   resources :draft_chat_messages, only: [:create]
   devise_for :users, :controllers => { registrations: "users/registrations" }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

@@ -16,6 +16,9 @@ application.register("countdown", CountdownController)
 import DelayedRemovalController from "./delayed_removal_controller"
 application.register("delayed-removal", DelayedRemovalController)
 
+import DragDropController from "./drag_drop_controller"
+application.register("drag-drop", DragDropController)
+
 import FilterableController from "./filterable_controller"
 application.register("filterable", FilterableController)
 

@@ -15,10 +15,21 @@ class DraftParticipantsController < ApplicationController
   def update
     @draft_participant = DraftParticipant.find(params[:id])
     @draft_participant.update!(update_params)
-    redirect_to draft_path(@draft_participant.draft)
+
+    respond_to do |format|
+      format.turbo_stream { flash.now[:success] = "Settings saved" }
+      format.html do
+        flash[:success] = "Settings saved"
+        redirect_to draft_path(@draft_participant.draft)
+      end
+    end
   end
 
   def picks
+    @draft_participant = DraftParticipant.find(params[:id])
+  end
+
+  def pick_queue
     @draft_participant = DraftParticipant.find(params[:id])
   end
 
@@ -34,7 +45,9 @@ class DraftParticipantsController < ApplicationController
 
   def update_params
     params.require(:draft_participant).permit(
-      :display_name
+      :display_name,
+      :queue_active,
+      :queue_minute_delay
     )
   end
 end
