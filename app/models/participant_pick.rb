@@ -1,11 +1,28 @@
-# t.references :draft_participant, references: :draft_participants, foreign_key: { to_table: :draft_participants }
-# t.references :cube_card, references: :cube_cards, foreign_key: { to_table: :cube_cards }
-# t.integer :pick_number, null: false
-# t.integer :round, null: false
-# t.string :comment
-# t.boolean :skipped
-# t.timestamps null: false
-
+# == Schema Information
+#
+# Table name: participant_picks
+#
+#  id                   :uuid             not null, primary key
+#  comment              :string           default("")
+#  pick_number          :integer          not null
+#  round                :integer          not null
+#  skipped              :boolean          default(FALSE)
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  cube_card_id         :uuid
+#  draft_participant_id :uuid
+#
+# Indexes
+#
+#  index_participant_picks_on_cube_card_id          (cube_card_id)
+#  index_participant_picks_on_draft_participant_id  (draft_participant_id)
+#  index_participant_picks_on_round                 (round)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (cube_card_id => cube_cards.id)
+#  fk_rails_...  (draft_participant_id => draft_participants.id)
+#
 class ParticipantPick < ApplicationRecord
   belongs_to :draft_participant
   belongs_to :cube_card, optional: true

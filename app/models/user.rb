@@ -1,14 +1,28 @@
-# t.string :email,              null: false, default: ""
-# t.string :encrypted_password, null: false, default: ""
-# t.string :username
-# t.string :phone
-# t.string   :reset_password_token
-# t.datetime :reset_password_sent_at
-# t.string :default_display, null: false, default: "image"
-# t.string :default_image_size, null: false, default: "lg"
-# t.string :pick_list_size, null: false, default: ""
-# t.timestamps null: false
-
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :uuid             not null, primary key
+#  admin                  :boolean          default(FALSE)
+#  default_display        :string           default("image"), not null
+#  default_image_size     :string           default("lg"), not null
+#  email                  :string           default(""), not null
+#  encrypted_password     :string           default(""), not null
+#  phone                  :string
+#  pick_list_size         :string           default(""), not null
+#  remember_created_at    :datetime
+#  reset_password_sent_at :datetime
+#  reset_password_token   :string
+#  username               :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#
+# Indexes
+#
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_users_on_username              (username) UNIQUE
+#
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
