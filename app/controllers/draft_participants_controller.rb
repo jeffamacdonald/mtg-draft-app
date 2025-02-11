@@ -31,6 +31,8 @@ class DraftParticipantsController < ApplicationController
 
   def pick_queue
     @draft_participant = DraftParticipant.find(params[:id])
+
+    redirect_to draft_path(@draft_participant.draft) if @draft_participant.user != current_user
   end
 
   private

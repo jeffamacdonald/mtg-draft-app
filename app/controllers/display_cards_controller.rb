@@ -10,10 +10,14 @@ class DisplayCardsController < ApplicationController
         draft.active_participant
       end
 
-      if picking_participant.present? && !draft.participant_picks.map(&:cube_card).include?(cube_card)
-        render_new_participant_pick_path(cube_card, picking_participant)
+      if draft.participant_picks.map(&:cube_card).include?(cube_card)
+        render_cube_card_path(cube_card)
       else
-        render_new_queued_pick_path(cube_card, current_participant)
+        if picking_participant.present?
+          render_new_participant_pick_path(cube_card, picking_participant)
+        else
+          render_new_queued_pick_path(cube_card, current_participant)
+        end
       end
     elsif cube_card.cube.owner == current_user
       render_edit_cube_card_path(cube_card)

@@ -30,7 +30,7 @@ FactoryBot.define do
       cube_card { create :cube_card }
     end
     draft_participant_id { draft_participant.id }
-    cube_card_id { cube_card.id }
+    cube_card_id { cube_card&.id }
     sequence(:pick_number) { |n| n }
     round { 1 }
   end

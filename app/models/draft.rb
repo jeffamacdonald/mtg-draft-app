@@ -66,7 +66,7 @@ class Draft < ApplicationRecord
   end
 
   def timer_live?
-    active? && timer_minutes.present? && active_round > 2
+    active? && timer_minutes.present? && after_initial_rounds?
   end
 
   def enqueue_skip_job
@@ -83,7 +83,8 @@ class Draft < ApplicationRecord
     TimerCalculator.new(last_pick_at, timer_minutes).calculate_target_end.to_i - Time.now.to_i
   end
 
-  def active_round
-    active_pick&.round
+  def after_initial_rounds?
+    return false unless active_pick.present?
+    active_pick.round > 2
   end
 end

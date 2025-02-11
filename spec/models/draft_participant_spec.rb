@@ -50,6 +50,9 @@ RSpec.describe DraftParticipant do
       it 'updates active pick, updates last pick at, enqueues skip job, and broadcasts updates' do
         allow(participant_1).to receive(:draft).and_return(draft)
         expect(draft).to receive(:enqueue_skip_job)
+        allow(draft).to receive(:active_pick).and_return(participant_pick_2)
+        expect(participant_pick_2).to receive(:enqueue_auto_pick_job)
+        expect(RemoveQueuedPicksJob).to receive(:perform_later).with(participant_pick_1)
         expect(Broadcast::DraftUpdateJob).to receive(:perform_later).with(draft)
 
         subject

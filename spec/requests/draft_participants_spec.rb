@@ -45,4 +45,73 @@ RSpec.describe DraftParticipantsController, type: :request do
       end
     end
   end
+
+  describe 'GET #edit' do
+    let(:draft) { create(:draft) }
+    let(:user) { create(:user) }
+    let(:draft_participant) { create(:draft_participant, draft: draft, user: user) }
+
+    before do
+      sign_in user
+    end
+
+    it 'returns a successful response' do
+      get edit_draft_participant_path(draft_participant)
+      expect(response).to be_successful
+    end
+  end
+
+  describe 'PATCH #update' do
+    let(:draft) { create(:draft) }
+    let(:user) { create(:user) }
+    let(:draft_participant) { create(:draft_participant, draft: draft, user: user) }
+
+    before do
+      sign_in user
+    end
+
+    it 'returns a successful response' do
+      patch draft_participant_path(draft_participant), params: {draft_participant: {display_name: "new", queue_active: true, queue_minute_delay: 60}}
+      expect(response).to redirect_to(draft_path(draft))
+      expect(draft_participant.reload.display_name).to eq "new"
+    end
+  end
+
+  describe 'GET #picks' do
+    let(:draft) { create(:draft) }
+    let(:user) { create(:user) }
+    let(:draft_participant) { create(:draft_participant, draft: draft) }
+
+    before do
+      sign_in user
+    end
+
+    it 'returns a successful response' do
+      get picks_draft_participant_path(draft_participant)
+      expect(response).to be_successful
+    end
+  end
+
+  describe 'GET #pick_queue' do
+    let(:draft) { create(:draft) }
+    let(:user) { create(:user) }
+    let(:draft_participant) { create(:draft_participant, draft: draft, user: user) }
+
+    before do
+      sign_in user
+    end
+
+    it 'returns a successful response' do
+      get pick_queue_draft_participant_path(draft_participant)
+      expect(response).to be_successful
+    end
+
+    context "when draft participant is not current user" do
+      let(:draft_participant) { create(:draft_participant, draft: draft) }
+      it "redirects to draft" do
+        get pick_queue_draft_participant_path(draft_participant)
+        expect(response).to redirect_to draft_path(draft)
+      end
+    end
+  end
 end

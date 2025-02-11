@@ -32,6 +32,7 @@ RSpec.describe SkipActiveParticipantJob, type: :job do
       expect_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
       expect(Broadcast::DraftUpdateJob).to receive(:perform_later).with(draft)
       expect(draft).to receive(:enqueue_skip_job)
+      expect_any_instance_of(ParticipantPick).to receive(:enqueue_auto_pick_job)
       allow(participant_pick_5).to receive(:draft_participant).and_return(dp2)
       allow(participant_pick_5).to receive(:draft).and_return(draft)
 
