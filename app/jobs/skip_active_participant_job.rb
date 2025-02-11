@@ -15,6 +15,8 @@ class SkipActiveParticipantJob < ApplicationJob
 
       # Enqueue next skip
       draft.enqueue_skip_job
+      # Enqueue next auto pick
+      draft.active_pick.enqueue_auto_pick_job
     end
   end
 end

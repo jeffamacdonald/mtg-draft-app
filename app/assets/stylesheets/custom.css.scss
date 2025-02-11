@@ -1,3 +1,15 @@
+.queue-card-img {
+  width: 150px;
+  height: auto;
+  border-radius: 9px;
+}
+
+@media (max-width: 768px) {
+  .queue-card-img {
+    width: 100px; 
+  }
+}
+
 .cube_card__img {
   max-width: 100%;
   border-radius: 9px;
@@ -68,4 +80,13 @@
 
 .pick-list-header {
   min-width: 70px;
+}
+
+.draggable-item {
+  cursor: grab;
+  margin-bottom: 8px;
+}
+
+.draggable-item:active {
+  cursor: grabbing;
 }

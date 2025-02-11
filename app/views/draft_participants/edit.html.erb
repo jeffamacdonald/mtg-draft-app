@@ -1,6 +1,9 @@
+<div class="text-center mb-2">
+  <%= button_to("Back", draft_path(@draft_participant.draft), method: :get, class: "btn btn-warning mt-2") %>
+</div>
 <%= render(DisplayCardComponent.new(width: :lg)) do %>
-  <div class="card-header">DRAFT PARTICIPANT SETTINGS</div>
-  <%= form_with(model: @draft_participant) do |f| %>
+  <div class="card-header">DRAFTER SETTINGS</div>
+  <%= form_with(model: @draft_participant, data: { turbo: false }) do |f| %>
     <div class="container col-sm-2">
       <%= f.label :card_text do %>
         <div class="fw-bold text-center">
@@ -14,5 +17,4 @@
   <div class="container">
     <%= render(ButtonComponent.new(url: new_surrogate_draft_participant_path(draft_participant_id: @draft_participant.id), variation: :primary, data: { turbo_frame: "modal" })) { "Add Surrogate" } %>
   </div>
-  <%= button_to("Back", draft_path(@draft_participant.draft), method: :get, class: "btn btn-warning mt-2") %>
 <% end %>

@@ -1,12 +1,30 @@
-# t.references :cube, references: :cubes, foreign_key: { to_table: :cubes }
-# t.references :user, references: :users, foreign_key: { to_table: :users }
-# t.string :name, null: false
-# t.integer :rounds, null: false
-# t.integer :timer_minutes
-# t.string :status, null: false
-# t.datetime :last_pick_at
-# t.timestamps null: false
-
+# == Schema Information
+#
+# Table name: drafts
+#
+#  id            :uuid             not null, primary key
+#  last_pick_at  :datetime
+#  name          :string           not null
+#  rounds        :integer          not null
+#  status        :string           not null
+#  timer_minutes :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  cube_id       :uuid
+#  user_id       :uuid
+#
+# Indexes
+#
+#  index_drafts_on_cube_id  (cube_id)
+#  index_drafts_on_name     (name)
+#  index_drafts_on_status   (status)
+#  index_drafts_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (cube_id => cubes.id)
+#  fk_rails_...  (user_id => users.id)
+#
 class Draft < ApplicationRecord
   belongs_to :cube
   belongs_to :owner, foreign_key: :user_id, class_name: "User"
@@ -48,7 +66,7 @@ class Draft < ApplicationRecord
   end
 
   def timer_live?
-    active? && timer_minutes.present? && active_round > 2
+    active? && timer_minutes.present? && after_initial_rounds?
   end
 
   def enqueue_skip_job
@@ -65,7 +83,8 @@ class Draft < ApplicationRecord
     TimerCalculator.new(last_pick_at, timer_minutes).calculate_target_end.to_i - Time.now.to_i
   end
 
-  def active_round
-    active_pick&.round
+  def after_initial_rounds?
+    return false unless active_pick.present?
+    active_pick.round > 2
   end
 end

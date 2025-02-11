@@ -9,4 +9,9 @@ class PickMailer < ApplicationMailer
     @skipped_participant = skipped_participant
     mail(to: user.email, subject: "You're up in #{skipped_participant.draft.name}")
   end
+
+  def queued_pick_taken_email(participant_pick, user)
+    @participant_pick = participant_pick
+    mail(to: user.email, subject: "You're next pick was taken!")
+  end
 end
