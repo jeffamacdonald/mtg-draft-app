@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_01_005804) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_12_222655) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_01_005804) do
     t.string "default_set", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "scryfall_uri"
     t.index ["card_text"], name: "index_cards_on_card_text"
     t.index ["cmc"], name: "index_cards_on_cmc"
     t.index ["color_identity"], name: "index_cards_on_color_identity"

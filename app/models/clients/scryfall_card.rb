@@ -1,5 +1,5 @@
 module Clients
-  class ScryfallCard < Struct.new(:count, :name, :layout, :image_uri, :mana_cost, :cmc, :type_line, :oracle_text, :color_identity, :set, :power, :toughness, keyword_init: true)
+  class ScryfallCard < Struct.new(:count, :name, :layout, :scryfall_uri, :image_uri, :mana_cost, :cmc, :type_line, :oracle_text, :color_identity, :set, :power, :toughness, keyword_init: true)
 
     def create_card!
       Card.create!(
@@ -11,6 +11,7 @@ module Clients
         power: power,
         toughness: toughness,
         default_image: image_uri,
+        scryfall_uri: scryfall_uri,
         color_identity: parse_color_identity,
         default_set: set,
         type_line: type_line

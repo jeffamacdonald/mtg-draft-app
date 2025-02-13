@@ -11,6 +11,7 @@ RSpec.describe Clients::ScryfallCard do
       oracle_text: "Deal 3 damage to any target.",
       layout: "normal",
       image_uri: "https://example.com/image",
+      scryfall_uri: "https://scryfallexample.com/card",
       color_identity: color_identity,
       set: "LEB",
       type_line: type_line

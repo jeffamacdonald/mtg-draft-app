@@ -12,6 +12,7 @@
 #  layout         :string
 #  name           :string           not null
 #  power          :integer
+#  scryfall_uri   :string
 #  toughness      :integer
 #  type_line      :string           not null
 #  created_at     :datetime         not null
