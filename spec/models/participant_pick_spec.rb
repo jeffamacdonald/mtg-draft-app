@@ -45,6 +45,17 @@ RSpec.describe ParticipantPick, type: :model do
       end
     end
 
+    context "when card has not been picked" do
+      let!(:cube_card) { create :cube_card, cube_id: cube.id }
+
+      it "passes validation" do
+        record = ParticipantPick.new
+        record.draft_participant = dp2
+        record.cube_card_id = cube_card.id
+        expect(record.valid?).to eq true
+      end
+    end
+
     context "when no cube card is present" do
       it "passes validation" do
         record = ParticipantPick.new

@@ -43,8 +43,8 @@ class ParticipantPick < ApplicationRecord
   def availability
     return unless cube_card_id.present?
 
-    draft.draft_participants.each do |participant|
-      unless participant.participant_picks.select { |pick| pick.cube_card_id == cube_card_id }.empty?
+    draft.participant_picks.where.not(id:).each do |participant_pick|
+      if participant_pick.cube_card_id == cube_card_id
         errors.add(:cube_card_id, 'Card Is Not Available')
       end
     end

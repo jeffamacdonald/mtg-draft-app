@@ -9,6 +9,7 @@ RSpec.describe QueuedPicksController, type: :request do
 
   before do
     sign_in user
+    stub_request(:get, "https://api.scryfall.com/cards/named?exact=#{cube_card.card.name}").to_return(status: 200, body: {:image_uris => {:normal => nil}}.to_json, headers: {})
   end
 
   describe "GET #new" do
