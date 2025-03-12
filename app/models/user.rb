@@ -33,7 +33,7 @@ class User < ApplicationRecord
   has_many :draft_participants
   has_many :drafts, :through => :draft_participants
   # validates :username, uniqueness: { case_sensitive: false }, presence: true, allow_blank: false, format: { with: /\A[a-zA-Z0-9_]+\z/ }
-  validate :validate_secret_key
+  validate :validate_secret_key, on: :create
 
   private
 
