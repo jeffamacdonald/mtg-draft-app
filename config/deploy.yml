@@ -49,6 +49,9 @@ env:
     - REDIS_URL
     - POSTGRES_PASSWORD
     - REGISTRATION_SECRET
+    - ZOHO_ACCOUNT_ID
+    - ZOHO_CLIENT_ID
+    - ZOHO_SECRET
 
 # Use a different ssh user than root
 ssh:

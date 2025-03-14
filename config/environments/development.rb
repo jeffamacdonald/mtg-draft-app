@@ -43,16 +43,7 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_options = {from: "comms@nevernoid.xyz"}
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-  address:             'smtp.zoho.com',
-  port:                 465,
-  user_name:            Rails.application.credentials.zoho.user_name,
-  password:             Rails.application.credentials.zoho.password,
-  authentication:       :login,
-  ssl:                  true,
-  tls:                  true,
-  enable_starttls_auto: true }
+  config.action_mailer.delivery_method = :zoho_mail
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

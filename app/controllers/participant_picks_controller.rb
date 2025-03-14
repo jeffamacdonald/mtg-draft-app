@@ -10,10 +10,10 @@ class ParticipantPicksController < ApplicationController
     pick = draft_participant.pick_card!(cube_card)
     
     # Email next participant
-    # next_user = draft_participant.reload.draft.active_participant.user
-    # if next_user != current_user
-    #   PickMailer.next_up_email(pick, next_user).deliver_now
-    # end
+    next_user = draft_participant.reload.draft.active_participant.user
+    if next_user != current_user
+      PickMailer.next_up_email(pick, next_user).deliver_now
+    end
 
     redirect_to draft_path(draft_participant.draft)
   end
