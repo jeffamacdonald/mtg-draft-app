@@ -43,6 +43,7 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_options = {from: "comms@nevernoid.xyz"}
+  config.action_mailer.default_url_options = {host: "localhost", protocol: "http", port: 3000}
   config.action_mailer.delivery_method = :zoho_mail
 
   # Print deprecation notices to the Rails logger.
