@@ -1,8 +1,8 @@
 class TimerCalculator
   attr_reader :pick_time, :timer_minutes
 
-  START_TIME = 8
-  END_TIME = 18
+  START_TIME = 9
+  END_TIME = 19
 
   def initialize(pick_time, timer_minutes)
     @pick_time = pick_time.in_time_zone("Pacific Time (US & Canada)")

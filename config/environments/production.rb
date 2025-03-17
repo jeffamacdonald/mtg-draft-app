@@ -96,5 +96,5 @@ Rails.application.configure do
   config.action_cable.url = "ws://165.232.128.212:3000/cable"
   config.action_cable.allowed_request_origins = [/https:\/\/*/]
 
-  config.action_mailer.default_url_options = { host: "165.232.128.212", port: 3000 }
+  config.action_mailer.default_url_options = { host: "nevernoid.xyz", protocol: "https" }
 end
