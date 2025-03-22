@@ -42,5 +42,4 @@ RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile --trace
 
 # Start the Rails server
 EXPOSE 3000
-CMD ["rm -f tmp/pids/server.pid"]
-CMD ["./bin/rails", "server"]
+CMD ["sh", "-c", "rm -f tmp/pids/server.pid && ./bin/rails server"]
