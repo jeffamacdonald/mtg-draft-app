@@ -2,17 +2,17 @@ require 'rails_helper'
 
 RSpec.describe RemoveQueuedPicksJob, type: :job do
   let!(:draft) { create :draft }
-  let!(:draft_participant_1) { create :draft_participant, draft: }
-  let!(:draft_participant_2) { create :draft_participant, draft: }
+  let!(:draft_participant_1) { create :draft_participant, draft:, queue_active: true }
+  let!(:draft_participant_2) { create :draft_participant, draft:, queue_active: true }
   let!(:draft_participant_3) { create :draft_participant, draft:, queue_active: false }
-  let!(:draft_participant_4) { create :draft_participant, draft: }
+  let!(:draft_participant_4) { create :draft_participant, draft:, queue_active: true }
   let!(:cube_card) { create :cube_card }
   let!(:participant_pick) { create :participant_pick, draft_participant: draft_participant_1, cube_card: cube_card, round: 1, pick_number: 1 }
   let(:other_queued_card) { create :cube_card }
   let!(:queued_pick_1) { create :queued_pick, draft_participant: draft_participant_1, cube_card: cube_card, priority_number: 1 }
   let!(:queued_pick_2) { create :queued_pick, draft_participant: draft_participant_1, cube_card: other_queued_card, priority_number: 2 }
   let!(:queued_pick_3) { create :queued_pick, draft_participant: draft_participant_2, cube_card: cube_card, priority_number: 1 }
-  let!(:queued_pick_4) { create :queued_pick, draft_participant: draft_participant_3, cube_card: cube_card, priority_number: 1}
+  let!(:queued_pick_4) { create :queued_pick, draft_participant: draft_participant_3, cube_card: cube_card, priority_number: 2}
   let!(:queued_pick_5) { create :queued_pick, draft_participant: draft_participant_4, cube_card: other_queued_card, priority_number: 1}
 
   it "deletes queued_picks that match the cube_card" do
