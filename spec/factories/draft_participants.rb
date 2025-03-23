@@ -5,7 +5,7 @@
 #  id                 :uuid             not null, primary key
 #  display_name       :string           not null
 #  draft_position     :integer
-#  queue_active       :boolean          default(TRUE), not null
+#  queue_active       :boolean          default(FALSE), not null
 #  queue_minute_delay :integer          default(0), not null
 #  skipped            :boolean          default(FALSE)
 #  created_at         :datetime         not null

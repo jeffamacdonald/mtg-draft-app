@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_12_222655) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_23_054707) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -115,7 +115,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_12_222655) do
     t.boolean "skipped", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "queue_active", default: true, null: false
+    t.boolean "queue_active", default: false, null: false
     t.integer "queue_minute_delay", default: 0, null: false
     t.index ["draft_id", "draft_position"], name: "index_draft_participants_on_draft_id_and_draft_position", unique: true
     t.index ["draft_id", "user_id"], name: "index_draft_participants_on_draft_id_and_user_id", unique: true
