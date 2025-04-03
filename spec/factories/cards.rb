@@ -34,7 +34,7 @@ FactoryBot.define do
     cmc {0}
     card_text {"{T}, Sacrifice Black Lotus: Add three mana of any one color."}
     layout {"normal"}
-    default_image {"https://img.scryfall.com/cards/normal/front/b/d/bd8fa327-dd41-4737-8f19-2cf5eb1f7cdd.jpg?1562933099"}
+    default_image {"https://cards.scryfall.io/large/front/6/6/66b875b1-e534-4ed8-9ebd-8f4d5a066e7d.jpg?1613677449"}
     color_identity {["C"]}
     default_set {"LEB"}
     type_line {"Artifact"}
