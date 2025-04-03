@@ -2,9 +2,7 @@
 	<div class="card-header">Pending Transfers</div>
 	<div>
 		<% @accepted_transfers.each do |accepted_transfer| %>
-			<% accepted_transfer.receiving_participants.each do |receiving_participant| %>
-				<%# TODO: display each participants receiving picks %>
-			<% end %>
+			<%= render(TransferPortalTransactionComponent.new(transfer_portal_transaction: accepted_transfer)) %>
 		<% end %>
 	</div>
 <% end %>
@@ -13,6 +11,7 @@
 	<div class="card-header">Completed Transfers</div>
 	<div>
 		<% @completed_transfers.each do |completed_transfer| %>
+			<%= render(TransferPortalTransactionComponent.new(transfer_portal_transaction: completed_transfer)) %>
 		<% end %>
 	</div>
 <% end %>
@@ -21,6 +20,7 @@
 	<div class="card-header">Canceled Transfers</div>
 	<div>
 		<% @canceled_transfers.each do |canceled_transfer| %>
+			<%= render(TransferPortalTransactionComponent.new(transfer_portal_transaction: canceled_transfer)) %>
 		<% end %>
 	</div>
 <% end %>

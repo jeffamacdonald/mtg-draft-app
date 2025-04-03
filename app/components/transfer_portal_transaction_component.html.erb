@@ -1,0 +1,14 @@
+<div class="d-flex flex-column">
+	<% @transfer_portal_transaction.receiving_participants.each do |receiving_participant| %>
+		<div class="d-flex flex-row">
+			<%= "#{receiving_participant.display_name} will receive:" %>
+			<ul>
+				<% @transfer_portal_transaction.receiver_display_names(receiving_participant).each do |display_name| %>
+					<li>
+						<%= display_name %>
+					</li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+</div>
