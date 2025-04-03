@@ -32,6 +32,7 @@ class Draft < ApplicationRecord
   has_many :users, :through => :draft_participants
   has_many :participant_picks, :through => :draft_participants
   has_many :draft_chat_messages
+  has_many :transfer_portal_transactions
   enum :status, DraftStatus.all.zip(DraftStatus.all).to_h
 
   scope :pending, -> { where(status: DraftStatus.pending) }

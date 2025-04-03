@@ -38,6 +38,10 @@ class ParticipantPick < ApplicationRecord
     PickNextQueuedPickJob.set(wait: seconds_until_auto_pick).perform_later(self)
   end
 
+  def display_name
+    cube_card&.card&.name || "Round #{round} Pick"
+  end
+
   private
 
   def availability

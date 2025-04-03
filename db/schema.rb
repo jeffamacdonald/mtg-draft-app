@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_23_054707) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_03_041853) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -173,6 +173,28 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_23_054707) do
     t.index ["surrogate_participant_id"], name: "index_surrogate_draft_participants_on_surrogate_participant_id"
   end
 
+  create_table "transfer_portal_transaction_offerings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "transfer_portal_transaction_id", null: false
+    t.uuid "sender_id", null: false
+    t.uuid "receiver_id", null: false
+    t.uuid "participant_pick_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["participant_pick_id"], name: "idx_on_participant_pick_id_a1ed08093d"
+    t.index ["receiver_id"], name: "index_transfer_portal_transaction_offerings_on_receiver_id"
+    t.index ["sender_id"], name: "index_transfer_portal_transaction_offerings_on_sender_id"
+    t.index ["transfer_portal_transaction_id"], name: "idx_on_transfer_portal_transaction_id_03d80ed631"
+  end
+
+  create_table "transfer_portal_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "draft_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["draft_id"], name: "index_transfer_portal_transactions_on_draft_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -208,4 +230,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_23_054707) do
   add_foreign_key "queued_picks", "draft_participants"
   add_foreign_key "surrogate_draft_participants", "draft_participants"
   add_foreign_key "surrogate_draft_participants", "draft_participants", column: "surrogate_participant_id"
+  add_foreign_key "transfer_portal_transaction_offerings", "draft_participants", column: "receiver_id"
+  add_foreign_key "transfer_portal_transaction_offerings", "draft_participants", column: "sender_id"
+  add_foreign_key "transfer_portal_transaction_offerings", "participant_picks"
+  add_foreign_key "transfer_portal_transaction_offerings", "transfer_portal_transactions"
+  add_foreign_key "transfer_portal_transactions", "drafts"
 end
