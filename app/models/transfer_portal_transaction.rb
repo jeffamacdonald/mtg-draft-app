@@ -34,4 +34,9 @@ class TransferPortalTransaction < ApplicationRecord
 			offering.participant_pick.display_name
 		end
 	end
+
+	def confirm!
+		transfer_portal_transaction_offerings.each(&:transfer!)
+		confirmed!
+	end
 end

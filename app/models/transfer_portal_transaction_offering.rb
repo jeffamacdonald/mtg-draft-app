@@ -29,4 +29,8 @@ class TransferPortalTransactionOffering < ApplicationRecord
 	belongs_to :sender, class_name: "DraftParticipant", foreign_key: :draft_participant_id
 	belongs_to :receiver, class_name: "DraftParticipant", foreign_key: :draft_participant_id
 	belongs_to :participant_pick
+
+	def transfer!
+		participant_pick.update!(draft_participant: receiver)
+	end
 end
