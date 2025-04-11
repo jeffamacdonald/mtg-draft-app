@@ -1,0 +1,4 @@
+<div class="text-center mb-2">
+  <%= button_to("Back", draft_path(@draft_participant.draft), method: :get, class: "btn btn-warning mt-2") %>
+</div>
+<%= render(TransferPortalComponent.new(draft: @draft, draft_participant: @draft_participant)) %>

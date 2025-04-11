@@ -30,3 +30,6 @@ application.register("inline-edit", InlineEditController)
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
+
+import TransferPortalController from "./transfer_portal_controller"
+application.register("transfer-portal", TransferPortalController)

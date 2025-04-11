@@ -1,0 +1,52 @@
+<%= turbo_frame_tag "transfer-portal-transaction-form" do %>
+  <div class="card shadow-sm" data-controller="transfer-portal">
+    <div class="card-header bg-white">
+      <h3 class="card-title mb-0">Trade Proposal: <%= sender.display_name %> ↔ <%= receiver.display_name %></h3>
+    </div>
+    
+    <div class="card-body">
+      <%= form_with url: draft_transfer_portal_transactions_path(draft), 
+                  method: :post,
+                  data: { turbo: false } do |f| %>
+        <input type="hidden" name="draft_participant_id" value="<%= receiver.id %>">
+        
+        <!-- Bootstrap row/columns for side-by-side layout -->
+        <div class="row g-4 mb-3">
+          <!-- Sender's picks (current user) -->
+          <div class="col-md-6">
+            <h4 class="h5 mb-3 text-center"><%= sender.display_name %>'s Picks</h4>
+            <div class="border rounded p-3 bg-light" style="height: 400px; overflow-y: auto;">
+              <% sender_picks.each do |pick| %>
+                <div class="mb-2">
+                  <%= pick_checkbox(pick, :offerer) %>
+                  <%= pick_label(pick, :offerer) %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Receiver's picks (other participant) -->
+          <div class="col-md-6">
+            <h4 class="h5 mb-3 text-center"><%= receiver.display_name %>'s Picks</h4>
+            <div class="border rounded p-3 bg-light" style="height: 400px; overflow-y: auto;">
+              <% receiver_picks.each do |pick| %>
+                <div class="mb-2">
+                  <%= pick_checkbox(pick, :offeree) %>
+                  <%= pick_label(pick, :offeree) %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <%= link_to "Cancel", draft_transfer_portal_transactions_path(draft), class: "btn btn-outline-secondary" %>
+          <%= submit_tag "Submit Offer", 
+                       disabled: true,
+                       class: "btn btn-primary",
+                       data: { transfer_portal_target: "submitButton" } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

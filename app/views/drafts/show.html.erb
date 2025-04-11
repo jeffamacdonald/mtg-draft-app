@@ -10,6 +10,7 @@
     <div class="d-flex mb-2 justify-content-center gap-2">
       <%= render(ButtonComponent.new(url: edit_draft_participant_path(@context.draft_participant), variation: :primary)) { "Drafter Settings" } %>
       <%= render(ButtonComponent.new(url: pick_queue_draft_participant_path(@context.draft_participant), variation: :primary)) { "Pick Queue" } %>
+      <%= render(ButtonComponent.new(url: draft_transfer_portal_transactions_path(@draft), variation: :primary)) { "Transfer Portal" } %>
     </div>
   <% end %>
   <div id="draft_<%= @draft.id %>_show_body">

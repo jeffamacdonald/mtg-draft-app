@@ -2,6 +2,7 @@ class CreateTransferPortal < ActiveRecord::Migration[7.1]
   def change
     create_table :transfer_portal_transactions, id: :uuid do |t|
       t.references :draft, foreign_key: { to_table: :drafts }, type: :uuid, null: false
+      t.references :offerer, foreign_key: { to_table: :draft_participants }, type: :uuid, null: false
       t.string :status, default: "pending", null: false
       t.datetime :expires_at
 

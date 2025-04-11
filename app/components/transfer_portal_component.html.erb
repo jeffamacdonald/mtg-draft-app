@@ -1,26 +1,8 @@
 <%= render(DisplayCardComponent.new(width: :xl, classes: "mb-2")) do %>
-	<div class="card-header">Pending Transfers</div>
-	<div>
-		<% @accepted_transfers.each do |accepted_transfer| %>
-			<%= render(TransferPortalTransactionComponent.new(transfer_portal_transaction: accepted_transfer)) %>
-		<% end %>
-	</div>
+	<%= render(TransferPortalDraftParticipantsComponent.new(draft: @draft)) %>
 <% end %>
 
-<%= render(DisplayCardComponent.new(width: :xl, classes: "mb-2")) do %>
-	<div class="card-header">Completed Transfers</div>
-	<div>
-		<% @completed_transfers.each do |completed_transfer| %>
-			<%= render(TransferPortalTransactionComponent.new(transfer_portal_transaction: completed_transfer)) %>
-		<% end %>
-	</div>
-<% end %>
-
-<%= render(DisplayCardComponent.new(width: :xl, classes: "mb-2")) do %>
-	<div class="card-header">Canceled Transfers</div>
-	<div>
-		<% @canceled_transfers.each do |canceled_transfer| %>
-			<%= render(TransferPortalTransactionComponent.new(transfer_portal_transaction: canceled_transfer)) %>
-		<% end %>
-	</div>
-<% end %>
+<%= render(TransferPortalTransactionCardComponent.new(card_header: "Your Offers", transfer_portal_transactions: @pending_transfers, pending_actions: true, cancel_action: false)) %>
+<%= render(TransferPortalTransactionCardComponent.new(card_header: "Open Transfers", transfer_portal_transactions: @accepted_transfers, pending_actions: false, cancel_action: true, draft_participant: @draft_participant)) %>
+<%= render(TransferPortalTransactionCardComponent.new(card_header: "Confirmed Transfers", transfer_portal_transactions: @confirmed_transfers, pending_actions: false, cancel_action: false)) %>
+<%= render(TransferPortalTransactionCardComponent.new(card_header: "Canceled Transfers", transfer_portal_transactions: @canceled_transfers, pending_actions: false, cancel_action: false)) %>

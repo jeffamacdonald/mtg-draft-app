@@ -188,11 +188,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_03_041853) do
 
   create_table "transfer_portal_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "draft_id", null: false
+    t.uuid "offerer_id", null: false
     t.string "status", default: "pending", null: false
     t.datetime "expires_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["draft_id"], name: "index_transfer_portal_transactions_on_draft_id"
+    t.index ["offerer_id"], name: "index_transfer_portal_transactions_on_offerer_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -234,5 +236,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_03_041853) do
   add_foreign_key "transfer_portal_transaction_offerings", "draft_participants", column: "sender_id"
   add_foreign_key "transfer_portal_transaction_offerings", "participant_picks"
   add_foreign_key "transfer_portal_transaction_offerings", "transfer_portal_transactions"
+  add_foreign_key "transfer_portal_transactions", "draft_participants", column: "offerer_id"
   add_foreign_key "transfer_portal_transactions", "drafts"
 end

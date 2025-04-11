@@ -1,8 +1,8 @@
-<div class="d-flex flex-column">
+<div class="d-flex flex-sm-row flex-column gap-4 justify-content-center mb-2">
 	<% @transfer_portal_transaction.receiving_participants.each do |receiving_participant| %>
-		<div class="d-flex flex-row">
-			<%= "#{receiving_participant.display_name} will receive:" %>
-			<ul>
+		<div class="d-flex flex-column">
+			<div class="fw-bold"><%= "#{receiving_participant.display_name} will receive:" %></div>
+			<ul class="list-unstyled">
 				<% @transfer_portal_transaction.receiver_display_names(receiving_participant).each do |display_name| %>
 					<li>
 						<%= display_name %>
@@ -10,5 +10,14 @@
 				<% end %>
 			</ul>
 		</div>
+	<% end %>
+	<% if @pending_actions %>
+		<div class="d-flex flex-row justify-content-center align-items-center gap-2">
+			<%= button_to "Accept", accept_transfer_portal_transaction_path(@transfer_portal_transaction), method: :post, class: "btn btn-block btn:hover btn-primary" %>
+			<%= button_to "Reject", reject_transfer_portal_transaction_path(@transfer_portal_transaction), method: :post, class: "btn btn-block btn:hover btn-danger" %>
+		</div>
+	<% end %>
+	<% if @cancel_action %>
+		<%= button_to "Cancel", cancel_transfer_portal_transaction_path(@transfer_portal_transaction), method: :post, class: "btn btn-block btn:hover btn-primary" %>
 	<% end %>
 </div>

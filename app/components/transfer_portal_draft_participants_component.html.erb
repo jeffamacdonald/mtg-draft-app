@@ -1,0 +1,16 @@
+<%= turbo_frame_tag "transfer-portal-draft-participants" do %>
+	<div class="card-header">Select a Drafter to Offer a Trade</div>
+	<div class="table-responsive fs-6">
+    <table class="small-table table table-bordered">
+      <thead>
+        <tr>
+          <% @draft.draft_participants.ordered.each do |participant| %>
+            <th scope="col" class="pick-list-header">
+              <%= render(ButtonComponent.new(url: new_transfer_portal_transaction_path(draft_participant_id: participant.id), variation: :link)) { participant.display_name } %>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+    </table>
+  </div>
+<% end %>
