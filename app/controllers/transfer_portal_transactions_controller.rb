@@ -45,6 +45,9 @@ class TransferPortalTransactionsController < ApplicationController
 
 		flash[:success] = "Offer sent!"
 		redirect_to draft_path(@draft)
+	rescue ActiveRecord::RecordInvalid => ex
+		flash[:error] = ex.record.errors.full_messages.join(", ")
+		redirect_to draft_transfer_portal_transactions_path(@draft)
 	end
 
 	def accept

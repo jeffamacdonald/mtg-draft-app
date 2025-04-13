@@ -34,6 +34,7 @@ class TransferPortalTransaction < ApplicationRecord
 			.where.not(offerer: draft_participant)
 			.where(transfer_portal_transaction_offerings: { receiver: draft_participant })
 	end
+	scope :active, -> { where(status: ["pending", "accepted"]) }
 
 	def receiving_participants
 		transfer_portal_transaction_offerings.map(&:receiver).uniq
@@ -47,34 +48,40 @@ class TransferPortalTransaction < ApplicationRecord
 	end
 
 	def accept!
-		# TODO: send email
 		update!(expires_at: two_business_days_away)
 		accepted!
+		ConfirmTransferPortalTransactionJob.set(wait: expires_at.to_i - Time.now.to_i).perform_later(self)
+		TransferPortalMailer.transfer_initiated_email(self)
 	end
 
 	def cancel!
-		# TODO: send email
 		canceled!
+		TransferPortalMailer.transfer_canceled_email(self)
 	end
 
 	def reject!
-		# TODO: send email
 		rejected!
+		TransferPortalMailer.transfer_rejected_email(self)
 	end
 
 	def confirm!
 		transfer_portal_transaction_offerings.each(&:transfer!)
 		confirmed!
+		TransferPortalMailer.transfer_confirmed_email(self)
 	end
 
 	private
 
 	def two_business_days_away
-		two_days = 2.days.from_now
-		while day_off?(two_days)
-			two_days = two_days + 1.day
+		offset = 0
+		while day_off?(offset.days.from_now)
+			offset += 1
 		end
-		two_days
+		if offset > 0
+			(offset + 2).days.from_now.beginning_of_day
+		else
+			2.days.from_now
+		end
 	end
 
 	def day_off?(date_time)

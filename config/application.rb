@@ -35,5 +35,8 @@ module MtgDraftApp
     config.generators.system_tests = nil
 
     config.active_job.queue_adapter = :sidekiq
+
+    config.time_zone = 'Pacific Time (US & Canada)' # Sets Rails time zone
+    config.active_record.default_timezone = :local   # Ensures ActiveRecord uses this zone
   end
 end

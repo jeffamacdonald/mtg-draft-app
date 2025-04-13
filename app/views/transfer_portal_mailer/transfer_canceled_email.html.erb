@@ -1,0 +1,12 @@
+The following trade has been canceled in the transfer portal:
+<% @transfer_portal_transaction.transfer_portal_transaction_offerings.map(&:receiver).uniq.each do |draft_participant| %>
+	<div class="mb-2">
+		<%= draft_participant.display_name %> is no longer receiving:
+		<% @transfer_portal_transaction.transfer_portal_transaction_offerings.where(receiver: draft_participant).each do |transfer_portal_transaction_offering| %>
+			<%= transfer_portal_transaction_offering.participant_pick.display_name %>
+		<% end %>
+	</div>
+<% end %>
+The trade will not complete due to one of the drafters backing out of the deal.
+
+View all transfer portal transactions <a href="<%= draft_transfer_portal_transactions_url(@draft) %>">here</a>.

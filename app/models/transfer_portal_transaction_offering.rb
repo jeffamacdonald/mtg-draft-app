@@ -30,7 +30,21 @@ class TransferPortalTransactionOffering < ApplicationRecord
 	belongs_to :receiver, class_name: "DraftParticipant"
 	belongs_to :participant_pick
 
+	validate :any_picks_in_pending_trade
+
+	delegate :draft, to: :transfer_portal_transaction
+
 	def transfer!
 		participant_pick.update!(draft_participant: receiver)
+	end
+
+	private
+
+	def any_picks_in_pending_trade
+		if draft.transfer_portal_transactions.active.flat_map(&:transfer_portal_transaction_offerings).any? do |tpto|
+			tpto.participant_pick == participant_pick
+		end
+			errors.add(:base, "Cannot trade picks that are still in an active trade")
+		end
 	end
 end

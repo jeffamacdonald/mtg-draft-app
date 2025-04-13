@@ -1,0 +1,24 @@
+<% if @offerer %>
+	Your offer has been accepted:
+<% elsif @trade_participant %>
+	You have accepted the following trade:
+<% else %>
+	The following trade has been accepted in the transfer portal:
+<% end %>
+<% @transfer_portal_transaction.transfer_portal_transaction_offerings.map(&:receiver).uniq.each do |draft_participant| %>
+	<div class="mb-2">
+		<%= draft_participant.display_name %> is receiving:
+		<% @transfer_portal_transaction.transfer_portal_transaction_offerings.where(receiver: draft_participant).each do |transfer_portal_transaction_offering| %>
+			<%= transfer_portal_transaction_offering.participant_pick.display_name %>
+		<% end %>
+	</div>
+<% end %>
+The trade will be finalized by <%= @transfer_portal_transaction.expires_at.in_time_zone("Pacific Time (US & Canada)").strftime("%a %B %-d at %-l:%M%P") %>.
+
+<% if @offerer || @trade_participant %>
+	You can always cancel the transaction before the trade is finalized <a href="<%= draft_transfer_portal_transactions_url(@draft) %>">here</a>.
+<% else %>
+	Unless of course they find a better deal before the transaction is finalized...
+
+	View all transfer portal transactions <a href="<%= draft_transfer_portal_transactions_url(@draft) %>">here</a>.
+<% end %>
