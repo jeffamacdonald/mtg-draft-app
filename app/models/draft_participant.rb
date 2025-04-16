@@ -3,6 +3,7 @@
 # Table name: draft_participants
 #
 #  id                 :uuid             not null, primary key
+#  display_color      :string
 #  display_name       :string           not null
 #  draft_position     :integer
 #  queue_active       :boolean          default(FALSE), not null
@@ -40,7 +41,14 @@ class DraftParticipant < ApplicationRecord
   scope :unskipped, -> { where(skipped: false) }
   scope :skipped, -> { where(skipped: true) }
   scope :ordered, -> { order(:draft_position) }
-  scope :reversed, -> { order(draft_position: :desc) }
+  scope :reversed, -> { order(draft_position: :desc) } 
+   
+  DISPLAY_COLORS = %w[#e6194b #3cb44b #ffe338 #4363d8 #f58231 #911eb4 #46f0f0 #f032e6 #bcf60c #fabebe #008080 #e6beff #9a6324 #a58559 #800000 #76dbaa #808000 #ffd8b1 #000075 #808080]
+  
+  def set_display_color!
+    color = (DISPLAY_COLORS - draft.draft_participants.map(&:display_color)).sample
+    update!(display_color: color)
+  end
 
   def pick_card!(cube_card)
     round = next_pick_round

@@ -3,6 +3,7 @@
 # Table name: draft_participants
 #
 #  id                 :uuid             not null, primary key
+#  display_color      :string
 #  display_name       :string           not null
 #  draft_position     :integer
 #  queue_active       :boolean          default(FALSE), not null

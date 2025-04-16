@@ -5,6 +5,7 @@ class DraftParticipantsController < ApplicationController
 
   def create
     draft_participant = DraftParticipant.create(create_params)
+    draft_participant.set_display_color!
     redirect_to draft_path(draft_participant.draft)
   end
 

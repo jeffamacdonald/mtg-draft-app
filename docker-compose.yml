@@ -39,6 +39,9 @@ services:
     environment:
       REDIS_URL: redis://redis:6379/1
       REGISTRATION_SECRET: test_secret
+      ZOHO_ACCOUNT_ID: 8136978000000008002
+      ZOHO_CLIENT_ID: 1000.4AQ95UYLC96IM7V2VR85IPXO8EY0CV
+      ZOHO_SECRET: d3cf55b13cd18a22564a05afd62413d5b1b52980e0
     stdin_open: true
     tty: true
     depends_on:

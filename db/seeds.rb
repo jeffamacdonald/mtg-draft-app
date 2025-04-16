@@ -59,9 +59,9 @@ land_cards.each do |card|
 end
 
 # draft
-draft = FactoryBot.create(:draft, cube:, owner: users.first)
+draft = FactoryBot.create(:draft, cube:, owner: users.first, transfers_allowed: true)
 
 # draft participants
-users.each do |user|
-	FactoryBot.create(:draft_participant, draft:, user:, draft_position: nil)
+users.each_with_index do |user, i|
+	FactoryBot.create(:draft_participant, draft:, user:, draft_position: nil, display_color: DraftParticipant::DISPLAY_COLORS[i])
 end
