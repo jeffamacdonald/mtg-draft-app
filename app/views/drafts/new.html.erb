@@ -16,6 +16,14 @@
           <%= f.number_field :timer_minutes, class: "d-block" %>
         </div>
         <div class="col-12">
+          <%= f.check_box :transfers_allowed, checked_value: true, unchecked_value:false %>
+          <%= f.label :transfers_allowed do %>
+            <div class="fw-bold text-center">
+              Allow Trades
+            </div>
+          <% end %>
+        </div>
+        <div class="col-12">
           <%= f.label :cube_id, "Cube", class: "fw-bold" %>
           <%= f.collection_select :cube_id, Cube.where(owner: current_user).order(:name), :id, :name, {}, {class: "d-block"} %>
         </div>

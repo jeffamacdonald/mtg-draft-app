@@ -2,16 +2,17 @@
 #
 # Table name: drafts
 #
-#  id            :uuid             not null, primary key
-#  last_pick_at  :datetime
-#  name          :string           not null
-#  rounds        :integer          not null
-#  status        :string           not null
-#  timer_minutes :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  cube_id       :uuid
-#  user_id       :uuid
+#  id                :uuid             not null, primary key
+#  last_pick_at      :datetime
+#  name              :string           not null
+#  rounds            :integer          not null
+#  status            :string           not null
+#  timer_minutes     :integer
+#  transfers_allowed :boolean
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  cube_id           :uuid
+#  user_id           :uuid
 #
 # Indexes
 #

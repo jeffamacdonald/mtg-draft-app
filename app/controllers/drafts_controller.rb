@@ -54,7 +54,8 @@ class DraftsController < ApplicationController
         timer_minutes: create_params[:timer_minutes],
         cube: Cube.find(create_params[:cube_id]),
         owner: current_user,
-        status: DraftStatus.pending
+        status: DraftStatus.pending,
+        transfers_allowed: create_params[:transfers_allowed]
       )
       @draft.draft_participants.create(user: current_user, display_name: current_user.username)
       redirect_to drafts_path
@@ -88,7 +89,8 @@ class DraftsController < ApplicationController
       :name,
       :rounds,
       :cube_id,
-      :timer_minutes
+      :timer_minutes,
+      :transfers_allowed
     )
   end
 
