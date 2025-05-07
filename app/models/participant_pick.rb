@@ -42,6 +42,10 @@ class ParticipantPick < ApplicationRecord
     cube_card&.card&.name || "Round #{round} Pick"
   end
 
+  def transfered?
+    draft_participant.calculate_pick_number(round) != pick_number
+  end
+
   private
 
   def availability

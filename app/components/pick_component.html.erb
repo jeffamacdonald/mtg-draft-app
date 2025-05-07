@@ -1,7 +1,18 @@
 <% if participant_pick.cube_card.present? || participant_pick.skipped? %>
-  <td id="participant_pick_<%= participant_pick.id %>" class="<%= pick_classes %>">
-    <%= participant_pick.name || "SKIPPED" %>
-  </td>
+  <% if participant_pick.transfered? %>
+    <td id="participant_pick_<%= participant_pick.id %>" 
+      class="<%= pick_classes %>"
+      style="border-style: solid; border-width: medium;"
+      data-controller="hovercard"
+      data-hovercard-url-value="<%= hovercard_participant_pick_path(participant_pick) %>"
+      data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
+      <%= participant_pick.name || "SKIPPED" %>
+    </td>
+  <% else %>
+    <td id="participant_pick_<%= participant_pick.id %>" class="<%= pick_classes %>">
+      <%= participant_pick.name || "SKIPPED" %>
+    </td>
+  <% end %>
 <% else %>
   <td
     id="participant_pick_<%= participant_pick.id %>"
