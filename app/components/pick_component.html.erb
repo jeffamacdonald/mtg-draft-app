@@ -1,24 +1,19 @@
 <% if participant_pick.cube_card.present? || participant_pick.skipped? %>
-  <% if participant_pick.transfered? %>
-    <td id="participant_pick_<%= participant_pick.id %>" 
-      class="<%= pick_classes %>"
-      style="border-style: solid; border-width: medium;"
-      data-controller="hovercard"
-      data-hovercard-url-value="<%= hovercard_participant_pick_path(participant_pick) %>"
-      data-action="mouseenter->hovercard#show mouseleave->hovercard#hide">
-      <%= participant_pick.name || "SKIPPED" %>
-    </td>
-  <% else %>
-    <td id="participant_pick_<%= participant_pick.id %>" class="<%= pick_classes %>">
-      <%= participant_pick.name || "SKIPPED" %>
-    </td>
-  <% end %>
+  <td id="participant_pick_<%= participant_pick.id %>" 
+    class="<%= pick_classes %>"
+    data-controller="<%= hovercard_controller %>"
+    data-hovercard-url-value="<%= hovercard_url %>"
+    data-action="<%= hovercard_actions %>">
+    <%= participant_pick.name || "SKIPPED" %>
+  </td>
 <% else %>
   <td
     id="participant_pick_<%= participant_pick.id %>"
-    data-controller="inline-edit"
+    class="<%= pick_classes %>"
+    data-controller="<%= "inline-edit #{hovercard_controller}" %>"
     data-inline-edit-value="<%= participant_pick.comment %>"
-    data-action="click->inline-edit#toggleEdit"
+    data-hovercard-url-value="<%= hovercard_url %>"
+    data-action="<%= "click->inline-edit#toggleEdit #{hovercard_actions}" %>"
   >
     <span data-inline-edit-target="text"><%= helpers.auto_link(participant_pick.comment, :html => { :target => '_blank' }) %></span>
     <form 

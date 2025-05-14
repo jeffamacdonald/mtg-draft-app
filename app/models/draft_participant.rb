@@ -52,8 +52,8 @@ class DraftParticipant < ApplicationRecord
 
   def pick_card!(cube_card)
     round = next_pick_round
-    pick = ParticipantPick.find_by(draft_participant: self,
-      round: round)
+    pick = ParticipantPick.where(draft_participant: self,
+      round: round).order(:pick_number).first
     pick.update!(cube_card: cube_card, skipped: false)
     if skipped?
       if draft.last_pick_number < next_pick_number

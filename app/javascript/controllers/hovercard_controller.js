@@ -6,7 +6,7 @@ export default class extends Controller {
 
   show() {
     if (this.hasCardTarget) {
-      this.cardTarget.classList.remove("hidden");
+      this.cardTarget.classList.remove("d-none");
     } else {
       fetch(this.urlValue)
         .then((r) => r.text())
@@ -21,8 +21,9 @@ export default class extends Controller {
   }
 
   hide() {
+    console.log('Hide called');
     if (this.hasCardTarget) {
-      this.cardTarget.classList.add("hidden");
+      this.cardTarget.classList.add("d-none");
     }
   }
 

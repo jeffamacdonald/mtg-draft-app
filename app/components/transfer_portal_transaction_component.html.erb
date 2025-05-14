@@ -1,7 +1,7 @@
 <div class="d-flex flex-sm-row flex-column gap-4 justify-content-center mb-2">
 	<% @transfer_portal_transaction.receiving_participants.each do |receiving_participant| %>
 		<div class="d-flex flex-column">
-			<div class="fw-bold"><%= "#{receiving_participant.display_name} will receive:" %></div>
+			<div class="fw-bold"><%= "#{receiving_participant.display_name} receives:" %></div>
 			<ul class="list-unstyled">
 				<% @transfer_portal_transaction.receiver_display_names(receiving_participant).each do |display_name| %>
 					<li>

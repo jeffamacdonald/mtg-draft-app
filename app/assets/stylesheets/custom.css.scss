@@ -91,6 +91,11 @@
   cursor: grabbing;
 }
 
+.highlighted-pick {
+  outline: medium solid black;
+  outline-offset: -2px;
+}
+
 [data-tooltip-arrow]::after {
   content: " ";
   position: absolute;
