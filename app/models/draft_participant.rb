@@ -51,9 +51,7 @@ class DraftParticipant < ApplicationRecord
   end
 
   def pick_card!(cube_card)
-    round = next_pick_round
-    pick = ParticipantPick.find_by(draft_participant: self,
-      round: round)
+    pick = next_pick
     pick.update!(cube_card: cube_card, skipped: false)
     if skipped?
       if draft.last_pick_number < next_pick_number
@@ -72,26 +70,6 @@ class DraftParticipant < ApplicationRecord
     RemoveQueuedPicksJob.perform_later(pick)
     Broadcast::DraftUpdateJob.perform_later(draft)
     pick
-  end
-
-  def next_pick_number
-    calculate_pick_number(next_pick_round)
-  end
-
-  def edge_case?
-    draft_position == 1 || draft_position == draft.draft_participants.count
-  end
-
-  def last_pick
-    participant_picks.reload.where.not(cube_card_id: nil).order(:pick_number).last
-  end
-
-  def all_pick_numbers
-    pick_numbers = []
-    draft.rounds.times do |i|
-      pick_numbers << calculate_pick_number(i + 1)
-    end
-    pick_numbers
   end
 
   def can_pick_for?(draft_participant)
@@ -115,7 +93,15 @@ class DraftParticipant < ApplicationRecord
 
   private
 
+  def next_pick
+    ParticipantPick.where(cube_card: nil, draft_participant: self).order(:pick_number).first
+  end
+
+  def next_pick_number
+    calculate_pick_number(next_pick_round)
+  end
+
   def next_pick_round
-    last_pick.nil? ? 1 : last_pick.round + 1
+    next_pick&.round || draft.rounds + 1
   end
 end

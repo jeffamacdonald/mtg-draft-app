@@ -38,6 +38,12 @@ class ParticipantPicksController < ApplicationController
     )
   end
 
+  def hovercard
+    @draft_participant = ParticipantPick.find(params[:id]).draft_participant
+
+    render layout: false
+  end
+
   private
 
   def create_params

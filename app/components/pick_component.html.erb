@@ -1,13 +1,19 @@
 <% if participant_pick.cube_card.present? || participant_pick.skipped? %>
-  <td id="participant_pick_<%= participant_pick.id %>" class="<%= pick_classes %>">
+  <td id="participant_pick_<%= participant_pick.id %>" 
+    class="<%= pick_classes %>"
+    data-controller="<%= hovercard_controller %>"
+    data-hovercard-url-value="<%= hovercard_url %>"
+    data-action="<%= hovercard_actions %>">
     <%= participant_pick.name || "SKIPPED" %>
   </td>
 <% else %>
   <td
     id="participant_pick_<%= participant_pick.id %>"
-    data-controller="inline-edit"
+    class="<%= pick_classes %>"
+    data-controller="<%= "inline-edit #{hovercard_controller}" %>"
     data-inline-edit-value="<%= participant_pick.comment %>"
-    data-action="click->inline-edit#toggleEdit"
+    data-hovercard-url-value="<%= hovercard_url %>"
+    data-action="<%= "click->inline-edit#toggleEdit #{hovercard_actions}" %>"
   >
     <span data-inline-edit-target="text"><%= helpers.auto_link(participant_pick.comment, :html => { :target => '_blank' }) %></span>
     <form 
