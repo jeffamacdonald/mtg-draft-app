@@ -41,6 +41,7 @@ class TransferPortalTransactionsController < ApplicationController
 					participant_pick_id:
 				)
 			end
+			TransferPortalMailer.transfer_proposed_email(transfer_portal_transaction).deliver_now
 		end
 
 		flash[:success] = "Offer sent!"

@@ -51,23 +51,23 @@ class TransferPortalTransaction < ApplicationRecord
 		update!(expires_at: two_business_days_away)
 		accepted!
 		ConfirmTransferPortalTransactionJob.set(wait: expires_at.to_i - Time.now.to_i).perform_later(self)
-		TransferPortalMailer.transfer_initiated_email(self)
+		TransferPortalMailer.transfer_initiated_email(self).deliver_now
 	end
 
 	def cancel!
 		canceled!
-		TransferPortalMailer.transfer_canceled_email(self)
+		TransferPortalMailer.transfer_canceled_email(self).deliver_now
 	end
 
 	def reject!
 		rejected!
-		TransferPortalMailer.transfer_rejected_email(self)
+		TransferPortalMailer.transfer_rejected_email(self).deliver_now
 	end
 
 	def confirm!
 		transfer_portal_transaction_offerings.each(&:transfer!)
 		confirmed!
-		TransferPortalMailer.transfer_confirmed_email(self)
+		TransferPortalMailer.transfer_confirmed_email(self).deliver_now
 	end
 
 	private

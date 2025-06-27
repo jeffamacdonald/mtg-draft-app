@@ -1,4 +1,4 @@
-The following trade has been accepted in the transfer portal:
+The following trade has been proposed:
 
 <% @transfer_portal_transaction.transfer_portal_transaction_offerings.map(&:receiver).uniq.each do |draft_participant| %>
 	<div class="mb-2">
@@ -9,8 +9,6 @@ The following trade has been accepted in the transfer portal:
 	</div>
 <% end %>
 
-The trade will be finalized by <%= @transfer_portal_transaction.expires_at.in_time_zone("Pacific Time (US & Canada)").strftime("%a %B %-d at %-l:%M%P") %>.
+You can accept or reject the offer <a href="<%= draft_transfer_portal_transactions_url(@draft) %>">here</a>.
 
-Unless of course they find a better deal before the transaction is finalized...
-
-View all transfer portal transactions <a href="<%= draft_transfer_portal_transactions_url(@draft) %>">here</a>.
+An accepted offer will go through after two business days.
