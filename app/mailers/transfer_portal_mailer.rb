@@ -40,6 +40,5 @@ class TransferPortalMailer < ApplicationMailer
       draft_participant.user.email
     end
     mail(to: to, subject: "A Trade Has Gone Through!")
-    end
   end
 end
