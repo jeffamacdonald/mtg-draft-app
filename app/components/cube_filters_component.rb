@@ -30,9 +30,9 @@ class CubeFiltersComponent < ViewComponent::Base
   private
 
   def selected_view
-    if user.default_display == "text"
+    if user&.default_display == "text"
       "Text View"
-    elsif user.default_image_size == "lg"
+    elsif user&.default_image_size == "lg"
       "Large Image View"
     else
       "Small Image View"

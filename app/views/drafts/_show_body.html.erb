@@ -3,6 +3,6 @@
   <div class="d-flex flex-md-row flex-column w-100">
     <%= render(PickListComponent.new(draft: draft, context: context)) %>
   </div>
-  <%= render(CubeFiltersComponent.new(url: draft_path(draft), filter_params: filter_params, user: context.draft_participant.user)) %>
+  <%= render(CubeFiltersComponent.new(url: draft_path(draft), filter_params: filter_params, user: context.draft_participant&.user)) %>
   <%= render(CubeCardListComponent.new(cube_cards: cube_cards, context: context)) %>
 </div>
