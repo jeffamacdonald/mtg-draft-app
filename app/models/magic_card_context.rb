@@ -26,7 +26,7 @@ class MagicCardContext
   def picked?(cube_card)
     return false unless draft.present?
 
-    draft.participant_picks.map(&:cube_card).include? cube_card
+    picked_cube_card_ids.include? cube_card.id
   end
 
   def active_participant
@@ -35,5 +35,11 @@ class MagicCardContext
 
   def text_only?
     !!@text_only
+  end
+
+  private
+
+  def picked_cube_card_ids
+    @picked_cube_card_ids ||= draft.participant_picks.pluck(:cube_card_id).to_a
   end
 end

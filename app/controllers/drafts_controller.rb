@@ -7,6 +7,7 @@ class DraftsController < ApplicationController
 
   def show
     @cube_cards = @draft.cube.cube_cards
+      .includes(:card)
       .select(
         "cube_cards.*",
         "cards.name",
@@ -101,7 +102,11 @@ class DraftsController < ApplicationController
   end
 
   def find_draft
-    @draft = Draft.find params[:id]
+    @draft = Draft.includes(
+      :cube,
+      draft_participants: :user,
+      participant_picks: [:draft_participant, :cube_card]
+    ).find(params[:id])
   end
 
   def set_display_defaults
@@ -113,9 +118,11 @@ class DraftsController < ApplicationController
   end
 
   def set_context
+    @draft_participant = @draft.draft_participants.find { |p| p.user_id == current_user.id }
+
     @context = MagicCardContext.for_active_draft(
       draft: @draft, 
-      draft_participant: @draft.draft_participants.find_by(user: current_user), 
+      draft_participant: @draft_participant,
       text_only: current_user.default_display == "text", 
       image_size: current_user.default_image_size)
   end
