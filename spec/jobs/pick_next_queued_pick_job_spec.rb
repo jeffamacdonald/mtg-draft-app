@@ -47,7 +47,8 @@ RSpec.describe PickNextQueuedPickJob, type: :job do
       end
 
       context "when queued picks are present" do
-        it "picks the queued pick with priority 1" do
+        it "picks the queued pick with priority 1 and sends email" do
+          expect(PickMailer).to receive(:next_up_email).and_return(double("MessageDelivery", deliver_now: true))
           described_class.perform_now(participant_pick)
 
           expect(participant_pick.reload.cube_card).to eq queued_card_1
