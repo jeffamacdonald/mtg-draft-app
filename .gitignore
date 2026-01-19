@@ -37,5 +37,6 @@
 
 /.byebug_history
 /.env*
+/.idea
 
 /config/credentials/production.key

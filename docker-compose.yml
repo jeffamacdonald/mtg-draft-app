@@ -4,9 +4,9 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql/data
     ports:
-      - 127.0.0.1:${POSTGRES_PORT:-5432}:5432
+      - 127.0.0.1:5433:5432
     environment:
-      - POSTGRES_USERNAME=postgres
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
   redis:
@@ -14,10 +14,13 @@ services:
     ports:
       - "6379:6379"
     volumes:
-    - redis-data:/var/lib/redis/data
+      - redis-data:/var/lib/redis/data
 
   sidekiq:
-    build: .
+    build:
+      context: .
+      args:
+        RAILS_ENV: development
     command: bundle exec sidekiq
     volumes:
       - .:/app
@@ -26,19 +29,25 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_URL: redis://redis:6379/1
+      BUNDLE_WITHOUT: ""
     depends_on:
       - redis
 
   web:
-    build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    build:
+      context: .
+      args:
+        RAILS_ENV: development
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails assets:precompile && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/app
     ports:
       - "3000:3000"
     environment:
+      RAILS_ENV: development
       REDIS_URL: redis://redis:6379/1
       REGISTRATION_SECRET: test_secret
+      BUNDLE_WITHOUT: ""
     stdin_open: true
     tty: true
     depends_on:
