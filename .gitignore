@@ -38,5 +38,6 @@
 /.byebug_history
 /.env*
 /.idea
+/.kamal/secrets*
 
 /config/credentials/production.key
