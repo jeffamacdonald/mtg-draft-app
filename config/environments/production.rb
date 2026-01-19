@@ -93,8 +93,8 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_cable.url = "ws://nevernoid.xyz/cable"
-  config.action_cable.allowed_request_origins = ["https://nevernoid.xyz"]
+  config.action_cable.url = "ws://165.232.128.212:3000/cable"
+  config.action_cable.allowed_request_origins = [/https:\/\/*/]
 
   config.action_mailer.default_url_options = { host: "nevernoid.xyz", protocol: "https" }
 end
