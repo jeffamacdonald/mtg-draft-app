@@ -31,9 +31,13 @@ RUN yarn install
 COPY . .
 
 # Only precompile bootsnap and assets in production
-RUN if [ "$RAILS_ENV" != "development" ]; then \
+RUN echo "RAILS_ENV is: $RAILS_ENV" && \
+    if [ "$RAILS_ENV" = "production" ] || [ -z "$RAILS_ENV" ]; then \
+      echo "Compiling assets..." && \
       bundle exec bootsnap precompile app/ lib/ && \
       SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile --trace; \
+    else \
+      echo "Skipping asset compilation for $RAILS_ENV"; \
     fi
 
 EXPOSE 3000
