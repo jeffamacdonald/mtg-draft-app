@@ -4,15 +4,18 @@ service: mtg-draft-app
 # Name of the container image.
 image: jeffamacdonald/mtg-draft-app
 
-# Builder configuration
-builder:
-  arch: amd64
-
 # Deploy to these servers.
 servers:
   web:
     hosts:
       - 165.232.128.212
+    labels:
+      traefik.http.routers.mtg-draft-app-web.rule: "Host(`nevernoid.xyz`) || Host(`www.nevernoid.xyz`)"
+      traefik.http.routers.mtg-draft-app-web.entrypoints: websecure
+      traefik.http.routers.mtg-draft-app-web.tls.certresolver: letsencrypt
+      traefik.http.routers.mtg-draft-app-web.tls.domains[0].main: nevernoid.xyz
+      traefik.http.routers.mtg-draft-app-web.tls.domains[0].sans: www.nevernoid.xyz
+      traefik.http.services.mtg-draft-app-web.loadbalancer.server.port: 3000
     options:
       network: "private"
 
@@ -27,8 +30,8 @@ servers:
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: 
-    - DOCKERHUB_USERNAME
+  username:
+    - DOCKERHUB_USER
   password:
     - DOCKERHUB_PASSWORD
 
@@ -53,6 +56,16 @@ env:
 # Use a different ssh user than root
 ssh:
   user: root
+
+# Configure builder setup.
+# builder:
+#   args:
+#     RUBY_VERSION: 3.2.0
+#   secrets:
+#     - GITHUB_TOKEN
+#   remote:
+#     arch: amd64
+#     host: ssh://app@192.168.0.1
 
 # Use accessory services (secrets come from .env).
 accessories:
@@ -81,15 +94,31 @@ accessories:
     options:
       network: "private"
 
-# Configure proxy for SSL and domain handling
-# Configure proxy for SSL and domain handling
-proxy:
-  ssl: true
-  host: nevernoid.xyz
-  healthcheck:
-    path: /up
-    interval: 10
-    timeout: 60
+# Configure custom arguments for Traefik. Be sure to reboot traefik when you modify it.
+traefik:
+  options:
+    publish:
+      - "443:443"
+    volume:
+      - "/letsencrypt/acme.json:/letsencrypt/acme.json"
+    network: "private"
+  args:
+    entryPoints.web.address: ":80"
+    entryPoints.websecure.address: ":443"
+    entryPoints.web.http.redirections.entryPoint.to: websecure
+    entryPoints.web.http.redirections.entryPoint.scheme: https
+    entryPoints.web.http.redirections.entrypoint.permanent: true
+    certificatesResolvers.letsencrypt.acme.email: "comms@nevernoid.xyz"
+    certificatesResolvers.letsencrypt.acme.storage: "/letsencrypt/acme.json"
+    certificatesResolvers.letsencrypt.acme.httpchallenge: true
+    certificatesResolvers.letsencrypt.acme.httpchallenge.entrypoint: web
+
+# Configure a custom healthcheck (default is /up on port 3000)
+healthcheck:
+  interval: 10s
+  max_attempts: 10
+#   path: /healthz
+#   port: 4000
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
@@ -115,4 +144,4 @@ proxy:
 # Controls if we abort when see a role with no hosts. Disabling this may be
 # useful for more complex deploy configurations.
 #
-# allow_empty_roles: false
+  # allow_empty_roles: false
