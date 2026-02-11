@@ -42,8 +42,4 @@ RUN echo "RAILS_ENV is: $RAILS_ENV" && \
 
 EXPOSE 3000
 
-# Add health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:3000/up || exit 1
-
 CMD ["sh", "-c", "rm -f tmp/pids/server.pid && ./bin/rails server"]
