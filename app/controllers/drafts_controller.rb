@@ -7,7 +7,7 @@ class DraftsController < ApplicationController
 
   def show
     @cube_cards = @draft.cube.cube_cards
-      .includes(card: :color_identity)
+      .includes(:card)
       .select(
         "cube_cards.*",
         "cards.name",

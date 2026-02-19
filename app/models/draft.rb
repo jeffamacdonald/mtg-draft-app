@@ -45,7 +45,7 @@ class Draft < ApplicationRecord
       draft_participants: :user,
       participant_picks: [
         :draft_participant,
-        { cube_card: { card: :color_identity } }
+        { cube_card: :card }
       ]
     )
   }
