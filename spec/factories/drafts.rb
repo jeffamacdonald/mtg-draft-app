@@ -2,17 +2,18 @@
 #
 # Table name: drafts
 #
-#  id                :uuid             not null, primary key
-#  last_pick_at      :datetime
-#  name              :string           not null
-#  rounds            :integer          not null
-#  status            :string           not null
-#  timer_minutes     :integer
-#  transfers_allowed :boolean
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  cube_id           :uuid
-#  user_id           :uuid
+#  id                 :uuid             not null, primary key
+#  last_pick_at       :datetime
+#  name               :string           not null
+#  participants_count :integer          default(0), not null
+#  rounds             :integer          not null
+#  status             :string           not null
+#  timer_minutes      :integer
+#  transfers_allowed  :boolean
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  cube_id            :uuid
+#  user_id            :uuid
 #
 # Indexes
 #
@@ -28,8 +29,8 @@
 #
 FactoryBot.define do
   factory :draft do
-    cube { create :cube }
-    owner { create :user }
+    cube
+    association :owner, factory: :user
     sequence(:name) { |n| "draft#{n}" }
     status { DraftStatus.pending }
     rounds { 40 }

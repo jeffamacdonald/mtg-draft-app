@@ -20,6 +20,7 @@
 #  index_draft_participants_on_draft_id                     (draft_id)
 #  index_draft_participants_on_draft_id_and_draft_position  (draft_id,draft_position) UNIQUE
 #  index_draft_participants_on_draft_id_and_user_id         (draft_id,user_id) UNIQUE
+#  index_draft_participants_on_draft_position_skipped       (draft_id,draft_position,skipped)
 #  index_draft_participants_on_surrogate_user_id            (surrogate_user_id)
 #  index_draft_participants_on_user_id                      (user_id)
 #
@@ -31,12 +32,8 @@
 #
 FactoryBot.define do
   factory :draft_participant do
-    transient do
-      draft { create :draft }
-      user { create :user }
-    end
-    draft_id { draft.id }
-    user_id { user.id }
+    draft
+    user
     sequence(:display_name) { |n| "participant#{n}" }
     sequence(:draft_position) { |n| n }
   end

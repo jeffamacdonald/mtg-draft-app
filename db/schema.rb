@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_16_051726) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_19_073651) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "pgcrypto"
@@ -80,6 +80,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_16_051726) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["card_id"], name: "index_cube_cards_on_card_id"
+    t.index ["cube_id", "soft_delete", "custom_cmc"], name: "index_cube_cards_on_cube_soft_delete_cmc"
     t.index ["cube_id"], name: "index_cube_cards_on_cube_id"
     t.index ["custom_color_identity"], name: "index_cube_cards_on_custom_color_identity"
     t.index ["soft_delete"], name: "index_cube_cards_on_soft_delete"
@@ -118,6 +119,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_16_051726) do
     t.boolean "queue_active", default: false, null: false
     t.integer "queue_minute_delay", default: 0, null: false
     t.string "display_color"
+    t.index ["draft_id", "draft_position", "skipped"], name: "index_draft_participants_on_draft_position_skipped"
     t.index ["draft_id", "draft_position"], name: "index_draft_participants_on_draft_id_and_draft_position", unique: true
     t.index ["draft_id", "user_id"], name: "index_draft_participants_on_draft_id_and_user_id", unique: true
     t.index ["draft_id"], name: "index_draft_participants_on_draft_id"
@@ -136,6 +138,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_16_051726) do
     t.datetime "updated_at", null: false
     t.datetime "last_pick_at"
     t.boolean "transfers_allowed"
+    t.integer "participants_count", default: 0, null: false
     t.index ["cube_id"], name: "index_drafts_on_cube_id"
     t.index ["name"], name: "index_drafts_on_name"
     t.index ["status"], name: "index_drafts_on_status"
@@ -151,7 +154,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_16_051726) do
     t.datetime "updated_at", null: false
     t.string "comment", default: ""
     t.boolean "skipped", default: false
+    t.index ["cube_card_id", "round"], name: "index_participant_picks_on_card_and_round"
     t.index ["cube_card_id"], name: "index_participant_picks_on_cube_card_id"
+    t.index ["draft_participant_id", "pick_number"], name: "index_participant_picks_on_participant_and_pick_number"
     t.index ["draft_participant_id"], name: "index_participant_picks_on_draft_participant_id"
     t.index ["round"], name: "index_participant_picks_on_round"
   end

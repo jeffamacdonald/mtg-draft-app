@@ -2,17 +2,18 @@
 #
 # Table name: drafts
 #
-#  id                :uuid             not null, primary key
-#  last_pick_at      :datetime
-#  name              :string           not null
-#  rounds            :integer          not null
-#  status            :string           not null
-#  timer_minutes     :integer
-#  transfers_allowed :boolean
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  cube_id           :uuid
-#  user_id           :uuid
+#  id                 :uuid             not null, primary key
+#  last_pick_at       :datetime
+#  name               :string           not null
+#  participants_count :integer          default(0), not null
+#  rounds             :integer          not null
+#  status             :string           not null
+#  timer_minutes      :integer
+#  transfers_allowed  :boolean
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  cube_id            :uuid
+#  user_id            :uuid
 #
 # Indexes
 #
@@ -29,7 +30,7 @@
 class Draft < ApplicationRecord
   belongs_to :cube
   belongs_to :owner, foreign_key: :user_id, class_name: "User"
-  has_many :draft_participants
+  has_many :draft_participants, counter_cache: :participants_count
   has_many :users, :through => :draft_participants
   has_many :participant_picks, :through => :draft_participants
   has_many :draft_chat_messages
@@ -38,6 +39,16 @@ class Draft < ApplicationRecord
   enum :status, DraftStatus.all.zip(DraftStatus.all).to_h
 
   scope :pending, -> { where(status: DraftStatus.pending) }
+  scope :with_full_associations, -> {
+    includes(
+      :cube,
+      draft_participants: :user,
+      participant_picks: [
+        :draft_participant,
+        { cube_card: { card: :color_identity } }
+      ]
+    )
+  }
 
   def set_participant_positions!
     draft_participants.shuffle.each.with_index do |participant, i|

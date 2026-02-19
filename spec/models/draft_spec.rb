@@ -2,17 +2,18 @@
 #
 # Table name: drafts
 #
-#  id                :uuid             not null, primary key
-#  last_pick_at      :datetime
-#  name              :string           not null
-#  rounds            :integer          not null
-#  status            :string           not null
-#  timer_minutes     :integer
-#  transfers_allowed :boolean
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  cube_id           :uuid
-#  user_id           :uuid
+#  id                 :uuid             not null, primary key
+#  last_pick_at       :datetime
+#  name               :string           not null
+#  participants_count :integer          default(0), not null
+#  rounds             :integer          not null
+#  status             :string           not null
+#  timer_minutes      :integer
+#  transfers_allowed  :boolean
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  cube_id            :uuid
+#  user_id            :uuid
 #
 # Indexes
 #
@@ -31,8 +32,8 @@ require 'rails_helper'
 RSpec.describe Draft do
   describe '#set_participant_positions!' do
     let!(:draft) { create :draft }
-    let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: nil }
-    let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: nil }
+    let!(:draft_participant_1) { create :draft_participant, draft: draft, draft_position: nil }
+    let!(:draft_participant_2) { create :draft_participant, draft: draft, draft_position: nil }
 
     subject { draft.set_participant_positions! }
 
@@ -49,8 +50,8 @@ RSpec.describe Draft do
 
   describe "#setup_picks!" do
     let!(:draft) { create :draft, rounds: 2 }
-    let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: 1 }
-    let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
+    let!(:draft_participant_1) { create :draft_participant, draft: draft, draft_position: 1 }
+    let!(:draft_participant_2) { create :draft_participant, draft: draft, draft_position: 2 }
 
     it "creates empty picks based on draft position" do
       expect {
@@ -65,9 +66,9 @@ RSpec.describe Draft do
 
   describe "#active_pick" do
     let(:draft) { create :draft }
-    let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: 1 }
-    let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
-    let!(:draft_participant_3) { create :draft_participant, draft_id: draft.id, draft_position: 3 }
+    let!(:draft_participant_1) { create :draft_participant, draft: draft, draft_position: 1 }
+    let!(:draft_participant_2) { create :draft_participant, draft: draft, draft_position: 2 }
+    let!(:draft_participant_3) { create :draft_participant, draft: draft, draft_position: 3 }
     let!(:participant_pick_1) do
       create :participant_pick,
         draft_participant_id: draft_participant_1.id,
@@ -97,9 +98,9 @@ RSpec.describe Draft do
 
   describe '#active_participant' do
     let(:draft) { create :draft }
-    let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: 1 }
-    let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
-    let!(:draft_participant_3) { create :draft_participant, draft_id: draft.id, draft_position: 3 }
+    let!(:draft_participant_1) { create :draft_participant, draft: draft, draft_position: 1 }
+    let!(:draft_participant_2) { create :draft_participant, draft: draft, draft_position: 2 }
+    let!(:draft_participant_3) { create :draft_participant, draft: draft, draft_position: 3 }
     let!(:participant_pick_1) do
       create :participant_pick,
         draft_participant_id: draft_participant_1.id,
@@ -150,8 +151,8 @@ RSpec.describe Draft do
       end
 
       context 'multiple drafters are skipped' do
-        let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2, skipped: true }
-        let!(:draft_participant_3) { create :draft_participant, draft_id: draft.id, draft_position: 3, skipped: true }
+        let!(:draft_participant_2) { create :draft_participant, draft: draft, draft_position: 2, skipped: true }
+        let!(:draft_participant_3) { create :draft_participant, draft: draft, draft_position: 3, skipped: true }
         let!(:participant_pick_3) do
           create :participant_pick,
             draft_participant_id: draft_participant_3.id,
@@ -193,8 +194,8 @@ RSpec.describe Draft do
 
   describe "#last_pick_number" do
     let(:draft) { create :draft }
-    let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: 1 }
-    let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
+    let!(:draft_participant_1) { create :draft_participant, draft: draft, draft_position: 1 }
+    let!(:draft_participant_2) { create :draft_participant, draft: draft, draft_position: 2 }
     let!(:participant_pick_1) do
       create :participant_pick,
         draft_participant_id: draft_participant_1.id,
@@ -260,8 +261,8 @@ RSpec.describe Draft do
   describe "#timer_live?" do
     let(:timer_minutes) { nil }
     let(:draft) { create :draft, timer_minutes: timer_minutes, status: DraftStatus.active }
-    let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: 1 }
-    let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
+    let!(:draft_participant_1) { create :draft_participant, draft: draft, draft_position: 1 }
+    let!(:draft_participant_2) { create :draft_participant, draft: draft, draft_position: 2 }
     let!(:participant_pick_1) do
       create :participant_pick,
         draft_participant_id: draft_participant_1.id,
@@ -337,8 +338,8 @@ RSpec.describe Draft do
 
   describe "#enqueue_skip_job" do
     let(:draft) { create :draft, status: DraftStatus.active }
-    let!(:draft_participant_1) { create :draft_participant, draft_id: draft.id, draft_position: 1 }
-    let!(:draft_participant_2) { create :draft_participant, draft_id: draft.id, draft_position: 2 }
+    let!(:draft_participant_1) { create :draft_participant, draft: draft, draft_position: 1 }
+    let!(:draft_participant_2) { create :draft_participant, draft: draft, draft_position: 2 }
     let!(:participant_pick_1) do
       create :participant_pick,
         draft_participant_id: draft_participant_1.id,

@@ -14,9 +14,11 @@
 #
 # Indexes
 #
-#  index_participant_picks_on_cube_card_id          (cube_card_id)
-#  index_participant_picks_on_draft_participant_id  (draft_participant_id)
-#  index_participant_picks_on_round                 (round)
+#  index_participant_picks_on_card_and_round               (cube_card_id,round)
+#  index_participant_picks_on_cube_card_id                 (cube_card_id)
+#  index_participant_picks_on_draft_participant_id         (draft_participant_id)
+#  index_participant_picks_on_participant_and_pick_number  (draft_participant_id,pick_number)
+#  index_participant_picks_on_round                        (round)
 #
 # Foreign Keys
 #

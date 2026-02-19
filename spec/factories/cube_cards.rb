@@ -18,6 +18,7 @@
 #
 #  index_cube_cards_on_card_id                (card_id)
 #  index_cube_cards_on_cube_id                (cube_id)
+#  index_cube_cards_on_cube_soft_delete_cmc   (cube_id,soft_delete,custom_cmc)
 #  index_cube_cards_on_custom_color_identity  (custom_color_identity)
 #  index_cube_cards_on_soft_delete            (soft_delete)
 #

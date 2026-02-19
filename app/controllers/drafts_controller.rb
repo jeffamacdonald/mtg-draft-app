@@ -7,7 +7,7 @@ class DraftsController < ApplicationController
 
   def show
     @cube_cards = @draft.cube.cube_cards
-      .includes(:card)
+      .includes(card: :color_identity)
       .select(
         "cube_cards.*",
         "cards.name",
@@ -102,11 +102,7 @@ class DraftsController < ApplicationController
   end
 
   def find_draft
-    @draft = Draft.includes(
-      :cube,
-      draft_participants: :user,
-      participant_picks: [:draft_participant, :cube_card]
-    ).find(params[:id])
+    @draft = Draft.with_full_associations.find(params[:id])
   end
 
   def set_display_defaults

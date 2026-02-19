@@ -12,4 +12,15 @@ class PickListComponent < ViewComponent::Base
       "bg-cyan"
     end
   end
+
+  def grouped_picks_by_round
+    # Use already loaded participant_picks to avoid additional queries
+    @grouped_picks_by_round ||= draft.participant_picks
+      .sort_by(&:pick_number)
+      .group_by(&:round)
+  end
+
+  def ordered_participants
+    @ordered_participants ||= draft.draft_participants.sort_by(&:draft_position)
+  end
 end

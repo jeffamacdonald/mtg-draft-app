@@ -1,3 +1,5 @@
+require 'set'
+
 class MagicCardContext
   include Rails.application.routes.url_helpers
 
@@ -15,22 +17,22 @@ class MagicCardContext
     new(cube: nil, draft: nil, draft_participant: nil, text_only: nil, image_size: nil)
   end
 
+  attr_reader :active_participant, :picked_cube_card_ids
+
   def initialize(cube:, draft:, draft_participant:, text_only:, image_size:)
     @cube = cube
     @draft = draft
     @draft_participant = draft_participant
     @text_only = text_only
     @image_size = image_size
+    # Precompute expensive operations
+    precompute_draft_data if draft.present?
   end
 
   def picked?(cube_card)
     return false unless draft.present?
 
-    picked_cube_card_ids.include? cube_card.id
-  end
-
-  def active_participant
-    @_active_participant ||= draft.active_participant
+    picked_cube_card_ids.include?(cube_card.id)
   end
 
   def text_only?
@@ -39,7 +41,19 @@ class MagicCardContext
 
   private
 
-  def picked_cube_card_ids
-    @picked_cube_card_ids ||= draft.participant_picks.pluck(:cube_card_id).to_a
+  def precompute_draft_data
+    # Use the already loaded participant_picks from includes
+    picks_with_cards = @draft.participant_picks.select { |pick| pick.cube_card_id.present? }
+    @picked_cube_card_ids = Set.new(picks_with_cards.map(&:cube_card_id))
+
+    # Calculate active pick without additional queries
+    max_pick_number = @draft.participant_picks
+      .select { |pick| pick.cube_card_id.present? || pick.skipped? }
+      .map(&:pick_number)
+      .max || 0
+
+    @active_participant = @draft.participant_picks
+      .find { |pick| pick.pick_number == max_pick_number + 1 }
+      &.draft_participant
   end
 end

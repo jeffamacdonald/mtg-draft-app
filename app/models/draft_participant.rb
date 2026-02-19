@@ -20,6 +20,7 @@
 #  index_draft_participants_on_draft_id                     (draft_id)
 #  index_draft_participants_on_draft_id_and_draft_position  (draft_id,draft_position) UNIQUE
 #  index_draft_participants_on_draft_id_and_user_id         (draft_id,user_id) UNIQUE
+#  index_draft_participants_on_draft_position_skipped       (draft_id,draft_position,skipped)
 #  index_draft_participants_on_surrogate_user_id            (surrogate_user_id)
 #  index_draft_participants_on_user_id                      (user_id)
 #
@@ -30,7 +31,7 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class DraftParticipant < ApplicationRecord
-  belongs_to :draft
+  belongs_to :draft, counter_cache: :participants_count
   belongs_to :user
   has_many :participant_picks
   has_many :queued_picks
@@ -59,7 +60,7 @@ class DraftParticipant < ApplicationRecord
       end
     else
       draft.update!(last_pick_at: pick.updated_at)
-      if pick.pick_number == draft.draft_participants.count * draft.rounds
+      if pick.pick_number == draft.participants_count * draft.rounds
         draft.completed!
       else
         draft.enqueue_skip_job
@@ -83,7 +84,7 @@ class DraftParticipant < ApplicationRecord
   end
 
   def calculate_pick_number(round)
-    total_drafters = draft.draft_participants.count
+    total_drafters = draft.participants_count
     if round % 2 == 1
       ((round-1) * total_drafters + draft_position)
     else
