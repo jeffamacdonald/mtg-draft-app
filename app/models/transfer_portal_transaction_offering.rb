@@ -41,7 +41,7 @@ class TransferPortalTransactionOffering < ApplicationRecord
 	private
 
 	def any_picks_in_pending_trade
-		if draft.transfer_portal_transactions.active.flat_map(&:transfer_portal_transaction_offerings).any? do |tpto|
+		if draft.transfer_portal_transactions.active.where.not(id: transfer_portal_transaction_id).flat_map(&:transfer_portal_transaction_offerings).any? do |tpto|
 			tpto.participant_pick == participant_pick
 		end
 			errors.add(:base, "Cannot trade picks that are still in an active trade")

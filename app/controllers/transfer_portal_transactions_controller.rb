@@ -9,7 +9,7 @@ class TransferPortalTransactionsController < ApplicationController
 	def new
 		@draft_participant = DraftParticipant.find(params[:draft_participant_id])
 	  @sender = @draft_participant.draft.draft_participants.find_by(user: current_user)
-	  
+
 	  render turbo_stream: turbo_stream.replace(
 	    "transfer-portal-draft-participants",
 	    render_to_string(
