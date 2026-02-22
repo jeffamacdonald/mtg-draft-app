@@ -1,13 +1,12 @@
 # Use the official Ruby image
-FROM ruby:3.3.0-alpine
+FROM ruby:3.4.4-alpine
 
 WORKDIR /app
 
 ARG RAILS_ENV=development
 ENV RAILS_ENV=${RAILS_ENV} \
     BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_PATH="/usr/local/bundle"
 
 RUN apk add --no-cache bash \
       curl \
@@ -17,13 +16,19 @@ RUN apk add --no-cache bash \
       postgresql-dev \
       postgresql-client \
       libc6-compat \
+      linux-headers \
+      yaml-dev \
       tzdata \
       yarn \
       sed && rm -rf /var/cache/apk/*
 
-RUN gem install bundler:2.3.3
+RUN gem install bundler:2.7.2
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --verbose
+RUN if [ "$RAILS_ENV" = "production" ]; then \
+      bundle install --verbose --without development test; \
+    else \
+      bundle install --verbose; \
+    fi
 
 COPY package.json yarn.lock ./
 RUN yarn install

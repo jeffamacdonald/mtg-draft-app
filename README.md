@@ -5,7 +5,7 @@ This web app uses rails for the framework, Postgres for the database, Bootstrap 
 ## Prerequisites
 
 This web application is contained within docker images, so most of the prerequisites are taken care of by the dockerfile. With that said, things that would be good to have installed are:
-- Ruby 3.3.0 https://www.ruby-lang.org/en/documentation/installation/
+- Ruby 3.4.4 https://www.ruby-lang.org/en/documentation/installation/
 - Docker https://docs.docker.com/get-docker/
 
 ## Docker
