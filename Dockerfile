@@ -21,8 +21,16 @@ RUN apk add --no-cache bash \
       glib-dev \
       musl-dev \
       gcc \
+      g++ \
       make \
       pkgconfig \
+      autoconf \
+      automake \
+      libtool \
+      binutils \
+      gmp-dev \
+      mpfr-dev \
+      mpc1-dev \
       tzdata \
       yarn \
       sed && rm -rf /var/cache/apk/*
