@@ -49,6 +49,9 @@ gem "bootsnap", require: false
 # Use Sass to process CSS
 gem "sassc-rails"
 
+# Force compatible io-console version for Ruby 3.4.4
+gem "io-console", ">= 0.7.0"
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
@@ -68,6 +71,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "annotaterb"
+  gem "oaken"
 end
 
 group :test do

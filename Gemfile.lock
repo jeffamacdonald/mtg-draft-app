@@ -143,7 +143,7 @@ GEM
     holidays (8.8.0)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
-    io-console (0.7.2)
+    io-console (0.8.2)
     irb (1.13.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
@@ -195,6 +195,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.1-x86_64-linux-musl)
       racc (~> 1.4)
+    oaken (1.0.0)
     orm_adapter (0.5.0)
     pg (1.5.6)
     pg_search (2.3.6)
@@ -361,8 +362,10 @@ DEPENDENCIES
   faraday
   faraday_middleware
   holidays
+  io-console (>= 0.7.0)
   jbuilder
   jsbundling-rails
+  oaken
   pg (~> 1.1)
   pg_search
   puma (~> 6.0)
