@@ -18,6 +18,11 @@ RUN apk add --no-cache bash \
       libc6-compat \
       linux-headers \
       yaml-dev \
+      glib-dev \
+      musl-dev \
+      gcc \
+      make \
+      pkgconfig \
       tzdata \
       yarn \
       sed && rm -rf /var/cache/apk/*
