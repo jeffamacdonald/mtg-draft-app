@@ -33,7 +33,11 @@ RUN apk add --no-cache bash \
       mpc1-dev \
       tzdata \
       yarn \
-      sed && rm -rf /var/cache/apk/*
+      sed \
+      ruby-dev \
+      openssl-dev \
+      libffi-dev \
+      zlib-dev && rm -rf /var/cache/apk/*
 
 RUN gem install bundler:2.7.2
 COPY Gemfile Gemfile.lock ./
