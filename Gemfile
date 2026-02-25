@@ -46,11 +46,16 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
-# Use Sass to process CSS
-gem "sassc-rails"
+# Use Dart Sass to process CSS
+gem "dartsass-rails"
 
 # Force compatible io-console version for Ruby 3.4.4
 gem "io-console", ">= 0.7.0"
+
+# Add gems that will be removed from standard library in Ruby 3.5
+gem "logger"
+gem "benchmark"
+gem "ostruct"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"

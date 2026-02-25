@@ -56,6 +56,7 @@ COPY . .
 RUN if [ "$RAILS_ENV" = "production" ] || [ -z "$RAILS_ENV" ]; then \
       echo "Compiling assets..." && \
       bundle exec bootsnap precompile app/ lib/ && \
+      bundle exec rails dartsass:build && \
       SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile --trace; \
     else \
       echo "Skipping asset compilation for $RAILS_ENV"; \
