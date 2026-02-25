@@ -46,9 +46,6 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
-# Use Dart Sass to process CSS
-gem "dartsass-rails"
-
 # Force compatible io-console version for Ruby 3.4.4
 gem "io-console", ">= 0.7.0"
 
@@ -93,4 +90,3 @@ group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
-
