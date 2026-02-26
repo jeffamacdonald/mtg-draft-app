@@ -11,7 +11,8 @@ unless File.exist?(sassc_stub_path)
     # Stub sassc file to prevent LoadError when Sprockets tries to require it
     # We handle SCSS compilation with yarn build:css instead
     
-    module SassC
+    # Define both Sassc (for Zeitwerk) and SassC (for compatibility)
+    module Sassc
       class Engine
         def initialize(*)
           # Stub implementation
@@ -22,6 +23,9 @@ unless File.exist?(sassc_stub_path)
         end
       end
     end
+    
+    # Alias for compatibility
+    SassC = Sassc unless defined?(SassC)
   RUBY
 end
 
