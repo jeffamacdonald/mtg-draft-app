@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.4"
+ruby "3.3.0"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.1"
@@ -46,13 +46,8 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
-# Force compatible io-console version for Ruby 3.4.4
-gem "io-console", ">= 0.7.0"
-
-# Add gems that will be removed from standard library in Ruby 3.5
-gem "logger"
-gem "benchmark"
-gem "ostruct"
+# Use Sass to process CSS
+gem "sassc-rails"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
@@ -73,7 +68,6 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "annotaterb"
-  gem "oaken"
 end
 
 group :test do
@@ -90,3 +84,4 @@ group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
+
