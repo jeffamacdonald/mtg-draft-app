@@ -32,6 +32,7 @@ class TransferPortalTransaction < ApplicationRecord
 		joins(:transfer_portal_transaction_offerings)
 			.pending
 			.where(transfer_portal_transaction_offerings: { receiver: draft_participant })
+			.distinct
 	end
 	scope :active, -> { where(status: ["pending", "accepted"]) }
 
