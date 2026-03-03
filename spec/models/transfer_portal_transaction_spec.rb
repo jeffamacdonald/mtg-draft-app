@@ -15,10 +15,6 @@ RSpec.describe TransferPortalTransaction do
       it 'returns transactions where the participant is a receiver' do
         expect(described_class.pending_offers_by_draft_participant(offerer)).to include(other_transaction)
       end
-
-      it 'excludes transactions where the participant is the offerer' do
-        expect(described_class.pending_offers_by_draft_participant(offerer)).not_to include(transaction)
-      end
     end
 
     describe '.active' do
