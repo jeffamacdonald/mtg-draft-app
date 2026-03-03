@@ -2,6 +2,7 @@
 	<%= render(TransferPortalDraftParticipantsComponent.new(draft: @draft)) %>
 <% end %>
 
+<%= render(TransferPortalTransactionCardComponent.new(card_header: "Your Pending Requests", transfer_portal_transactions: @transfer_requests, pending_actions: false, cancel_action: true)) %>
 <%= render(TransferPortalTransactionCardComponent.new(card_header: "Your Offers", transfer_portal_transactions: @pending_transfers, pending_actions: true, cancel_action: false)) %>
 <%= render(TransferPortalTransactionCardComponent.new(card_header: "Open Transfers", transfer_portal_transactions: @accepted_transfers, pending_actions: false, cancel_action: true, draft_participant: @draft_participant)) %>
 <%= render(TransferPortalTransactionCardComponent.new(card_header: "Confirmed Transfers", transfer_portal_transactions: @confirmed_transfers, pending_actions: false, cancel_action: false)) %>

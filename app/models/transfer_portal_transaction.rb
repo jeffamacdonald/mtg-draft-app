@@ -31,6 +31,7 @@ class TransferPortalTransaction < ApplicationRecord
 	scope :pending_offers_by_draft_participant, ->(draft_participant) do
 		joins(:transfer_portal_transaction_offerings)
 			.pending
+			.where.not(offerer: draft_participant)
 			.where(transfer_portal_transaction_offerings: { receiver: draft_participant })
 			.distinct
 	end
