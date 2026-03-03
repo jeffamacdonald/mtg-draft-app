@@ -30,7 +30,7 @@ land_cards = ["Karoo","Plains","Island","Everglades","Swamp","Mountain","Forest"
 end
 
 # cube
-cube = FactoryBot.create(:cube, user: users.first)
+cube = FactoryBot.create(:cube, owner: users.first)
 
 # cube_cards
 white_cards.each do |card|
