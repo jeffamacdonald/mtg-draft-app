@@ -4,9 +4,11 @@ FROM ruby:3.3.0-alpine
 WORKDIR /app
 
 ARG RAILS_ENV=development
+ARG BUNDLE_WITHOUT=""
 ENV RAILS_ENV=${RAILS_ENV} \
     BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle"
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT=${BUNDLE_WITHOUT}
 
 RUN apk add --no-cache bash \
       curl \
@@ -22,11 +24,7 @@ RUN apk add --no-cache bash \
 
 RUN gem install bundler:2.3.3
 COPY Gemfile Gemfile.lock ./
-RUN if [ "$RAILS_ENV" = "production" ]; then \
-      bundle install --verbose --without development test; \
-    else \
-      bundle install --verbose; \
-    fi
+RUN bundle install --verbose
 
 COPY package.json yarn.lock ./
 RUN yarn install

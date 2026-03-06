@@ -41,6 +41,7 @@ env:
   clear:
     RAILS_ENV: production
     RACK_ENV: production
+    BUNDLE_WITHOUT: development
     RAILS_LOG_TO_STDOUT: true
     RAILS_SERVE_STATIC_FILES: true
   secret:
@@ -61,6 +62,7 @@ ssh:
 builder:
   args:
     RAILS_ENV: production
+    BUNDLE_WITHOUT: development
 #   secrets:
 #     - GITHUB_TOKEN
 #   remote:
