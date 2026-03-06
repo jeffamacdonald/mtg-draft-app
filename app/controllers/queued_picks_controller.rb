@@ -18,6 +18,7 @@ class QueuedPicksController < ApplicationController
 		@queued_pick.destroy!
 		respond_to do |format|
       format.turbo_stream do
+				render turbo_stream: turbo_stream.remove("modal")
         render turbo_stream: turbo_stream.remove(
           "#{@queued_pick.id}_border"
         )
