@@ -1,10 +1,11 @@
 # Use the official Ruby image
 FROM ruby:3.3.0-alpine
+FROM ruby:3.3.0-alpine
 
 WORKDIR /app
 
 ARG RAILS_ENV=development
-ARG BUNDLE_WITHOUT=""
+ARG BUNDLE_WITHOUT=development
 ENV RAILS_ENV=${RAILS_ENV} \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
