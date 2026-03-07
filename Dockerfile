@@ -1,6 +1,5 @@
-# Use the official Ruby image
-FROM ruby:3.3.0-alpine
-FROM ruby:3.3.0-alpine
+# Use Ubuntu-based Ruby image instead of Alpine to avoid native extension issues
+FROM ruby:3.3.0
 
 WORKDIR /app
 
@@ -11,17 +10,22 @@ ENV RAILS_ENV=${RAILS_ENV} \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT=${BUNDLE_WITHOUT}
 
-RUN apk add --no-cache bash \
-      curl \
-      build-base \
-      gcompat \
-      nodejs \
-      postgresql-dev \
-      postgresql-client \
-      libc6-compat \
-      tzdata \
-      yarn \
-      sed && rm -rf /var/cache/apk/*
+# Install Node.js and Yarn repositories and update package lists
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    postgresql-client \
+    nodejs \
+    yarn \
+    libffi-dev \
+    libssl-dev \
+    libyaml-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN gem install bundler:2.3.3
 COPY Gemfile Gemfile.lock ./
