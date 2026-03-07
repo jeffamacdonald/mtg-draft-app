@@ -10,26 +10,31 @@ ENV RAILS_ENV=${RAILS_ENV} \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT=${BUNDLE_WITHOUT}
 
-# Install PostgreSQL 14 repository for newer version
-RUN apt-get update && apt-get install -y wget ca-certificates && \
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+# Install system dependencies for repository setup
+RUN apt-get update && apt-get install -y \
+    wget \
+    ca-certificates \
+    lsb-release \
+    gnupg \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js and Yarn repositories
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+# Install PostgreSQL 14 repository with modern keyring method
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
+    gpg --dearmor -o /etc/apt/keyrings/postgresql.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+
+# Install Node.js 20 and Yarn repositories with modern keyring method
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    wget --quiet -O - https://dl.yarnpkg.com/debian/pubkey.gpg | \
+    gpg --dearmor -o /etc/apt/keyrings/yarn.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
 
 # Install system dependencies including newer PostgreSQL
 RUN apt-get update && apt-get install -y \
     build-essential \
-    gcc \
-    g++ \
-    make \
-    libc6-dev \
     libpq-dev \
     postgresql-client-14 \
-    postgresql-14 \
     nodejs \
     yarn \
     libffi-dev \
@@ -42,8 +47,6 @@ RUN apt-get update && apt-get install -y \
     libreadline-dev \
     libncurses5-dev \
     libgdbm-dev \
-    libnss3-dev \
-    libssl-dev \
     libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
