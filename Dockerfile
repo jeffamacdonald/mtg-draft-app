@@ -10,21 +10,41 @@ ENV RAILS_ENV=${RAILS_ENV} \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT=${BUNDLE_WITHOUT}
 
-# Install Node.js and Yarn repositories and update package lists
+# Install PostgreSQL 14 repository for newer version
+RUN apt-get update && apt-get install -y wget ca-certificates && \
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+
+# Install Node.js and Yarn repositories
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-# Install system dependencies
+# Install system dependencies including newer PostgreSQL
 RUN apt-get update && apt-get install -y \
     build-essential \
+    gcc \
+    g++ \
+    make \
+    libc6-dev \
     libpq-dev \
-    postgresql-client \
+    postgresql-client-14 \
+    postgresql-14 \
     nodejs \
     yarn \
     libffi-dev \
     libssl-dev \
     libyaml-dev \
+    ruby-dev \
+    zlib1g-dev \
+    liblzma-dev \
+    libgmp-dev \
+    libreadline-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libssl-dev \
+    libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN gem install bundler:2.3.3
