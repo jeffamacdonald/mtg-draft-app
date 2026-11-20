@@ -68,6 +68,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "annotaterb"
+  gem "rubocop-rails-omakase", require: false
   gem "oaken"
 end
 
