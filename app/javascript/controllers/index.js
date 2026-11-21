@@ -16,6 +16,9 @@ application.register("countdown", CountdownController)
 import DelayedRemovalController from "./delayed_removal_controller"
 application.register("delayed-removal", DelayedRemovalController)
 
+import DismissEditController from "./dismiss_edit_controller"
+application.register("dismiss-edit", DismissEditController)
+
 import DragDropController from "./drag_drop_controller"
 application.register("drag-drop", DragDropController)
 
@@ -27,7 +30,6 @@ application.register("form-redirect", FormRedirectController)
 
 import HovercardController from "./hovercard_controller"
 application.register("hovercard", HovercardController)
-
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)

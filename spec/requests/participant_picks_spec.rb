@@ -93,6 +93,14 @@ RSpec.describe 'ParticipantPicks', type: :request do
       expect(response.body).not_to include('<html')
     end
 
+    it 'dismisses on an outside click instead of offering a cancel button' do
+      get edit_participant_pick_path(participant_pick)
+
+      expect(response.body).to include('data-controller="dismiss-edit"')
+      expect(response.body).to include(%(data-dismiss-edit-url-value="#{participant_pick_path(participant_pick)}"))
+      expect(response.body).not_to include('Cancel')
+    end
+
     context 'when not signed in' do
       before { sign_out user }
 

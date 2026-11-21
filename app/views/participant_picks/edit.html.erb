@@ -1,7 +1,6 @@
 <%= turbo_frame_tag "participant_pick_#{@participant_pick.id}_comment" do %>
-  <%= form_with model: @participant_pick do |f| %>
+  <%= form_with model: @participant_pick, data: { controller: "dismiss-edit", dismiss_edit_url_value: participant_pick_path(@participant_pick) } do |f| %>
     <%= f.text_field :comment, class: "form-control", autofocus: true %>
     <%= f.submit "Save", class: "visually-hidden" %>
-    <%= link_to "Cancel", participant_pick_path(@participant_pick), class: "small" %>
   <% end %>
 <% end %>
