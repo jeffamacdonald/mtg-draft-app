@@ -64,8 +64,13 @@ class CubeCard < ApplicationRecord
 
   delegate :colorless?, :white?, :blue?, :black?, :red?, :green?, to: :color_identity
 
+  # Memoized per source array, so reassigning custom_color_identity rebuilds it
   def color_identity
-    Card::ColorIdentity.new(custom_color_identity)
+    source = custom_color_identity
+    return @color_identity if @color_identity && @color_identity_source.equal?(source)
+
+    @color_identity_source = source
+    @color_identity = Card::ColorIdentity.new(source)
   end
 
   def image_url

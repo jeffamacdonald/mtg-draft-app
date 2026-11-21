@@ -16,8 +16,7 @@ class Cube
 
     def to_hash
       @_to_hash ||= cube_cards.each_with_object({}) do |cube_card, hsh|
-        hsh[cube_card.color_identity.display_identity] ||= []
-        hsh[cube_card.color_identity.display_identity] << cube_card
+        (hsh[cube_card.color_identity.display_identity] ||= []) << cube_card
       end
     end
 
