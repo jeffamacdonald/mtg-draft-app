@@ -44,6 +44,17 @@ class CubeCard < ApplicationRecord
   }, ignoring: :accents
 
   scope :active, -> { where(soft_delete: false) }
+  # Only the columns the cube list needs. Joins cards, so combine with .sorted
+  scope :for_display, -> {
+    select(
+      "cube_cards.id",
+      "cube_cards.custom_image",
+      "cube_cards.custom_color_identity",
+      "cards.name",
+      "cards.type_line",
+      "cards.card_text"
+    )
+  }
   scope :sorted, -> { joins('LEFT OUTER JOIN cards ON cube_cards.card_id = cards.id').order(:custom_cmc, Arel.sql("cards.type_line LIKE '\%Creature\%' DESC"), "cards.name") }
   scope :with_cmc, ->(cmc) { where(custom_cmc: cmc) if cmc.present? }
   scope :with_color, ->(color) { where("? = ANY (custom_color_identity)", color) if color.present? }
