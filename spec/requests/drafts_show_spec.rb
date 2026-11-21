@@ -126,6 +126,27 @@ RSpec.describe "GET /drafts/:id (active draft cube list)", type: :request do
     end
   end
 
+  describe "empty pick cells" do
+    let(:participant) { create(:draft_participant, draft: draft) }
+    let!(:empty_pick) { create(:participant_pick, draft_participant: participant, cube_card: nil, comment: "see https://example.com/x") }
+
+    it "links to a lazily loaded edit form instead of embedding one" do
+      get draft_path(draft)
+
+      expect(response.body).to include(edit_participant_pick_path(empty_pick))
+      expect(response.body).to include("participant_pick_#{empty_pick.id}_comment")
+      expect(response.body).not_to include('name="participant_pick[comment]"')
+    end
+
+    it "keeps links inside comments clickable" do
+      get draft_path(draft)
+
+      link = response.body[%r{<a [^>]*href="https://example.com/x"[^>]*>}] || response.body[%r{<a [^>]*example.com/x[^>]*>}]
+      expect(link).to include('target="_blank"')
+      expect(link).to include("z-index")
+    end
+  end
+
   it "does not issue more queries as the cube grows" do
     count_queries = lambda do
       queries = 0

@@ -28,8 +28,6 @@ application.register("form-redirect", FormRedirectController)
 import HovercardController from "./hovercard_controller"
 application.register("hovercard", HovercardController)
 
-import InlineEditController from "./inline_edit_controller"
-application.register("inline-edit", InlineEditController)
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
