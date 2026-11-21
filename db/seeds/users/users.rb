@@ -46,3 +46,15 @@ users.create(
   username: "Arlene",
   secret_key: "test_secret"
 )
+
+# Extra drafters so the active draft has a production-sized participant count
+%w[Liz Lyman Binky Irma Herman Lanolin Squeak Vito].each do |name|
+  users.create(
+    name.downcase.to_sym,
+    email: "#{name.downcase}@gmail.com",
+    password: "password",
+    admin: false,
+    username: name,
+    secret_key: "test_secret"
+  )
+end

@@ -1,7 +1,6 @@
 drafts.create(
   :active_draft,
   name: "Active Draft",
-  participants_count: 6,
   rounds: 36,
   cube: cubes.garfield_cube,
   owner: users.garfield,
@@ -52,5 +51,16 @@ draft_participants.create(
   display_name: users.arlene.username,
   draft_position: 6
 )
+
+%w[Liz Lyman Binky Irma Herman Lanolin Squeak Vito].each.with_index(7) do |name, position|
+  user = users.public_send(name.downcase)
+  draft_participants.create(
+    :"active_draft_#{name.downcase}",
+    draft: drafts.active_draft,
+    user: user,
+    display_name: user.username,
+    draft_position: position
+  )
+end
 
 drafts.active_draft.setup_picks!
