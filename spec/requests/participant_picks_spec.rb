@@ -57,6 +57,60 @@ RSpec.describe 'ParticipantPicks', type: :request do
     end
   end
 
+  describe 'GET /participant_picks/:id' do
+    let(:participant_pick) { create(:participant_pick, draft_participant:, cube_card: nil, comment: 'Nice pool') }
+
+    it 'renders the comment inside its turbo frame with an edit link' do
+      get participant_pick_path(participant_pick)
+
+      expect(response).to be_successful
+      expect(response.body).to include("participant_pick_#{participant_pick.id}_comment")
+      expect(response.body).to include('Nice pool')
+      expect(response.body).to include(edit_participant_pick_path(participant_pick))
+      expect(response.body).not_to include('<html')
+    end
+
+    context 'when not signed in' do
+      before { sign_out user }
+
+      it 'redirects to sign in' do
+        get participant_pick_path(participant_pick)
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe 'GET /participant_picks/:id/edit' do
+    let(:participant_pick) { create(:participant_pick, draft_participant:, cube_card: nil, comment: 'Nice pool') }
+
+    it 'renders the comment form inside the pick comment frame' do
+      get edit_participant_pick_path(participant_pick)
+
+      expect(response).to be_successful
+      expect(response.body).to include("participant_pick_#{participant_pick.id}_comment")
+      expect(response.body).to include('name="participant_pick[comment]"')
+      expect(response.body).to include('value="Nice pool"')
+      expect(response.body).not_to include('<html')
+    end
+
+    it 'dismisses on an outside click instead of offering a cancel button' do
+      get edit_participant_pick_path(participant_pick)
+
+      expect(response.body).to include('data-controller="dismiss-edit"')
+      expect(response.body).to include(%(data-dismiss-edit-url-value="#{participant_pick_path(participant_pick)}"))
+      expect(response.body).not_to include('Cancel')
+    end
+
+    context 'when not signed in' do
+      before { sign_out user }
+
+      it 'redirects to sign in' do
+        get edit_participant_pick_path(participant_pick)
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
   describe 'PATCH /participant_picks/:id' do
     let(:participant_pick) { create(:participant_pick, draft_participant: draft_participant) }
     let(:update_params) do

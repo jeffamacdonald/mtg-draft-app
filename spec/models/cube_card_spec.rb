@@ -38,5 +38,25 @@ RSpec.describe CubeCard do
     it "returns a ColorIdentity object" do
       expect(subject.class).to eq Card::ColorIdentity
     end
+
+    it "returns the same object on repeated calls" do
+      expect(cube_card.color_identity).to equal(cube_card.color_identity)
+    end
+
+    it "rebuilds when custom_color_identity is reassigned" do
+      original = cube_card.color_identity
+
+      cube_card.custom_color_identity = [ "U", "R" ]
+
+      expect(cube_card.color_identity).not_to equal(original)
+      expect(cube_card.color_identity.color_identities).to eq([ "R", "U" ])
+    end
+
+    it "reflects the stored value after reload" do
+      cube_card.color_identity
+      CubeCard.where(id: cube_card.id).update_all(custom_color_identity: [ "G" ])
+
+      expect(cube_card.reload.color_identity.color_identities).to eq([ "G" ])
+    end
   end
 end

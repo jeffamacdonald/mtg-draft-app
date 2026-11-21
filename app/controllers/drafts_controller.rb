@@ -7,13 +7,7 @@ class DraftsController < ApplicationController
 
   def show
     @cube_cards = @draft.cube.cube_cards
-      .includes(:card)
-      .select(
-        "cube_cards.*",
-        "cards.name",
-        "cards.type_line",
-        "cards.card_text"
-      )
+      .for_display
       .active.sorted
       .with_cmc(filter_params[:cmc])
       .with_color(filter_params[:color])

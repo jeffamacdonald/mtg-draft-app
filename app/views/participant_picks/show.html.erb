@@ -1,0 +1,7 @@
+<%# Keep in sync with the comment frame in PickComponent's empty-cell markup %>
+<%= turbo_frame_tag "participant_pick_#{@participant_pick.id}_comment" do %>
+  <%= link_to edit_participant_pick_path(@participant_pick), class: "stretched-link" do %>
+    <span class="visually-hidden">Edit comment</span>
+  <% end %>
+  <%= auto_link(@participant_pick.comment, html: { target: "_blank", class: "position-relative", style: "z-index: 2;" }) %>
+<% end %>

@@ -6,6 +6,9 @@ ruby "3.3.0"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.1"
 
+# json 3.x removed options that ActiveSupport 7.1 still passes (quirks_mode); remove when Rails is upgraded
+gem "json", "~> 2.9.1"
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 

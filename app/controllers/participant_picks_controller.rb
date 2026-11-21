@@ -18,6 +18,18 @@ class ParticipantPicksController < ApplicationController
     redirect_to draft_path(draft_participant.draft)
   end
 
+  def show
+    @participant_pick = ParticipantPick.find(params[:id])
+
+    render layout: false
+  end
+
+  def edit
+    @participant_pick = ParticipantPick.find(params[:id])
+
+    render layout: false
+  end
+
   def update
     @participant_pick = ParticipantPick.find(params[:id])
     @participant_pick.update!(update_params)
