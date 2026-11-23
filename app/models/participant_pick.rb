@@ -28,6 +28,11 @@
 class ParticipantPick < ApplicationRecord
   belongs_to :draft_participant
   belongs_to :cube_card, optional: true
+  # Lightweight cube card for the pick grid: only the columns a pick cell renders
+  # (id, custom_color_identity, name). Preload this instead of cube_card: :card.
+  belongs_to :grid_cube_card,
+    -> { joins(:card).select("cube_cards.id", "cube_cards.custom_color_identity", "cards.name") },
+    class_name: "CubeCard", foreign_key: :cube_card_id, optional: true
   delegate :draft, to: :draft_participant
   delegate :card, :color_identity, to: :cube_card, allow_nil: true
   delegate :name, to: :card, allow_nil: true

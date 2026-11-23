@@ -5,6 +5,14 @@ class PickComponent < ViewComponent::Base
     @participant_pick = participant_pick
   end
 
+  def picked?
+    grid_cube_card.present?
+  end
+
+  def card_name
+    grid_cube_card&.name
+  end
+
   def pick_classes
     "#{pick_bg_class} #{pick_text_class} #{highlighted_class}"
   end
@@ -29,17 +37,21 @@ class PickComponent < ViewComponent::Base
 
   private
 
+  def grid_cube_card
+    participant_pick.grid_cube_card
+  end
+
   def pick_bg_class
     return Card::SkippedColorIdentity.new.background_class if participant_pick.skipped?
-    return if participant_pick.cube_card.blank?
+    return if grid_cube_card.blank?
 
-    participant_pick.color_identity.background_class
+    grid_cube_card.color_identity.background_class
   end
 
   def pick_text_class
-    return if participant_pick.cube_card.blank?
+    return if grid_cube_card.blank?
 
-    participant_pick.color_identity.text_class
+    grid_cube_card.color_identity.text_class
   end
 
   def highlighted_class
