@@ -147,6 +147,46 @@ RSpec.describe "GET /drafts/:id (active draft cube list)", type: :request do
     end
   end
 
+  describe "cube tiles" do
+    let!(:card) { add_card(name: "Tile Card") }
+
+    def tile_for(cube_card)
+      response.body[%r{<a [^>]*id="magic_card_#{cube_card.id}".*?</a>}m]
+    end
+
+    it "links each tile to the card route in the modal frame" do
+      get draft_path(draft)
+
+      tile = tile_for(card)
+      expect(tile).to include('data-turbo-frame="modal"')
+      href = CGI.unescapeHTML(tile[/href="([^"]*)"/, 1])
+      expect(href).to eq(route_display_card_path(cube_card_id: card.id, draft_id: draft.id))
+    end
+
+    it "uses the large column class for large images" do
+      user.update!(default_image_size: "lg")
+
+      get draft_path(draft)
+
+      expect(tile_for(card)).to include('class="col-md col-6"')
+    end
+
+    it "uses the small column class for other image sizes" do
+      user.update!(default_image_size: "sm")
+
+      get draft_path(draft)
+
+      expect(tile_for(card)).to include('class="col-md col-3"')
+    end
+
+    it "renders the card image with the stored image URL" do
+      get draft_path(draft)
+
+      expect(tile_for(card)).to include(%(src="#{card.custom_image}"))
+      expect(tile_for(card)).to include('class="flex-fill cube_card__img"')
+    end
+  end
+
   describe "pick grid cells" do
     let(:participant) { create(:draft_participant, draft: draft) }
 

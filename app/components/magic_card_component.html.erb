@@ -1,11 +1,11 @@
-<%= link_to link_url, id: "magic_card_#{cube_card.id}", class: size_class, data: { turbo_frame: 'modal' } do %>
+<a id="magic_card_<%= cube_card.id %>"<% if size_class %> class="<%= size_class %>"<% end %> data-turbo-frame="modal" href="<%= link_url %>">
   <div class="d-flex">
     <% if context.text_only? %>
       <div class="text-start <%= text_only_class %>">
         <%= cube_card.name %>
       </div>
     <% else %>
-      <%= image_tag(cube_card.image_url, class: "flex-fill #{css_class}") %>
+      <img class="flex-fill <%= css_class %>" src="<%= cube_card.image_url %>" />
     <% end %>
   </div>
-<% end %>
+</a>

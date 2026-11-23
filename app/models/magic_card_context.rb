@@ -39,6 +39,16 @@ class MagicCardContext
     !!@text_only
   end
 
+  # Placeholder with no characters that get URL-escaped
+  CARD_ID_PLACEHOLDER = "CUBE_CARD_ID".freeze
+
+  # Route path for a cube card. The route is generated once per context and the id
+  # substituted in: the route helper is the most expensive part of rendering a tile.
+  def card_route_path(cube_card)
+    @card_route_template ||= route_display_card_path(cube_card_id: CARD_ID_PLACEHOLDER, draft_id: draft&.id)
+    @card_route_template.sub(CARD_ID_PLACEHOLDER, cube_card.id.to_s)
+  end
+
   private
 
   def precompute_draft_data
