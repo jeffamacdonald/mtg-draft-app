@@ -138,6 +138,17 @@ RSpec.describe "GET /drafts/:id (active draft cube list)", type: :request do
       expect(response.body).not_to include('name="participant_pick[comment]"')
     end
 
+    it "links an empty cell with no comment to its edit form" do
+      blank = create(:participant_pick, draft_participant: participant, cube_card: nil, comment: "")
+
+      get draft_path(draft)
+
+      cell = response.body[%r{<td\s+id="participant_pick_#{blank.id}".*?</td>}m]
+      expect(cell).to include(%(href="#{edit_participant_pick_path(blank)}"))
+      expect(cell).to include("participant_pick_#{blank.id}_comment")
+      expect(cell).not_to include("<a target")
+    end
+
     it "keeps links inside comments clickable" do
       get draft_path(draft)
 

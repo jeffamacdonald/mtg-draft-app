@@ -39,7 +39,7 @@
               <td class="fw-bold"><%= round %></td>
               <% sorted_picks = round % 2 == 0 ? picks.reverse : picks %>
               <% sorted_picks.each do |pick| %>
-                <%= render 'drafts/pick', pick: pick %>
+                <%= render(PickComponent.new(pick)) %>
               <% end %>
             </tr>
           <% end %>

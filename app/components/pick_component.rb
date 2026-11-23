@@ -5,6 +5,25 @@ class PickComponent < ViewComponent::Base
     @participant_pick = participant_pick
   end
 
+  ID_PLACEHOLDER = "PICK_ID".freeze
+
+  # The edit route is generated once per process with a placeholder id and the pick's
+  # id substituted in: the route helper is the most expensive part of an empty cell.
+  def self.edit_path_template
+    @edit_path_template ||= Rails.application.routes.url_helpers.edit_participant_pick_path(ID_PLACEHOLDER).freeze
+  end
+
+  def edit_path
+    self.class.edit_path_template.sub(ID_PLACEHOLDER, participant_pick.id.to_s)
+  end
+
+  # auto_link on a blank comment returns "", so skip the work for the (many) empty cells
+  def comment_html
+    return if participant_pick.comment.blank?
+
+    helpers.auto_link(participant_pick.comment, html: { target: "_blank", class: "position-relative", style: "z-index: 2;" })
+  end
+
   def picked?
     grid_cube_card.present?
   end
