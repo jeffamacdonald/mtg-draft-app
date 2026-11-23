@@ -1,10 +1,10 @@
-<% if participant_pick.cube_card.present? || participant_pick.skipped? %>
+<% if picked? || participant_pick.skipped? %>
   <td id="participant_pick_<%= participant_pick.id %>" 
     class="<%= pick_classes %>"
     data-controller="<%= hovercard_controller %>"
     data-hovercard-url-value="<%= hovercard_url %>"
     data-action="<%= hovercard_actions %>">
-    <%= participant_pick.name || "SKIPPED" %>
+    <%= card_name || "SKIPPED" %>
   </td>
 <% else %>
   <td

@@ -147,6 +147,52 @@ RSpec.describe "GET /drafts/:id (active draft cube list)", type: :request do
     end
   end
 
+  describe "pick grid cells" do
+    let(:participant) { create(:draft_participant, draft: draft) }
+
+    def cell_for(pick)
+      response.body[%r{<td id="participant_pick_#{pick.id}".*?</td>}m]
+    end
+
+    it "shows the picked card's name colored by its identity" do
+      white_pick = create(:participant_pick, draft_participant: participant, cube_card: add_card(name: "Plains Walker", color: [ "W" ]), pick_number: 1)
+      black_pick = create(:participant_pick, draft_participant: participant, cube_card: add_card(name: "Night Wraith", color: [ "B" ]), pick_number: 2)
+      gold_pick = create(:participant_pick, draft_participant: participant, cube_card: add_card(name: "Izzet Mage", color: [ "U", "R" ]), pick_number: 3)
+
+      get draft_path(draft)
+
+      expect(cell_for(white_pick)).to include("Plains Walker").and include("bg-white")
+      expect(cell_for(black_pick)).to include("Night Wraith").and include("bg-black").and include("text-white")
+      expect(cell_for(gold_pick)).to include("Izzet Mage").and include("bg-gold")
+    end
+
+    it "labels skipped picks" do
+      skipped = create(:participant_pick, draft_participant: participant, cube_card: nil, skipped: true, pick_number: 1)
+
+      get draft_path(draft)
+
+      expect(cell_for(skipped)).to include("SKIPPED")
+    end
+
+    it "does not issue more queries as more picks are made" do
+      count_queries = lambda do
+        queries = 0
+        counter = ->(*, payload) { queries += 1 unless payload[:name] == "SCHEMA" || payload[:cached] }
+        ActiveSupport::Notifications.subscribed(counter, "sql.active_record") { get draft_path(draft) }
+        queries
+      end
+
+      2.times { |i| create(:participant_pick, draft_participant: participant, cube_card: add_card(name: "Few #{i}")) }
+      get draft_path(draft) # warm-up
+      few = count_queries.call
+
+      8.times { |i| create(:participant_pick, draft_participant: participant, cube_card: add_card(name: "Many #{i}")) }
+      many = count_queries.call
+
+      expect(many).to eq(few)
+    end
+  end
+
   it "does not issue more queries as the cube grows" do
     count_queries = lambda do
       queries = 0
