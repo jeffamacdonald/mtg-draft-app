@@ -25,6 +25,7 @@ class MagicCardContext
     @draft_participant = draft_participant
     @text_only = text_only
     @image_size = image_size
+    @card_route_template = draft.present? ? DRAFT_CARD_ROUTE_TEMPLATE.sub(DRAFT_ID_PLACEHOLDER, draft.id.to_s) : CARD_ROUTE_TEMPLATE
     # Precompute expensive operations
     precompute_draft_data if draft.present?
   end
@@ -39,13 +40,18 @@ class MagicCardContext
     !!@text_only
   end
 
-  # Placeholder with no characters that get URL-escaped
+  # Placeholders with no characters that get URL-escaped
   CARD_ID_PLACEHOLDER = "CUBE_CARD_ID".freeze
+  DRAFT_ID_PLACEHOLDER = "DRAFT_ID".freeze
 
-  # Route path for a cube card. The route is generated once per context and the id
-  # substituted in: the route helper is the most expensive part of rendering a tile.
+  # The card route is generated once, at load, and ids substituted in: the route helper
+  # is the most expensive part of rendering a tile.
+  CARD_ROUTE_TEMPLATE = Rails.application.routes.url_helpers
+    .route_display_card_path(cube_card_id: CARD_ID_PLACEHOLDER).freeze
+  DRAFT_CARD_ROUTE_TEMPLATE = Rails.application.routes.url_helpers
+    .route_display_card_path(cube_card_id: CARD_ID_PLACEHOLDER, draft_id: DRAFT_ID_PLACEHOLDER).freeze
+
   def card_route_path(cube_card)
-    @card_route_template ||= route_display_card_path(cube_card_id: CARD_ID_PLACEHOLDER, draft_id: draft&.id)
     @card_route_template.sub(CARD_ID_PLACEHOLDER, cube_card.id.to_s)
   end
 

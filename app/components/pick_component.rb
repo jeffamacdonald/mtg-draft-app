@@ -6,15 +6,12 @@ class PickComponent < ViewComponent::Base
   end
 
   ID_PLACEHOLDER = "PICK_ID".freeze
-
-  # The edit route is generated once per process with a placeholder id and the pick's
-  # id substituted in: the route helper is the most expensive part of an empty cell.
-  def self.edit_path_template
-    @edit_path_template ||= Rails.application.routes.url_helpers.edit_participant_pick_path(ID_PLACEHOLDER).freeze
-  end
+  # The edit route is generated once, at load, with a placeholder id and the pick's id
+  # substituted in: the route helper is the most expensive part of an empty cell.
+  EDIT_PATH_TEMPLATE = Rails.application.routes.url_helpers.edit_participant_pick_path(ID_PLACEHOLDER).freeze
 
   def edit_path
-    self.class.edit_path_template.sub(ID_PLACEHOLDER, participant_pick.id.to_s)
+    EDIT_PATH_TEMPLATE.sub(ID_PLACEHOLDER, participant_pick.id.to_s)
   end
 
   # auto_link on a blank comment returns "", so skip the work for the (many) empty cells
