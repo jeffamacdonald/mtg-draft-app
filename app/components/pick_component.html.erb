@@ -15,8 +15,8 @@
     data-action="<%= hovercard_actions %>"
   >
     <turbo-frame id="participant_pick_<%= participant_pick.id %>_comment">
-      <a class="stretched-link" href="<%= edit_participant_pick_path(participant_pick) %>"><span class="visually-hidden">Edit comment</span></a>
-      <%= helpers.auto_link(participant_pick.comment, html: { target: "_blank", class: "position-relative", style: "z-index: 2;" }) %>
+      <a class="stretched-link" href="<%= edit_path %>"><span class="visually-hidden">Edit comment</span></a>
+      <%= comment_html %>
     </turbo-frame>
   </td>
 <% end %>

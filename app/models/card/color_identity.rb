@@ -22,8 +22,12 @@ class Card
       end.join(" ")
     end
 
+    LAND = [ "L" ].freeze
+    COLORLESS = [ "C" ].freeze
+    BLACK_BACKGROUND = "bg-black".freeze
+
     def background_class
-      if colorless?
+      @background_class ||= if colorless?
         "bg-gray"
       elsif land?
         "bg-peach"
@@ -31,21 +35,21 @@ class Card
         "bg-gold"
       else
         "bg-#{COLOR_IDENTITIES[color_identities.first]}"
-      end
+      end.freeze
     end
 
     def text_class
-      if background_class == "bg-black"
+      if background_class == BLACK_BACKGROUND
         "text-white"
       end
     end
 
     def land?
-      color_identities == ["L"]
+      color_identities == LAND
     end
 
     def colorless?
-      color_identities == ["C"]
+      color_identities == COLORLESS
     end
 
     def white?
