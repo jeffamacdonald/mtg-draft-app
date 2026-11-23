@@ -7,7 +7,7 @@ class MagicCardComponent < ViewComponent::Base
   end
 
   def link_url
-    route_display_card_path(cube_card_id: cube_card.id, draft_id: context.draft&.id)
+    context.card_route_path(cube_card)
   end
 
   def size_class
