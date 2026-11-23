@@ -64,6 +64,9 @@ ssh:
 
 # Configure builder setup.
 builder:
+  # Build only for this machine's architecture (amd64, same as the server). The default
+  # also builds arm64, which runs under QEMU emulation on x86 and can take an hour+.
+  multiarch: false
   args:
     RAILS_ENV: production
     BUNDLE_WITHOUT: development
