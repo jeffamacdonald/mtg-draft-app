@@ -4,5 +4,7 @@
     <%= render(PickListComponent.new(draft: draft, context: context)) %>
   </div>
   <%= render(CubeFiltersComponent.new(url: draft_path(draft), filter_params: filter_params, user: context.draft_participant&.user)) %>
-  <%= render(CubeCardListComponent.new(cube_cards: cube_cards, context: context)) %>
+  <% cache context.cube_list_cache_key(filter_params) do %>
+    <%= render(CubeCardListComponent.new(cube_cards: cube_cards, context: context)) %>
+  <% end %>
 </div>
