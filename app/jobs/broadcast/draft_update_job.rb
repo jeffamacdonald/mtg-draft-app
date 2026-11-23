@@ -6,7 +6,8 @@ module Broadcast
     # and broadcasts that HTML to every user who shares those settings.
     def perform(draft)
       draft = Draft.with_full_associations.find(draft.id)
-      cube_cards = draft.cube.cube_cards.for_display.active.sorted.to_a
+      # Left unloaded: a cached cube list never needs the cards, so this only queries on a cache miss.
+      cube_cards = draft.cube.cube_cards.for_display.active.sorted
 
       draft.draft_participants.group_by { |participant| display_settings(participant.user) }.each do |settings, participants|
         html = render_body(draft, cube_cards, participants.first, settings)

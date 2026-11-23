@@ -55,6 +55,16 @@ class MagicCardContext
     @card_route_template.sub(CARD_ID_PLACEHOLDER, cube_card.id.to_s)
   end
 
+  # Everything the cube list's HTML depends on: the picked cards, how it is displayed,
+  # the filters, and the last time any of the cube's cards changed (to the microsecond:
+  # Time's default cache-key format is whole seconds, so a quick second edit would go unseen).
+  # The picked ids are digested (not Array#hash, which differs per process) so web and
+  # Sidekiq build the same key.
+  def cube_list_cache_key(filter_params)
+    [ "cube-card-list", draft.id, Digest::SHA1.hexdigest(picked_cube_card_ids.to_a.sort.join(",")), text_only?, image_size,
+      filter_params.to_h.sort, draft.cube.cube_cards.maximum(:updated_at)&.to_fs(:usec) ]
+  end
+
   private
 
   def precompute_draft_data
