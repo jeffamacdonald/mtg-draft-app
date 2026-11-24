@@ -8,6 +8,12 @@
 .panel { background: $parchment; color: $ink; border-radius: $border-radius; }
 .card-header, .card-footer { border-color: #7a5a22; }
 
+// Card headers: parchment lit from the center, darkening toward the edges (same vignette as the card).
+.card-header {
+  background: radial-gradient(ellipse at center, $parchment 0%, #d6c28c 100%);
+  box-shadow: inset 0 0 18px rgba(90, 60, 20, .25);
+}
+
 // Beveled buttons: light top edge, dark bottom edge, pressed state flips them.
 .btn:not(.btn-close, .btn-link, .btn-ghost) {
   box-shadow: 0 0 0 1px #1a1008, // thin dark outer ring (no layout shift) to stand out on light surfaces

@@ -4,17 +4,19 @@
 <%= render(DisplayCardComponent.new(width: :lg)) do %>
   <div class="card-header">DRAFTER SETTINGS</div>
   <%= form_with(model: @draft_participant, data: { turbo: false }) do |f| %>
-    <div class="container col-sm-2">
-      <%= f.label :card_text do %>
-        <div class="fw-bold text-center">
-          Name
-        </div>
-      <% end %>
-      <%= f.text_field :display_name, value: @draft_participant.display_name, class: "d-block w-100 mb-1" %>
-      <%= render(ButtonComponent.new(classes: "mb-1")) {"Update"} %>
+    <div class="d-flex flex-column align-items-center gap-2 p-3">
+      <div class="col-12 col-sm-6">
+        <%= f.label :display_name do %>
+          <div class="fw-bold text-center">
+            Name
+          </div>
+        <% end %>
+        <%= f.text_field :display_name, value: @draft_participant.display_name, class: "d-block w-100 text-center" %>
+      </div>
+      <%= render(ButtonComponent.new) { "Update" } %>
     </div>
   <% end %>
-  <div class="container">
+  <div class="d-flex justify-content-center pb-3">
     <%= render(ButtonComponent.new(url: new_surrogate_draft_participant_path(draft_participant_id: @draft_participant.id), variation: :primary, data: { turbo_frame: "modal" })) { "Add Surrogate" } %>
   </div>
 <% end %>
