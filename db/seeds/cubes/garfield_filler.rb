@@ -2,6 +2,8 @@
 # (700 cards) so dev pages and performance baselines reflect real-world sizes.
 # Deterministic: the same cards are generated on every run.
 TARGET_CUBE_SIZE = 700
+# Filler cards are not real, so give them a link up front: otherwise the card modal asks the Scryfall API and 404s.
+SCRYFALL_URI = "https://scryfall.com/"
 IMAGE = "https://cards.scryfall.io/normal/front/5/b/5b6ddce7-b9c5-431d-a0b0-46d4aa93cbcb.jpg?1559591324"
 
 rng = Random.new(42)
@@ -50,7 +52,8 @@ counts.each do |identity, count|
       card_text: text,
       layout: "normal",
       default_image: IMAGE,
-      default_set: "tst"
+      default_set: "tst",
+      scryfall_uri: SCRYFALL_URI
     )
     cube_cards.create(
       key,
