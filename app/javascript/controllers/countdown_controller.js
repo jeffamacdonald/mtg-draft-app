@@ -10,6 +10,7 @@ export default class extends Controller {
     const now = new Date().getTime();
     this.endTime = new Date(now + this.secondsUntilEnd * 1000);
 
+    this.countdown(); // render immediately instead of waiting for the first interval tick
     this.countdown = setInterval(this.countdown.bind(this), 250);
   }
 

@@ -32,39 +32,6 @@
   border-radius: 9px;
 }
 
-.chat_box {
-  height: 200px;
-}
-
-@media screen and (min-width:576px) {
-  .chat_box {
-    height: 400px;
-  }
-}
-
-.seperator{
-     overflow: hidden;
-     text-align: center;
- }
-.seperator > span{
-    position: relative;
-    display: inline-block;
-}
-.seperator > span:before, .seperator > span:after{
-    content: '';
-    position: absolute;
-    top: 50%;
-    border-bottom: 2px solid;
-    width: 100vw;
-    margin: 0 8px;
-}
-.seperator > span:before{
-    right: 100%;
-}
-.seperator > span:after{
-    left: 100%;
-}
-
 .small-table, 
 .small-table tbody, .small-table tr , .small-table td, .small-table th  {
     padding: 0.2rem;

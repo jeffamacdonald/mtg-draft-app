@@ -15,7 +15,6 @@ Rails.application.routes.draw do
     end
     resources :transfer_portal_transactions, only: [:index, :create]
   end
-  resources :draft_chat_messages, only: [:create]
   resources :draft_participants, only: [:new, :create, :edit, :update] do
     member do
       get :picks
