@@ -33,7 +33,6 @@ class Draft < ApplicationRecord
   has_many :draft_participants, counter_cache: :participants_count
   has_many :users, :through => :draft_participants
   has_many :participant_picks, :through => :draft_participants
-  has_many :draft_chat_messages
   has_many :transfer_portal_transactions
   has_many :transfer_portal_transaction_offerings, :through => :transfer_portal_transactions
   enum :status, DraftStatus.all.zip(DraftStatus.all).to_h
