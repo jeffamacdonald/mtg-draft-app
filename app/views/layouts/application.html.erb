@@ -16,12 +16,6 @@
       <%= render 'shared/navbar' %>
     <% end %>
     <%= render partial: "layouts/flash" %>
-    <% if notice.present? %>
-      <p class="notice"><%= notice %></p>
-    <% end %>
-    <% if alert.present? %>
-      <p class="alert"><%= alert %></p>
-    <% end %>
     <%= turbo_frame_tag "modal" %>
     <%= yield %>
   </body>

@@ -1,0 +1,76 @@
+// Shandalar theme: Bootstrap variable overrides. Imported before Bootstrap's variables.
+$chrome-bg:   #1a1410;
+$chrome-head: #0e0a07;
+$parchment:   #e4d3a6;
+$ink:         #2b1d10;
+$gold:        #c9a227;
+$crimson:     #8f1d22;
+
+$font-pixel:   'Press Start 2P', ui-monospace, monospace;
+$font-body:    'VT323', ui-monospace, monospace;
+$font-display: 'Cinzel', Georgia, serif;
+
+$dark:  $chrome-bg;
+$primary: $crimson;
+
+$body-bg:    $chrome-bg;
+$body-color: #e9dcc0;
+
+$font-family-base:     $font-body;
+$font-size-base:       1.25rem;
+$line-height-base:     1.25;
+$headings-font-family: $font-pixel;
+$headings-line-height: 1.5;
+$headings-font-weight: 400;
+$h1-font-size: 1.25rem;
+$h2-font-size: 1.1rem;
+$h3-font-size: 1rem;
+$h4-font-size: .9rem;
+$h5-font-size: .8rem;
+$h6-font-size: .7rem;
+
+$link-color:       $gold;
+$link-hover-color: #e6c75a;
+
+$border-radius:    2px;
+$border-radius-sm: 2px;
+$border-radius-lg: 3px;
+
+$btn-font-family: $font-pixel;
+$btn-font-size:   .65rem;
+$btn-font-weight: 400;
+$btn-padding-y:   .6rem;
+$btn-padding-x:   1rem;
+$btn-border-width: 2px;
+
+$nav-link-font-size: .65rem;
+$navbar-nav-link-padding-x: .75rem;
+
+// Parchment surfaces: dark ink text so nothing renders light-on-light.
+$card-bg:               $parchment;
+$card-color:            $ink;
+$card-border-color:     #7a5a22;
+$card-cap-bg:           #d6c28c;
+$card-cap-color:        $ink;
+$modal-content-bg:      $parchment;
+$modal-content-color:   $ink;
+$list-group-bg:         $parchment;
+$list-group-color:      $ink;
+$text-muted:            #5a4528;
+$table-color:           $ink;
+
+// Font for form fields and dropdowns (swap to $font-body for pixel).
+$font-field:      $font-display;
+$font-size-field: 1rem;
+$input-font-family: $font-field;
+$input-font-size:   $font-size-field;
+
+$input-bg:                  $parchment;
+$input-color:               $ink;
+$input-border-color:        #7a5a22;
+$input-border-width:        2px;
+$input-placeholder-color:   #6b5535;
+$input-focus-bg:            $parchment;
+$input-focus-color:         $ink;
+$input-focus-border-color:  $gold;
+$input-focus-box-shadow:    none;

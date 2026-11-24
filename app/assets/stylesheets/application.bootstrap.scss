@@ -1,5 +1,6 @@
 // Import Bootstrap variables and functions
 @import 'bootstrap/scss/functions';
+@import 'theme/variables';
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins';
 
@@ -23,3 +24,5 @@ $utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
 
 // Import the rest of Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+@import 'theme/base';

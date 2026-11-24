@@ -1,0 +1,49 @@
+// Shandalar theme: fonts and base styles. Imported after Bootstrap.
+@font-face { font-family: 'Press Start 2P'; src: url('/fonts/PressStart2P-Regular.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'VT323'; src: url('/fonts/VT323-Regular.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Cinzel'; font-weight: 700; src: url('/fonts/Cinzel-Bold.ttf') format('truetype'); font-display: swap; }
+
+// Use for text that should stay readable/non-pixel (e.g. long prose).
+.font-display, .font-display .btn { font-family: $font-display; font-weight: 700; }
+
+.btn, .nav-link, .navbar-brand, label, .badge { text-transform: uppercase; }
+
+.navbar.bg-dark {
+  background-color: $chrome-head !important;
+  border-bottom: 3px double $gold;
+}
+.navbar .nav-link:hover, .navbar .nav-link.active { color: $gold; }
+
+// Light surfaces need dark text (body text is light).
+.bg-white, .bg-light { color: $ink; }
+
+// Native dropdown lists don't always inherit the font.
+select, option, optgroup, input, textarea { font-family: $font-field; }
+
+// Custom select (pixel_select_controller.js): native lists ignore page fonts.
+.pixel-select__native { display: none !important; }
+.pixel-select { position: relative; }
+.pixel-select__button {
+  width: 100%; text-align: left; font-family: $font-field; font-size: $font-size-field;
+  background: $parchment; color: $ink; border: 2px solid #7a5a22; border-radius: $border-radius;
+  padding: .25rem 2rem .25rem .5rem; position: relative;
+  &::after { content: "\25BE"; position: absolute; right: .6rem; top: 50%; transform: translateY(-50%); }
+  &:focus-visible { outline: 2px solid $gold; outline-offset: 1px; }
+}
+.pixel-select__list {
+  position: absolute; z-index: 1050; left: 0; right: 0; margin: 2px 0 0; padding: 0; list-style: none;
+  max-height: 16rem; overflow-y: auto; background: $parchment; color: $ink;
+  border: 2px solid #7a5a22; box-shadow: 0 6px 14px rgba(0, 0, 0, .5);
+  li { padding: .25rem .5rem; cursor: pointer; font-family: $font-field; font-size: $font-size-field; }
+  li.is-active, li:hover { background: #d6c28c; }
+  li[aria-selected="true"] { font-weight: bold; }
+}
+
+// Text-like fields match the custom select (parchment, dark ink, brown border).
+input:not([type="checkbox"], [type="radio"], [type="submit"], [type="button"], [type="hidden"], [type="file"], [type="range"], [type="color"]),
+textarea {
+  background: $parchment; color: $ink; border: 2px solid #7a5a22; border-radius: $border-radius;
+  padding: .25rem .5rem; font-size: $font-size-field;
+  &::placeholder { color: #6b5535; }
+  &:focus { outline: 2px solid $gold; outline-offset: 1px; border-color: $gold; }
+}
