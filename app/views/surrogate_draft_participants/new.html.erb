@@ -10,7 +10,7 @@
           <div class="modal-body">
             <div class="mb-3">
               Add surrogate drafter to pick for you?
-              <%= f.select :surrogate_participant_id, @available_surrogates.collect { |surrogate| [surrogate.display_name, surrogate.id] }, {label: "Surrogate"} %>
+              <%= f.select :surrogate_participant_id, @available_surrogates.collect { |surrogate| [surrogate.display_name, surrogate.id] }, {label: "Surrogate"}, {data: {controller: "pixel-select"}} %>
               <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
             </div>
           </div>

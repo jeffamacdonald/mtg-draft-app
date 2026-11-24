@@ -25,7 +25,7 @@
         </div>
         <div class="col-12">
           <%= f.label :cube_id, "Cube", class: "fw-bold" %>
-          <%= f.collection_select :cube_id, Cube.where(owner: current_user).order(:name), :id, :name, {}, {class: "d-block"} %>
+          <%= f.collection_select :cube_id, Cube.where(owner: current_user).order(:name), :id, :name, {}, {class: "d-block", data: {controller: "pixel-select"}} %>
         </div>
       </div>
     </div>

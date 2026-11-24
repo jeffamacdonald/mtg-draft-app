@@ -31,7 +31,7 @@
             Color
           </div>
         <% end %>
-        <%= f.select :color, options_for_select({"any": ""}.merge(Card::ColorIdentity::COLOR_IDENTITIES.invert), selected: filter_params[:color]), {label: "Color"}, class: "d-block w-100", data: {action: "change->filterable#apply"} %>
+        <%= f.select :color, options_for_select({"any": ""}.merge(Card::ColorIdentity::COLOR_IDENTITIES.invert), selected: filter_params[:color]), {label: "Color"}, class: "d-block w-100", data: {controller: "pixel-select", action: "change->filterable#apply"} %>
       </div>
       <%= f.hidden_field :text_only, value: filter_params[:text_only] %>
     </div>

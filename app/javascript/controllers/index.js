@@ -36,3 +36,6 @@ application.register("modal", ModalController)
 
 import TransferPortalController from "./transfer_portal_controller"
 application.register("transfer-portal", TransferPortalController)
+
+import PixelSelectController from "./pixel_select_controller"
+application.register("pixel-select", PixelSelectController)
