@@ -53,6 +53,8 @@ textarea {
 body.bg-dark {
   background: radial-gradient(ellipse at top, lighten($chrome-bg, 6%) 0%, $chrome-bg 60%) fixed !important;
   min-height: 100vh;
+  display: flex; flex-direction: column; // keeps the footer at the bottom on short pages
+  > main { flex: 1 0 auto; }
 }
 
 // Flash banner: parchment panel with gold double border; crimson edge for errors.
@@ -66,9 +68,20 @@ body.bg-dark {
 // Blue letters, gold inner outline, black outer outline (like the card-back logo).
 .navbar .navbar-brand {
   font-family: 'Magic', $font-display; font-size: 1.8rem; text-transform: none; margin-right: 1.5rem;
-  color: #2f6fb5;
+  color: $noid-blue;
   -webkit-text-stroke: 3px #d8b46a; paint-order: stroke fill; // gold ring just outside the blue fill
   text-shadow: 0 0 1px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 0 3px 5px rgba(0, 0, 0, .7); // black outer edge
   &:hover, &:focus { color: #4a8bd6; }
 }
+
+// Page titles: pixel gold on the dark page; ink inside parchment surfaces.
+main h1, main h2, main h3 { font-family: $font-pixel; color: $gold; line-height: 1.4; margin-bottom: 1rem; }
+main h1 { font-size: 1.4rem; }
+main h2 { font-size: 1.1rem; }
+main h3 { font-size: .9rem; }
+.card h1, .card h2, .card h3, .modal h1, .modal h2, .modal h3, .bg-light h1, .bg-light h2, .bg-light h3,
+.bg-white h1, .bg-white h2, .bg-white h3 { color: $ink; }
+
+// Footer: thin gold rule, muted pixel text.
+.app-footer { border-top: 3px double $gold; margin-top: 2rem; flex-shrink: 0; font-family: $font-pixel; font-size: .6rem; color: #8a7a55; text-transform: uppercase; }

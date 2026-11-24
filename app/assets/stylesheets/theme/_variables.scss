@@ -5,13 +5,14 @@ $parchment:   #e4d3a6;
 $ink:         #2b1d10;
 $gold:        #c9a227;
 $crimson:     #8f1d22;
+$noid-blue:   #2f6fb5; // same blue as the navbar brand
 
 $font-pixel:   'Press Start 2P', ui-monospace, monospace;
 $font-body:    'VT323', ui-monospace, monospace;
 $font-display: 'Cinzel', Georgia, serif;
 
 $dark:  $chrome-bg;
-$primary: $crimson;
+$primary: $noid-blue;
 
 $body-bg:    $chrome-bg;
 $body-color: #e9dcc0;
@@ -52,7 +53,7 @@ $card-color:            $ink;
 $card-border-color:     #7a5a22;
 $card-cap-bg:           #d6c28c;
 $card-cap-color:        $ink;
-$modal-content-bg:      $parchment;
+$modal-content-bg:      #fff;
 $modal-content-color:   $ink;
 $list-group-bg:         $parchment;
 $list-group-color:      $ink;
