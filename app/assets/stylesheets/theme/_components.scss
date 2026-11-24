@@ -86,3 +86,17 @@ $pick-textures: ("white": "white", "blue": "blue", "black": "black", "red": "red
 // Devise forms: fields fill the card and stack with a little space.
 .field { margin-bottom: .75rem; }
 .field > input:not([type="checkbox"]) { width: 100%; }
+
+// Links on parchment surfaces: dark crimson (gold only reads on the dark page).
+$link-on-parchment: #7a1f1f;
+.card a:not(.btn), .card .btn-link,
+.modal-content a:not(.btn), .modal-content .btn-link,
+.panel a:not(.btn), .panel .btn-link,
+.bg-light a:not(.btn), .bg-light .btn-link {
+  color: $link-on-parchment;
+  &:hover, &:focus { color: #4d1212; }
+}
+// Tables keep the gold links: dark header row, textured pick cells.
+.card .table a:not(.btn), .card .table .btn-link { color: $link-color; &:hover, &:focus { color: $link-hover-color; } }
+// Active drafter header (gold fill) keeps dark text on hover too.
+.table > thead > tr > th.is-active .btn-link:hover { color: $ink; }
