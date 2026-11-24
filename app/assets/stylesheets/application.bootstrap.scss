@@ -26,3 +26,4 @@ $utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
 @import 'bootstrap/scss/bootstrap';
 
 @import 'theme/base';
+@import 'theme/components';
