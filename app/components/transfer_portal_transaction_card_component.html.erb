@@ -1,6 +1,6 @@
 <%= render(DisplayCardComponent.new(width: :xl, classes: "mb-2")) do %>
 	<div class="card-header"><%= @card_header %></div>
-	<div>
+	<div class="p-2">
 		<% @transfer_portal_transactions.each do |transfer_portal_transaction| %>
 			<%= render(TransferPortalTransactionComponent.new(transfer_portal_transaction:, pending_actions: @pending_actions, cancel_action: @cancel_action)) %>
 		<% end %>
