@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Saves a copy of the production database to this machine (nothing is left on the server).
+#
+# Usage: bin/dump-production [output-dir]     (default: ~/backups)
+# Restore: stop the app containers, copy the file to the server, `docker cp` it into
+#   mtg-draft-app-db, then `pg_restore -U mtg_draft_app -d mtg_draft_app_production --clean --if-exists --no-owner`.
+#
+# Keep the file outside the repo: it contains user emails and password hashes.
+# Scheduled pick timers live in Redis and are not part of this dump.
+set -euo pipefail
+
+# Same host as `servers:` in config/deploy.yml. Override with DUMP_HOST=... if it moves.
+HOST="${DUMP_HOST:-159.65.75.94}"
+DIR="${1:-$HOME/backups}"
+FILE="$DIR/nevernoid-$(date +%F-%H%M).dump"
+
+mkdir -p "$DIR"
+trap 'rm -f "$FILE.part"' EXIT  # never leave a half-written dump, however the script ends
+# Write to a temp file first so a failed dump never leaves a half-written backup behind.
+ssh "root@$HOST" 'docker exec mtg-draft-app-db pg_dump -U mtg_draft_app -Fc mtg_draft_app_production' > "$FILE.part"
+
+# A real custom-format dump starts with "PGDMP" and is not tiny.
+if [ "$(head -c 5 "$FILE.part")" != "PGDMP" ] || [ "$(wc -c < "$FILE.part")" -lt 100000 ]; then
+  rm -f "$FILE.part"
+  echo "Dump failed: the output is not a valid PostgreSQL dump." >&2
+  exit 1
+fi
+
+mv "$FILE.part" "$FILE"
+echo "Saved $FILE ($(du -h "$FILE" | cut -f1))"
