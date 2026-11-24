@@ -43,6 +43,9 @@ module Clients
         if result.status == 200 
           token = result.body[:access_token]
           expires_in_sec = result.body[:expires_in]
+          # Zoho can return 200 with an error body (e.g. invalid_client) and no token/expiry
+          raise "Zoho token refresh failed: #{result.body.inspect}" if token.nil? || expires_in_sec.nil?
+
           token_json = {
             token: token, 
             expires: (Time.zone.now + expires_in_sec).to_i 

@@ -12,7 +12,12 @@ class ParticipantPicksController < ApplicationController
     # Email next participant
     next_user = draft_participant.reload.draft.active_participant.user
     if next_user != current_user
-      PickMailer.next_up_email(pick, next_user).deliver_now
+      begin
+        PickMailer.next_up_email(pick, next_user).deliver_now
+      rescue StandardError => e
+        Rails.logger.error("Next-up email failed: #{e.class}: #{e.message}")
+        flash[:error] = "Your pick was saved, but the email to the next player failed to send. Please notify the admin."
+      end
     end
 
     redirect_to draft_path(draft_participant.draft)
