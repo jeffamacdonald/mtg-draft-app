@@ -37,6 +37,20 @@
 .modal-header {
   background: $chrome-head; border-bottom: 3px double $gold; border-radius: 0;
   .modal-title { font-family: $font-pixel; font-size: .8rem; line-height: 1.5; color: $gold; text-transform: uppercase; }
-  .btn-close { filter: invert(1) grayscale(1) brightness(1.4); } // dark glyph -> light on dark header
 }
+// Square btn-secondary containing just "X" (modal close, queued pick remove).
+.btn-x { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; padding: 0; line-height: 1; }
+.btn-x-corner { position: absolute; top: 0; right: 0; width: 1.5rem; height: 1.5rem; border-radius: 0; } // flush in the corner of a bordered box
+
 .modal-footer { border-top: 2px solid #7a5a22; }
+
+// Tables: dark chrome header row, brown grid lines, faint row striping.
+.table {
+  --bs-table-border-color: #7a5a22;
+  > thead > tr > th { background: $chrome-head; color: $gold; border-color: #7a5a22; }
+  > thead > tr > th.is-active { // active drafter: inverted gold
+    background: $gold; color: $ink;
+    .btn-link { color: $ink; text-shadow: none; }
+  }
+  > tbody > tr:nth-child(even) > * { background-color: rgba(90, 60, 20, .08); }
+}
