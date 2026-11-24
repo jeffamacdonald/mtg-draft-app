@@ -47,6 +47,23 @@ RSpec.describe 'ParticipantPicks', type: :request do
     #   TODO
     end
 
+    context 'when the next-up email fails to send' do
+      let(:next_participant) { create(:draft_participant, draft:) }
+
+      before do
+        allow_any_instance_of(DraftParticipant).to receive(:pick_card!).and_return(build_stubbed(:participant_pick))
+        allow_any_instance_of(Draft).to receive(:active_participant).and_return(next_participant)
+        allow(PickMailer).to receive(:next_up_email).and_raise(StandardError, 'Zoho token refresh failed')
+      end
+
+      it 'still redirects to the draft and flashes an error' do
+        post participant_picks_path, params: pick_params
+
+        expect(response).to redirect_to(draft_path(draft))
+        expect(flash[:error]).to include('failed to send')
+      end
+    end
+
     context 'when not signed in' do
       before { sign_out user }
 
