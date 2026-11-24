@@ -1,8 +1,9 @@
 <div class="d-flex flex-column justify-content-center align-items-center min-vh-100">
+  <div class="brand-mark mb-3">Never Noid</div>
   <%= render(DisplayCardComponent.new) do %>
-    <p class="h2">Log in</p>
+    <p class="h2 pt-3">Log in</p>
 
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "p-3 pt-0" }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div class="field">

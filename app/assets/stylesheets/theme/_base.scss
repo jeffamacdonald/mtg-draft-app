@@ -66,14 +66,16 @@ body.bg-dark {
 }
 
 // Blue letters, gold inner outline, black outer outline (like the card-back logo).
-.navbar .navbar-brand {
-  font-family: 'Magic', $font-display; font-size: 1.8rem; text-transform: none; margin-right: 1.5rem;
+.navbar .navbar-brand, .brand-mark {
+  font-family: 'Magic', $font-display; font-size: 1.8rem; text-transform: none;
   color: $noid-blue;
   -webkit-text-stroke: 3px #d8b46a; paint-order: stroke fill; // gold ring just outside the blue fill
   text-shadow: 0 0 1px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 0 3px 5px rgba(0, 0, 0, .7); // black outer edge
   &:hover, &:focus { color: #4a8bd6; }
 }
+.navbar .navbar-brand { margin-right: 1.5rem; }
+.brand-mark { font-size: 2.6rem; text-align: center; }
 
 // Page titles: pixel gold on the dark page; ink inside parchment surfaces.
 main h1, main h2, main h3 { font-family: $font-pixel; color: $gold; line-height: 1.4; margin-bottom: 1rem; }
