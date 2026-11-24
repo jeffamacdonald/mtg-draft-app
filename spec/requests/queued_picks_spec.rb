@@ -43,6 +43,17 @@ RSpec.describe QueuedPicksController, type: :request do
 
       expect(response).to redirect_to(pick_queue_draft_participant_path(draft_participant))
     end
+
+    it "closes the card modal and removes the card from the queue page with a turbo stream" do
+      expect {
+        delete queued_pick_path(queued_pick), as: :turbo_stream
+      }.to change(QueuedPick, :count).by(-1)
+
+      expect(response).to be_successful
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include(%(<turbo-stream action="remove" target="#{queued_pick.id}_border">))
+      expect(response.body).to match(/<turbo-stream action="update" target="modal">\s*<template><\/template>/)
+    end
   end
 
   describe "PATCH #update_order" do

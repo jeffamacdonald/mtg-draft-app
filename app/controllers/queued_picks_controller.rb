@@ -18,10 +18,11 @@ class QueuedPicksController < ApplicationController
 		@queued_pick.destroy!
 		respond_to do |format|
       format.turbo_stream do
-				render turbo_stream: turbo_stream.remove("modal")
-        render turbo_stream: turbo_stream.remove(
-          "#{@queued_pick.id}_border"
-        )
+        # The card modal (draft view) closes; the queue page's card disappears. Each is a no-op where absent.
+        render turbo_stream: [
+          turbo_stream.update("modal", ""),
+          turbo_stream.remove("#{@queued_pick.id}_border")
+        ]
       end
       format.html { redirect_to pick_queue_draft_participant_path(@queued_pick.draft_participant) }
     end
