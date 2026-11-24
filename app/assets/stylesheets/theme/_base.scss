@@ -2,6 +2,7 @@
 @font-face { font-family: 'Press Start 2P'; src: url('/fonts/PressStart2P-Regular.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'VT323'; src: url('/fonts/VT323-Regular.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Cinzel'; font-weight: 700; src: url('/fonts/Cinzel-Bold.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Magic'; src: url('/fonts/Magic.ttf') format('truetype'); font-display: swap; }
 
 // Use for text that should stay readable/non-pixel (e.g. long prose).
 .font-display, .font-display .btn { font-family: $font-display; font-weight: 700; }
@@ -46,4 +47,28 @@ textarea {
   padding: .25rem .5rem; font-size: $font-size-field;
   &::placeholder { color: #6b5535; }
   &:focus { outline: 2px solid $gold; outline-offset: 1px; border-color: $gold; }
+}
+
+// Page background: subtle vignette over the chrome color.
+body.bg-dark {
+  background: radial-gradient(ellipse at top, lighten($chrome-bg, 6%) 0%, $chrome-bg 60%) fixed !important;
+  min-height: 100vh;
+}
+
+// Flash banner: parchment panel with gold double border; crimson edge for errors.
+#flash .alert {
+  background: $parchment; color: $ink; border: 3px double $gold; border-radius: $border-radius;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25), 0 4px 10px rgba(0, 0, 0, .5);
+  strong { font-family: $font-pixel; font-size: .7rem; margin-right: .5rem; }
+  &.alert-danger { border-color: $crimson; strong { color: $crimson; } }
+}
+
+// Blue letters, gold inner outline, black outer outline (like the card-back logo).
+.navbar .navbar-brand {
+  font-family: 'Magic', $font-display; font-size: 1.8rem; text-transform: none; margin-right: 1.5rem;
+  color: #2f6fb5;
+  -webkit-text-stroke: 3px #d8b46a; paint-order: stroke fill; // gold ring just outside the blue fill
+  text-shadow: 0 0 1px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 0 3px 5px rgba(0, 0, 0, .7); // black outer edge
+  &:hover, &:focus { color: #4a8bd6; }
 }
