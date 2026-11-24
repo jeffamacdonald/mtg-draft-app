@@ -40,3 +40,14 @@
   .btn-close { filter: invert(1) grayscale(1) brightness(1.4); } // dark glyph -> light on dark header
 }
 .modal-footer { border-top: 2px solid #7a5a22; }
+
+// Tables: dark chrome header row, brown grid lines, faint row striping.
+.table {
+  --bs-table-border-color: #7a5a22;
+  > thead > tr > th { background: $chrome-head; color: $gold; border-color: #7a5a22; }
+  > thead > tr > th.is-active { // active drafter: inverted gold
+    background: $gold; color: $ink;
+    .btn-link { color: $ink; text-shadow: none; }
+  }
+  > tbody > tr:nth-child(even) > * { background-color: rgba(90, 60, 20, .08); }
+}

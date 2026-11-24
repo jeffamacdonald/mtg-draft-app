@@ -9,7 +9,7 @@ class PickListComponent < ViewComponent::Base
 
   def active_participant_class(participant)
     if context.active_participant == participant
-      "bg-cyan"
+      "is-active"
     end
   end
 
