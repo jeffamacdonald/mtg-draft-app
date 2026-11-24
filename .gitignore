@@ -41,3 +41,7 @@
 /.kamal/secrets*
 
 /config/credentials/production.key
+
+# Claude Code session notes (local only)
+/.claude/checkpoint.md
+/.claude/archive/
