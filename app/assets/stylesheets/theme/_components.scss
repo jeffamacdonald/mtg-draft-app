@@ -71,4 +71,14 @@
 }
 
 // Dark old-frame colors need light text (black already gets .text-white from Card::ColorIdentity).
-.table td.bg-red, .table td.bg-green { color: #fff; }
+.table td.bg-red, .table td.bg-green, .table td.bg-gray, .table td.bg-blue, .table td.bg-gold, .table td.bg-peach, .table td.bg-black {
+  color: #fff;
+  // thin dark outline keeps white text readable over the light and dark parts of each texture
+  text-shadow: -1px -1px 0 #14100a, 1px -1px 0 #14100a, -1px 1px 0 #14100a, 1px 1px 0 #14100a, 0 0 3px rgba(20, 16, 10, .9);
+}
+
+// Pick cells: old-frame texture tiles (public/textures, mirrored crops of card frames) over the flat color.
+$pick-textures: ("white": "white", "blue": "blue", "black": "black", "red": "red", "green": "green", "gold": "gold", "peach": "land", "gray": "colorless");
+@each $color, $file in $pick-textures {
+  .table td.bg-#{$color} { background-image: url("/textures/#{$file}.webp"); }
+}
