@@ -2,7 +2,7 @@
   <div class="modal d-block" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <%= render(ButtonComponent.new(classes: "ms-auto", variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+        <%= render(ButtonComponent.new(classes: "btn-x ms-auto", variation: :secondary, data: { controller: "modal", action: "modal#close"})) { "X" } %>
         <div class="text-center"><%= @cube_card.card.name %></div>
         <%= form_with(model: @cube_card, local: true) do |f| %>
           <div class="pt-3 row justify-content-center">

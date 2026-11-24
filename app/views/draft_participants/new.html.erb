@@ -5,7 +5,7 @@
         <%= form_with(model: DraftParticipant.new, data: { controller: "form-redirect", action: "turbo:submit-end->form-redirect#next" }) do |f| %>
           <div class="modal-header">
             <h5 class="modal-title">Join Draft</h5>
-            <%= render(ButtonComponent.new(variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+            <%= render(ButtonComponent.new(classes: "btn-x ms-auto", variation: :secondary, data: { controller: "modal", action: "modal#close"})) { "X" } %>
           </div>
           <div class="modal-body">
             <div class="mb-3">

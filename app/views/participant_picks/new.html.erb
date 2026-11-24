@@ -2,7 +2,7 @@
   <div class="modal d-block" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <%= render(ButtonComponent.new(classes: "ms-auto", variation: :close, data: { controller: "modal", action: "modal#close"})) %>
+        <%= render(ButtonComponent.new(classes: "btn-x ms-auto", variation: :secondary, data: { controller: "modal", action: "modal#close"})) { "X" } %>
         <div class="text-center">ARE YOU SURE?</div>
         <% if @draft_participant.user != current_user %>
           <div class="text-center text-danger">Picking for <%= @draft_participant.display_name %></div>
