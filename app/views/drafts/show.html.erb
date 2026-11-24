@@ -4,7 +4,7 @@
 <% else %>
   <%= turbo_stream_from current_user %>
   <%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
-    <p class="h1"><%= @draft.name %></p>
+    <p class="h1 mb-0 py-3"><%= @draft.name %></p>
   <% end %>
   <% if @context.draft_participant.present? %>
     <div class="d-flex mb-2 justify-content-center gap-2">

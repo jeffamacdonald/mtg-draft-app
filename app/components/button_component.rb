@@ -9,6 +9,7 @@ class ButtonComponent < ViewComponent::Base
     danger: "#{base_button_classes} btn-danger",
     light: "#{base_button_classes} btn-light",
     dark: "#{base_button_classes} btn-dark",
+    ghost: "#{base_button_classes} btn-ghost",
     link: "#{base_button_classes} btn-link p-0",
     close: "btn-close"
   }.freeze
