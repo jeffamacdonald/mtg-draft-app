@@ -8,7 +8,7 @@ image: jeffamacdonald/mtg-draft-app
 servers:
   web:
     hosts:
-      - 165.232.128.212
+      - 159.65.75.94
     labels:
       traefik.http.routers.mtg-draft-app-web.rule: "Host(`nevernoid.xyz`) || Host(`www.nevernoid.xyz`)"
       traefik.http.routers.mtg-draft-app-web.entrypoints: websecure
@@ -21,7 +21,7 @@ servers:
 
   sidekiq:
     hosts:
-      - 165.232.128.212
+      - 159.65.75.94
     cmd: bundle exec sidekiq
     options:
       network: "private"
@@ -80,8 +80,7 @@ builder:
 accessories:
   db:
     image: postgres:12.2-alpine
-    host: 165.232.128.212
-    port: 5432
+    host: 159.65.75.94
     env:
       clear:
         POSTGRES_USER: mtg_draft_app
@@ -95,11 +94,9 @@ accessories:
 
   redis:
     image: redis:7-alpine
-    host: 165.232.128.212
-    port: 6379
+    host: 159.65.75.94
     directories:
       - data:/data
-    cmd: "redis-server /usr/local/etc/redis/redis.conf"
     options:
       network: "private"
 
@@ -112,6 +109,7 @@ traefik:
       - "/letsencrypt/acme.json:/letsencrypt/acme.json"
     network: "private"
   args:
+    log.level: INFO
     entryPoints.web.address: ":80"
     entryPoints.websecure.address: ":443"
     entryPoints.web.http.redirections.entryPoint.to: websecure
