@@ -5,14 +5,15 @@
 @import 'bootstrap/scss/mixins';
 
 $custom-theme-colors:map-merge($theme-colors, (
-  "blue": $blue-300,
-  "red": $red-300,
-  "green": $green-300,
-  "black": $gray-900,
-  "white": $white,
-  "gold": $yellow-400,
-  "peach": $orange-100,
-  "gray": $gray-500,
+  // MTG color-identity palette, sampled from Revised/Unlimited-era (pre-Mirrodin) card frames.
+  "blue": #7bafc4,
+  "red": #a25758,
+  "green": #536d61,
+  "black": #4a4f47,
+  "white": #d3ccc1,
+  "gold": #8a813c,
+  "peach": #8a8478, // land
+  "gray": #837a70, // colorless
   "cyan": $cyan-500
 ));
 
