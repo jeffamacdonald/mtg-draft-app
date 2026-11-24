@@ -59,8 +59,11 @@ $list-group-color:      $ink;
 $text-muted:            #5a4528;
 $table-color:           $ink;
 
-$input-font-family: $font-body;
-$input-font-size:   $font-size-base;
+// Font for form fields and dropdowns (swap to $font-body for pixel).
+$font-field:      $font-display;
+$font-size-field: 1rem;
+$input-font-family: $font-field;
+$input-font-size:   $font-size-field;
 
 $input-bg:                  $parchment;
 $input-color:               $ink;
