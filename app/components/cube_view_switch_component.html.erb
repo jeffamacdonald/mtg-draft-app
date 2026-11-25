@@ -1,0 +1,14 @@
+<div class="d-flex flex-row justify-content-center gap-2">
+  <%= form_with url: url, scope: :filters, local: false, method: :get, data: {turbo_frame: "cube_list", turbo_action: "replace"} do |f| %>
+    <%= f.hidden_field :query, value: filter_params[:query] %>
+    <%= f.hidden_field :text_only, value: text_only_value(switch_view_labels[0]) %>
+    <%= f.hidden_field :image_size, value: image_size_value(switch_view_labels[0]) %>
+    <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { switch_view_labels[0] } %>
+  <% end %>
+  <%= form_with url: url, scope: :filters, local: false, method: :get, data: {turbo_frame: "cube_list", turbo_action: "replace"} do |f| %>
+    <%= f.hidden_field :query, value: filter_params[:query] %>
+    <%= f.hidden_field :text_only, value: text_only_value(switch_view_labels[1]) %>
+    <%= f.hidden_field :image_size, value: image_size_value(switch_view_labels[1]) %>
+    <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { switch_view_labels[1] } %>
+  <% end %>
+</div>

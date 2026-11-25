@@ -20,6 +20,8 @@ application.register("dismiss-edit", DismissEditController)
 import DragDropController from "./drag_drop_controller"
 application.register("drag-drop", DragDropController)
 
+import AdvancedFilterController from "./advanced_filter_controller"
+application.register("advanced-filter", AdvancedFilterController)
 import FilterableController from "./filterable_controller"
 application.register("filterable", FilterableController)
 

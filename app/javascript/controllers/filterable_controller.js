@@ -5,7 +5,7 @@ import Rails from "@rails/ujs";
 export default class extends Controller {
   static targets = ["search"];
   static values = {
-    debounceMs: { type: Number, default: 200 },
+    debounceMs: { type: Number, default: 600 },
   };
 
   initialize() {

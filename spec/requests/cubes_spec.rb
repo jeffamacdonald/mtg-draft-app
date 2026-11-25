@@ -27,6 +27,12 @@ RSpec.describe CubesController, type: :request do
       get cube_path(cube)
       expect(response).to be_successful
     end
+
+    it 'keeps the search query in the box and filters by it' do
+      get cube_path(cube, filters: { query: "name:zzzznomatch" })
+      expect(response.body).to include('value="name:zzzznomatch"')
+      expect(response.body).not_to include("magic_card_")
+    end
   end
 
   describe 'GET #new' do

@@ -1,59 +1,74 @@
 <%= render(DisplayCardComponent.new(width: :xxl, classes: "mb-3")) do %>
-  <%= form_with url: url, scope: :filters, local: false, method: :get, data: {:controller => "filterable"} do |f| %>
-    <div id="search" class="d-flex flex-sm-row flex-column p-2 justify-content-center gap-2">
-      <div class="col-sm-3 flex-fill">
-        <%= f.label :card_text do %>
-          <div class="fw-bold text-center">
-            Card Text
-          </div>
-        <% end %>
-        <%= f.text_field :card_text, value: filter_params[:card_text], class: "d-block w-100", data: {action: "input->filterable#search", "filterable-target": "search"} %>
+  <%= form_with url: url, scope: :filters, local: false, method: :get, data: {controller: "filterable", turbo_frame: "cube_list", turbo_action: "replace"} do |f| %>
+    <div id="search" class="p-2">
+      <%= f.label :query do %>
+        <div class="fw-bold">Search</div>
+      <% end %>
+      <div class="d-flex gap-2">
+        <%= f.text_field :query, value: filter_params[:query], class: "d-block flex-fill", maxlength: Cubes::FilterQuery::MAX_QUERY_LENGTH, data: {action: "input->filterable#search", "filterable-target": "search"} %>
+        <%= render(ButtonComponent.new(variation: :secondary, type: "button", data: {"bs-toggle": "modal", "bs-target": "#advanced-filters"})) { "Advanced" } %>
       </div>
-      <div class="col-sm-2 flex-fill">
-        <%= f.label :card_type do %>
-          <div class="fw-bold">
-            Card Type
+    </div>
+    <div class="modal fade" id="advanced-filters" tabindex="-1" aria-hidden="true" data-controller="advanced-filter">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Advanced Filters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-        <% end %>
-        <%= f.text_field :card_type, value: filter_params[:card_type], class: "d-block w-100", data: {action: "input->filterable#search", "filterable-target": "search"} %>
-      </div>
-      <div class="col-sm-1 flex-fill">
-        <%= f.label :cmc do %>
-          <div class="fw-bold">
-            CMC
+          <div class="modal-body">
+            <div class="row g-2">
+              <% TEXT_FIELDS.each do |label, key| %>
+                <div class="col-md-6" data-advanced-filter-target="field" data-key="<%= key %>">
+                  <label class="fw-bold d-block"><%= label %></label>
+                  <input type="text" class="w-100" data-role="value">
+                </div>
+              <% end %>
+              <% COLOR_FIELDS.each do |label, key| %>
+                <div class="col-md-6" data-advanced-filter-target="field" data-key="<%= key %>">
+                  <label class="fw-bold d-block"><%= label %></label>
+                  <div class="d-flex gap-1">
+                    <select class="flex-shrink-0" data-role="op"><%= options_for_select(COLOR_OPERATORS) %></select>
+                    <input type="text" class="flex-fill" style="min-width: 0" placeholder="e.g. wu, azorius, m, 2" data-role="value">
+                  </div>
+                </div>
+              <% end %>
+              <% NUMBER_FIELDS.each do |label, key| %>
+                <div class="col-md-6" data-advanced-filter-target="field" data-key="<%= key %>">
+                  <label class="fw-bold d-block"><%= label %></label>
+                  <div class="d-flex gap-1">
+                    <select class="flex-shrink-0" data-role="op"><%= options_for_select(NUMBER_OPERATORS) %></select>
+                    <input type="text" class="flex-fill" style="min-width: 0" data-role="value">
+                  </div>
+                </div>
+              <% end %>
+              <div class="col-md-6" data-advanced-filter-target="field" data-key="m">
+                <label class="fw-bold d-block">Mana cost</label>
+                <div class="d-flex gap-1">
+                  <select class="flex-shrink-0" data-role="op"><%= options_for_select(MANA_OPERATORS) %></select>
+                  <input type="text" class="flex-fill" style="min-width: 0" placeholder="e.g. 2ww, {r/g}" data-role="value">
+                </div>
+              </div>
+              <div class="col-md-6" data-advanced-filter-target="field" data-key="layout">
+                <label class="fw-bold d-block">Layout</label>
+                <select class="w-100" data-role="value"><%= options_for_select([["any", ""]] + LAYOUTS) %></select>
+              </div>
+              <div class="col-12">
+                <label class="fw-bold d-block">Is</label>
+                <div class="d-flex flex-wrap gap-3">
+                  <% IS_KEYWORDS.each do |keyword| %>
+                    <label><input type="checkbox" value="<%= keyword %>" data-advanced-filter-target="is"> <%= keyword %></label>
+                  <% end %>
+                </div>
+              </div>
+            </div>
           </div>
-        <% end %>
-        <%= f.number_field :cmc, value: filter_params[:cmc], class: "d-block w-100", data: {action: "change->filterable#apply"} %>
-      </div>
-      <div class="col-sm-1 flex-fill">
-        <%= f.label :color do %>
-          <div class="fw-bold">
-            Color
+          <div class="modal-footer">
+            <%= render(ButtonComponent.new(variation: :secondary, type: "button", data: {action: "advanced-filter#reset"})) { "Reset" } %>
+            <%= render(ButtonComponent.new(variation: :primary, type: "button", data: {action: "advanced-filter#apply"})) { "Apply" } %>
           </div>
-        <% end %>
-        <%= f.select :color, options_for_select({"any": ""}.merge(Card::ColorIdentity::COLOR_IDENTITIES.invert), selected: filter_params[:color]), {label: "Color"}, class: "d-block w-100", data: {controller: "pixel-select", action: "change->filterable#apply"} %>
+        </div>
       </div>
-      <%= f.hidden_field :text_only, value: filter_params[:text_only] %>
     </div>
   <% end %>
-  <div class="d-flex flex-row justify-content-center gap-2">
-    <%= form_with url: url, scope: :filters, local: false, method: :get do |f| %>
-      <%= f.hidden_field :card_text, value: filter_params[:card_text] %>
-      <%= f.hidden_field :card_type, value: filter_params[:card_type] %>
-      <%= f.hidden_field :cmc, value: filter_params[:cmc] %>
-      <%= f.hidden_field :color, value: filter_params[:color] %>
-      <%= f.hidden_field :text_only, value: text_only_value(switch_view_labels[0]) %>
-      <%= f.hidden_field :image_size, value: image_size_value(switch_view_labels[0]) %>
-      <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { switch_view_labels[0] } %>
-    <% end %>
-    <%= form_with url: url, scope: :filters, local: false, method: :get do |f| %>
-      <%= f.hidden_field :card_text, value: filter_params[:card_text] %>
-      <%= f.hidden_field :card_type, value: filter_params[:card_type] %>
-      <%= f.hidden_field :cmc, value: filter_params[:cmc] %>
-      <%= f.hidden_field :color, value: filter_params[:color] %>
-      <%= f.hidden_field :text_only, value: text_only_value(switch_view_labels[1]) %>
-      <%= f.hidden_field :image_size, value: image_size_value(switch_view_labels[1]) %>
-      <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 mt-2")) { switch_view_labels[1] } %>
-    <% end %>
-  </div>
 <% end %>

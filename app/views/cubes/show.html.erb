@@ -1,5 +1,9 @@
 <%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
   <p class="h1"><%= @cube.name %></p>
 <% end %>
-<%= render(CubeFiltersComponent.new(url: cube_path(@cube), filter_params: filter_params, user: current_user)) %>
-<%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: MagicCardContext.for_cube(cube: @cube, text_only: @text_only, image_size: @image_size))) %>
+<%= render(CubeFiltersComponent.new(url: cube_path(@cube), filter_params: filter_params)) %>
+<%= turbo_frame_tag "cube_list", target: "_top" do %>
+  <%= render "shared/ignored_filter_terms", terms: @filter_query.ignored %>
+  <%= render(CubeViewSwitchComponent.new(url: cube_path(@cube), filter_params: filter_params, user: current_user)) %>
+  <%= render(CubeCardListComponent.new(cube_cards: @cube_cards, context: MagicCardContext.for_cube(cube: @cube, text_only: @text_only, image_size: @image_size))) %>
+<% end %>
