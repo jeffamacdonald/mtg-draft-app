@@ -54,6 +54,7 @@ class DraftParticipant < ApplicationRecord
   def pick_card!(cube_card)
     pick = next_pick
     pick.update!(cube_card: cube_card, skipped: false)
+    draft.record_pick!(pick)
     if skipped?
       if draft.last_pick_number < next_pick_number
         update!(skipped: false)

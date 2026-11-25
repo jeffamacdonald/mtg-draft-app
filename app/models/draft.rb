@@ -4,6 +4,7 @@
 #
 #  id                 :uuid             not null, primary key
 #  last_pick_at       :datetime
+#  last_pick_number   :integer          default(0), not null
 #  name               :string           not null
 #  participants_count :integer          default(0), not null
 #  rounds             :integer          not null
@@ -71,11 +72,12 @@ class Draft < ApplicationRecord
     active_pick&.draft_participant
   end
 
-  def last_pick_number
-    participant_picks.where.not(cube_card_id: nil)
-      .or(
-        participant_picks.where(skipped: true)
-      ).maximum(:pick_number) || 0
+  # Raises last_pick_number to this pick's number (it never goes down). The row lock keeps
+  # concurrent picks and skips from overwriting each other.
+  def record_pick!(participant_pick)
+    with_lock do
+      update!(last_pick_number: [ last_pick_number, participant_pick.pick_number ].max)
+    end
   end
 
   def timer_live?

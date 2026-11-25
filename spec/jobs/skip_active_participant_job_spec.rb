@@ -28,6 +28,7 @@ RSpec.describe SkipActiveParticipantJob, type: :job do
     let!(:participant_pick_6) { create :participant_pick, cube_card_id: nil, draft_participant: dp1, pick_number: 6, round: 2 }
 
     it "skips pick, skips drafter, updates draft last_pick_at, emails next active participant, broadcasts to draft channel, and enqueues the next skip job" do
+      draft.reload
       expect(PickMailer).to receive(:skipped_email).with(dp2, dp1.user).and_call_original
       expect_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
       expect(Broadcast::DraftUpdateJob).to receive(:perform_later).with(draft)
@@ -49,6 +50,7 @@ RSpec.describe SkipActiveParticipantJob, type: :job do
       let!(:participant_pick_7) { create :participant_pick, cube_card_id: nil, draft_participant: dp1, pick_number: 7, round: 3 }
 
       it "does not email the user" do
+        draft.reload
         expect(PickMailer).not_to receive(:skipped_email)
         expect(Broadcast::DraftUpdateJob).to receive(:perform_later).with(draft)
         expect(draft).to receive(:enqueue_skip_job)
