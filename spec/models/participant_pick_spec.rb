@@ -47,6 +47,18 @@ RSpec.describe ParticipantPick, type: :model do
       end
     end
 
+    context "when only the comment of an existing pick changes" do
+      let!(:cube_card) { create :cube_card, cube_id: cube.id }
+      let!(:pick) { create :participant_pick, draft_participant_id: dp1.id, cube_card_id: cube_card.id }
+
+      it "does not re-check availability" do
+        other = create :participant_pick, draft_participant_id: dp2.id
+        other.update_column(:cube_card_id, cube_card.id)
+
+        expect(pick.update(comment: "nice")).to eq true
+      end
+    end
+
     context "when card has not been picked" do
       let!(:cube_card) { create :cube_card, cube_id: cube.id }
 
