@@ -4,6 +4,7 @@
 #
 #  id                 :uuid             not null, primary key
 #  last_pick_at       :datetime
+#  last_pick_number   :integer          default(0), not null
 #  name               :string           not null
 #  participants_count :integer          default(0), not null
 #  rounds             :integer          not null
@@ -147,6 +148,7 @@ RSpec.describe Draft do
       end
 
       it 'drafter with pick_number 3 as next pick is active' do
+        draft.reload
         expect(subject).to eq draft_participant_3
       end
 
@@ -238,6 +240,7 @@ RSpec.describe Draft do
       end
 
       it "returns last picked participant pick number" do
+        draft.reload
         expect(draft.last_pick_number).to eq 3
       end
 
@@ -252,9 +255,34 @@ RSpec.describe Draft do
         end
 
         it "returns the skipped pick number" do
+          draft.reload
           expect(draft.last_pick_number).to eq 4
         end
       end
+    end
+  end
+
+  describe "#record_pick!" do
+    let(:draft) { create :draft }
+    let(:draft_participant) { create :draft_participant, draft: draft, draft_position: 1 }
+
+    def pick_numbered(number)
+      build :participant_pick, draft_participant: draft_participant, pick_number: number
+    end
+
+    it "stores the pick number on the draft and its in-memory copy" do
+      draft.record_pick!(pick_numbered(5))
+
+      expect(draft.last_pick_number).to eq 5
+      expect(draft).not_to be_changed
+      expect(Draft.find(draft.id).last_pick_number).to eq 5
+    end
+
+    it "never lowers last_pick_number" do
+      draft.record_pick!(pick_numbered(5))
+      draft.record_pick!(pick_numbered(3))
+
+      expect(draft.last_pick_number).to eq 5
     end
   end
 
@@ -320,6 +348,7 @@ RSpec.describe Draft do
         end
 
         it "returns true" do
+          draft.reload
           expect(draft.timer_live?).to eq true
         end
 
@@ -393,6 +422,7 @@ RSpec.describe Draft do
       end
 
       it "enqueues job at target end time" do
+        draft.reload
         freeze_time do
           expect_any_instance_of(TimerCalculator).to receive(:calculate_target_end).and_return(10.seconds.from_now)
           expect(SkipActiveParticipantJob).to receive(:set).with(wait: 10).and_call_original

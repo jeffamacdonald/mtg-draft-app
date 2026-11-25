@@ -4,6 +4,7 @@
 #
 #  id                 :uuid             not null, primary key
 #  last_pick_at       :datetime
+#  last_pick_number   :integer          default(0), not null
 #  name               :string           not null
 #  participants_count :integer          default(0), not null
 #  rounds             :integer          not null
@@ -71,11 +72,15 @@ class Draft < ApplicationRecord
     active_pick&.draft_participant
   end
 
-  def last_pick_number
-    participant_picks.where.not(cube_card_id: nil)
-      .or(
-        participant_picks.where(skipped: true)
-      ).maximum(:pick_number) || 0
+  # Atomically raises last_pick_number to this pick's number (it never goes down), so
+  # concurrent picks and skips can't overwrite each other.
+  def record_pick!(participant_pick)
+    sql = self.class.sanitize_sql_array([
+      "UPDATE drafts SET last_pick_number = GREATEST(last_pick_number, ?) WHERE id = ? RETURNING last_pick_number",
+      participant_pick.pick_number, id
+    ])
+    self.last_pick_number = self.class.connection.select_value(sql)
+    clear_attribute_changes([ :last_pick_number ])
   end
 
   def timer_live?

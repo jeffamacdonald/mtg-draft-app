@@ -4,6 +4,7 @@
 #
 #  id                 :uuid             not null, primary key
 #  last_pick_at       :datetime
+#  last_pick_number   :integer          default(0), not null
 #  name               :string           not null
 #  participants_count :integer          default(0), not null
 #  rounds             :integer          not null

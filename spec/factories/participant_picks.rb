@@ -35,5 +35,10 @@ FactoryBot.define do
     cube_card_id { cube_card&.id }
     sequence(:pick_number) { |n| n }
     round { 1 }
+
+    # Mirror what Draft#record_pick! does when the app fills or skips a pick
+    after(:create) do |pick|
+      pick.draft.record_pick!(pick) if pick.cube_card_id.present? || pick.skipped?
+    end
   end
 end
