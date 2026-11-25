@@ -37,4 +37,37 @@ RSpec.describe Cube::Display do
       expect(cards).to eq(sorted_cards)
     end
   end
+
+  describe 'land section ordering' do
+    let(:land_class) { Struct.new(:name, :type_line, :card_text, :color_identity) }
+    let(:land_identity) { Card::ColorIdentity.new(["L"]) }
+
+    def land(name, text, type_line: "Land")
+      land_class.new(name, type_line, text, land_identity)
+    end
+
+    it 'orders lands by type, color pairs, any color, colorless, then single colors in WUBRG order' do
+      lands = [
+        land("mono green", "{T}: Add {G}."),
+        land("mono white", "{T}: Add {W}."),
+        land("colorless", "{T}: Add {C}."),
+        land("any color", "{T}: Add one mana of any color."),
+        land("plains island typed", "Plains Island cycling {2}"),
+        land("white blue dual", "{T}: Add {W} or {U}."),
+        land("all types", "Enters tapped.", type_line: "Land — Plains Island Swamp Mountain Forest")
+      ]
+
+      land_section = Cube::Display.new(lands).sections.find { |section| section.title == "Land" }
+
+      expect(land_section.cards.map(&:name)).to eq(
+        ["all types", "white blue dual", "plains island typed", "any color", "colorless", "mono white", "mono green"]
+      )
+    end
+
+    it 'does not fail on a land with no rules text' do
+      sections = Cube::Display.new([land("blank", nil)]).sections
+
+      expect(sections.map(&:title)).to eq(["Land"])
+    end
+  end
 end
