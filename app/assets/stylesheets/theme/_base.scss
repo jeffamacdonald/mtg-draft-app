@@ -1,8 +1,8 @@
 // Shandalar theme: fonts and base styles. Imported after Bootstrap.
-@font-face { font-family: 'Press Start 2P'; src: url('/fonts/PressStart2P-Regular.ttf') format('truetype'); font-display: swap; }
-@font-face { font-family: 'VT323'; src: url('/fonts/VT323-Regular.ttf') format('truetype'); font-display: swap; }
-@font-face { font-family: 'Cinzel'; font-weight: 700; src: url('/fonts/Cinzel-Bold.ttf') format('truetype'); font-display: swap; }
-@font-face { font-family: 'Magic'; src: url('/fonts/Magic.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Press Start 2P'; src: url('/fonts/PressStart2P-Regular.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'VT323'; src: url('/fonts/VT323-Regular.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Cinzel'; font-weight: 700; src: url('/fonts/Cinzel-Bold.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Magic'; src: url('/fonts/Magic.woff2') format('woff2'); font-display: swap; }
 
 // Use for text that should stay readable/non-pixel (e.g. long prose).
 .font-display, .font-display .btn { font-family: $font-display; font-weight: 700; }

@@ -100,3 +100,14 @@ $link-on-parchment: #7a1f1f;
 .card .table a:not(.btn), .card .table .btn-link { color: $link-color; &:hover, &:focus { color: $link-hover-color; } }
 // Active drafter header (gold fill) keeps dark text on hover too.
 .table > thead > tr > th.is-active .btn-link:hover { color: $ink; }
+
+// Pick "slam": a freshly picked cell drops onto the grid like a card slapped on a table.
+@keyframes pick-slam {
+  0%   { transform: scale(2.2); opacity: 0; filter: brightness(2); }
+  55%  { transform: scale(.94); opacity: 1; filter: brightness(1.4); }
+  70%  { transform: translateX(-2px) scale(1); }
+  85%  { transform: translateX(2px); }
+  100% { transform: none; filter: none; }
+}
+.table td.pick-slam { position: relative; z-index: 1; animation: pick-slam .45s ease-out; }
+@media (prefers-reduced-motion: reduce) { .table td.pick-slam { animation: none; } }

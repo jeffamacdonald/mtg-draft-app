@@ -5,6 +5,8 @@ class PickComponent < ViewComponent::Base
     @participant_pick = participant_pick
   end
 
+  SLAM_WINDOW = 3.seconds
+
   ID_PLACEHOLDER = "PICK_ID".freeze
   # The edit route is generated once, at load, with a placeholder id and the pick's id
   # substituted in: the route helper is the most expensive part of an empty cell.
@@ -30,7 +32,7 @@ class PickComponent < ViewComponent::Base
   end
 
   def pick_classes
-    "#{pick_bg_class} #{pick_text_class} #{highlighted_class}"
+    "#{pick_bg_class} #{pick_text_class} #{highlighted_class} #{slam_class}"
   end
 
   def hovercard_controller
@@ -68,6 +70,11 @@ class PickComponent < ViewComponent::Base
     return if grid_cube_card.blank?
 
     grid_cube_card.color_identity.text_class
+  end
+
+  # A pick made in the last few seconds plays the slam animation when the cell is (re)rendered.
+  def slam_class
+    "pick-slam" if picked? && participant_pick.updated_at > SLAM_WINDOW.ago
   end
 
   def highlighted_class
