@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Run database migrations with the new image before the new containers boot.
+# Kamal runs this after the image is built and pushed, inside the deploy lock.
+# A failing migration aborts the deploy and leaves the current containers running.
+#
+# Set to the new version via KAMAL_VERSION. Web role only, so it runs once.
+set -euo pipefail
+
+# Rollbacks redeploy an older image; never migrate for those.
+if [ "${KAMAL_COMMAND:-}" = "rollback" ]; then
+  exit 0
+fi
+
+kamal app exec --roles=web --version="$KAMAL_VERSION" "bin/rails db:migrate"
