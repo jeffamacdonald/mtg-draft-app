@@ -36,7 +36,7 @@ class ParticipantPick < ApplicationRecord
   delegate :draft, to: :draft_participant
   delegate :card, :color_identity, to: :cube_card, allow_nil: true
   delegate :name, to: :card, allow_nil: true
-  validate :availability
+  validate :availability, if: :will_save_change_to_cube_card_id?
 
   scope :for_round, ->(round) { where(round: round) }
   scope :ordered, -> { order(:pick_number) }
@@ -58,10 +58,8 @@ class ParticipantPick < ApplicationRecord
   def availability
     return unless cube_card_id.present?
 
-    draft.participant_picks.where.not(id:).each do |participant_pick|
-      if participant_pick.cube_card_id == cube_card_id
-        errors.add(:cube_card_id, 'Card Is Not Available')
-      end
+    if draft.participant_picks.where(cube_card_id:).where.not(id:).exists?
+      errors.add(:cube_card_id, 'Card Is Not Available')
     end
   end
 
