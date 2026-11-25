@@ -64,6 +64,19 @@ RSpec.describe Cube::Display do
       )
     end
 
+    it 'puts lands with three or more basic land types first, however the type line is worded' do
+      lands = [
+        land("dual typed", "Enters tapped.", type_line: "Land — Forest Plains"),
+        land("creature land", "Enters tapped.", type_line: "Land Creature — Forest Dryad"),
+        land("legendary tri-land", "Enters tapped.", type_line: "Legendary Land — Mountain Forest Plains"),
+        land("tri-land", "Enters tapped.", type_line: "Land — Island Swamp Mountain")
+      ]
+
+      land_section = Cube::Display.new(lands).sections.find { |section| section.title == "Land" }
+
+      expect(land_section.cards.first(2).map(&:name)).to match_array(["legendary tri-land", "tri-land"])
+    end
+
     it 'does not fail on a land with no rules text' do
       sections = Cube::Display.new([land("blank", nil)]).sections
 

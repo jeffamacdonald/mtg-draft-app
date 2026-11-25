@@ -7,6 +7,7 @@ class Cube
     SINGLE_COLOR_SECTIONS = %w[white blue black red green].freeze
 
     BASIC_LANDS = { "W" => "Plains", "U" => "Island", "B" => "Swamp", "R" => "Mountain", "G" => "Forest" }.freeze
+    TRI_LAND_MIN_BASIC_TYPES = 3
     COLOR_PAIRS = %w[WU WB WR WG UB UR UG BR BG RG].map(&:chars).freeze
 
     # Checked in order against a land's rules text; a match sorts the land earlier.
@@ -66,7 +67,7 @@ class Cube
       end.values.flatten
     end
 
-    # Lands sort by the first rule they satisfy: type-heavy lands, then each color pair
+    # Lands sort by the first rule they satisfy: lands with 3+ basic land types, then each color pair
     # (dual mana symbols, then both basic land types), then any-color / any-type / fetch /
     # colorless lands, then single-color lands in WUBRG order.
     def sort_land(cube_cards)
@@ -74,9 +75,9 @@ class Cube
     end
 
     def land_sort_key(cube_card)
-      words = cube_card.type_line.to_s.split(" ")
+      basic_types = (cube_card.type_line.to_s.split(" ") & BASIC_LANDS.values).size
       text = cube_card.card_text.to_s
-      [ words.first == "Land" && words.count > 4 ? 0 : 1, *LAND_TEXT_RULES.map { |rule| rule.call(text) ? 0 : 1 } ]
+      [ basic_types >= TRI_LAND_MIN_BASIC_TYPES ? 0 : 1, *LAND_TEXT_RULES.map { |rule| rule.call(text) ? 0 : 1 } ]
     end
   end
 end
