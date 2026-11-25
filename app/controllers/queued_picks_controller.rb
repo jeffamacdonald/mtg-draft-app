@@ -29,21 +29,13 @@ class QueuedPicksController < ApplicationController
 	end
 
 	def update_order
-    queued_pick_ids = params[:queued_pick_ids]
+    own_queued_picks = QueuedPick.joins(:draft_participant).where(draft_participants: { user_id: current_user.id })
 
-	  # Generate a SQL CASE statement to update all records in one query
-	  case_statements = queued_pick_ids.map.with_index(1) do |id, index|
-      "WHEN '#{id}' THEN #{index}"
-    end.join(" ")
-
-    # Execute the update in a single SQL query
-    sql = <<-SQL
-      UPDATE queued_picks
-      SET priority_number = CASE id #{case_statements} END
-      WHERE id IN (#{queued_pick_ids.map { |id| "'#{id}'" }.join(", ")})
-    SQL
-
-	  ActiveRecord::Base.connection.execute(sql)
+    QueuedPick.transaction do
+      Array(params[:queued_pick_ids]).each.with_index(1) do |id, priority_number|
+        own_queued_picks.where(id: id.to_s).update_all(priority_number: priority_number)
+      end
+    end
 
     head :ok
   end

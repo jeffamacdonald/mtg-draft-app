@@ -67,5 +67,22 @@ RSpec.describe QueuedPicksController, type: :request do
       expect(queued_pick_2.reload.priority_number).to eq(1)
       expect(queued_pick.reload.priority_number).to eq(2)
     end
+
+    it "ignores queued picks that belong to another user" do
+      other_pick = create(:queued_pick, draft_participant: create(:draft_participant, draft: draft), priority_number: 5)
+
+      patch update_order_queued_picks_path, params: { queued_pick_ids: [ other_pick.id, queued_pick.id ] }
+
+      expect(other_pick.reload.priority_number).to eq(5)
+      expect(queued_pick.reload.priority_number).to eq(2)
+    end
+
+    it "treats ids as data, not SQL" do
+      patch update_order_queued_picks_path, params: { queued_pick_ids: [ "' OR 1=1 --", queued_pick.id ] }
+
+      expect(response).to have_http_status(:ok)
+      expect(queued_pick.reload.priority_number).to eq(2)
+      expect(queued_pick_2.reload.priority_number).to eq(2)
+    end
   end
 end
