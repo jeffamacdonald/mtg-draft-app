@@ -26,6 +26,7 @@ module Cubes
     }.freeze
     NAME = "REPLACE(REPLACE(cards.name, '''', ''), '’', '')"
     ORACLE_WITHOUT_REMINDER = "regexp_replace(cards.card_text, '\\([^)]*\\)', '', 'g')"
+    MAX_QUERY_LENGTH = 300
     MAX_REGEXES = 5
     MAX_REGEX_LENGTH = 200
 
@@ -57,7 +58,7 @@ module Cubes
     attr_reader :ignored
 
     def initialize(text)
-      @text = text.to_s
+      @text = text.to_s.first(MAX_QUERY_LENGTH)
       @ignored = []
       @regex_count = 0
     end

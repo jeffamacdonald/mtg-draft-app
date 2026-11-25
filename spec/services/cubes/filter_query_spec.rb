@@ -62,6 +62,11 @@ RSpec.describe Cubes::FilterQuery do
     expect(ignored).to eq([ "r:rare", "price>3" ])
   end
 
+  it "only reads the first #{described_class::MAX_QUERY_LENGTH} characters" do
+    query = "t:land #{"x" * described_class::MAX_QUERY_LENGTH} r:rare"
+    expect(names(query).second).to eq([])
+  end
+
   it "ignores unsafe or invalid regexes" do
     expect(names("o:/(/").second).to eq([ "o:/(/" ])
     expect(names("o:/(?=a)/").second).to eq([ "o:/(?=a)/" ])
