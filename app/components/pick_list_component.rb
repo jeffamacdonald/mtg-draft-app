@@ -4,7 +4,7 @@ class PickListComponent < ViewComponent::Base
   def initialize(draft:, context:)
     @draft = draft
     @context = context
-    @font_size = context.draft_participant&.user&.pick_list_size || ""
+    @font_size = context.draft_participant&.user&.pick_list_size.presence || "lg-text"
   end
 
   def active_participant_class(participant)
