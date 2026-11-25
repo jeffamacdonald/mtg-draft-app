@@ -75,7 +75,7 @@ class TransferPortalTransaction < ApplicationRecord
 
 	def two_business_days_away
 		offset = 0
-		while day_off?(offset.days.from_now)
+		while BusinessDays.off?(offset.days.from_now)
 			offset += 1
 		end
 		if offset > 0
@@ -84,12 +84,4 @@ class TransferPortalTransaction < ApplicationRecord
 			2.days.from_now
 		end
 	end
-
-	def day_off?(date_time)
-    weekend?(date_time) || Holidays.on(date_time, :us_ca, :observed).present?
-  end
-
-  def weekend?(date_time)
-    date_time.wday == 0 || date_time.wday == 6
-  end
 end

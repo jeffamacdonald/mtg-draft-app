@@ -58,17 +58,9 @@ class TimerCalculator
     @_first_date_time_on_the_clock ||= next_date_time_available
   end
 
-  def day_off?(date_time)
-    weekend?(date_time) || Holidays.on(date_time, :us_ca, :observed).present?
-  end
-
-  def weekend?(date_time)
-    date_time.wday == 0 || date_time.wday == 6
-  end
-
   def next_date_time_available
     date_time = pick_time
-    while day_off?(date_time)
+    while BusinessDays.off?(date_time)
       # Set to next day at 8am
       date_time = (date_time + 1.day).beginning_of_day + START_TIME.hours
     end
@@ -77,7 +69,7 @@ class TimerCalculator
 
   def next_available_start_time
     date_time = pick_time.beginning_of_day + 24.hours + START_TIME.hours
-    while day_off?(date_time)
+    while BusinessDays.off?(date_time)
       date_time += 1.day
     end
     date_time
