@@ -4,12 +4,42 @@ class Cube
 
     class Section < Struct.new(:title, :cards, keyword_init: true);end
 
+    SINGLE_COLOR_SECTIONS = %w[white blue black red green].freeze
+
+    BASIC_LANDS = { "W" => "Plains", "U" => "Island", "B" => "Swamp", "R" => "Mountain", "G" => "Forest" }.freeze
+    TRI_LAND_MIN_BASIC_TYPES = 3
+    COLOR_PAIRS = %w[WU WB WR WG UB UR UG BR BG RG].map(&:chars).freeze
+
+    # Checked in order against (type_line, rules text); a match sorts the land earlier.
+    LAND_SORT_RULES = [
+      # Tri-lands and other lands with 3+ basic land types
+      ->(type_line, _) { (type_line.split(" ") & BASIC_LANDS.values).size >= TRI_LAND_MIN_BASIC_TYPES },
+      *COLOR_PAIRS.flat_map do |a, b|
+        [
+          # Two-color duals, by mana symbols in the text
+          ->(_, text) { text.include?("{#{a}}") && text.include?("{#{b}}") },
+          # Duals and fetch lands that name both basic land types (Flooded Strand)
+          ->(_, text) { text.include?(BASIC_LANDS[a]) && text.include?(BASIC_LANDS[b]) }
+        ]
+      end,
+      # Lands that make any color (City of Brass, Command Tower)
+      ->(_, text) { text.include?("any color") },
+      # Lands that copy what you could produce (Reflecting Pool)
+      ->(_, text) { text.include?("any type") },
+      # Basic-land fetchers (Evolving Wilds)
+      ->(_, text) { text.include?("basic land card") },
+      # Colorless utility lands
+      ->(_, text) { text.include?("Add {C}") },
+      # Mono-colored lands, in WUBRG order
+      *BASIC_LANDS.map { |color, basic| ->(_, text) { text.include?("{#{color}}") || text.include?(basic) } }
+    ].freeze
+
     def initialize(cube_cards)
       @cube_cards = cube_cards
     end
 
     def sections
-      [white, blue, black, red, green, gold, colorless, land].compact
+      [ *SINGLE_COLOR_SECTIONS.map { |color| section_for(color) }, gold, section_for("colorless"), section_for("land") ].compact
     end
 
     private
@@ -20,20 +50,11 @@ class Cube
       end
     end
 
-    Card::ColorIdentity::COLOR_IDENTITIES.values.each do |color|
-      if color == "land"
-        define_method(color.to_sym) do
-          return if to_hash[color].blank?
+    def section_for(color)
+      cards = to_hash[color]
+      return if cards.blank?
 
-          Section.new(title: color.titleize, cards: sort_land(to_hash[color]))
-        end
-      else
-        define_method(color.to_sym) do
-          return if to_hash[color].blank?
-
-          Section.new(title: color.titleize, cards: to_hash[color])
-        end
-      end
+      Section.new(title: color.titleize, cards: color == "land" ? sort_land(cards) : cards)
     end
 
     def gold
@@ -55,39 +76,15 @@ class Cube
       end.values.flatten
     end
 
+    # Lands sort by the first rule they satisfy, in LAND_SORT_RULES order.
     def sort_land(cube_cards)
-      cube_cards&.sort_by do |cube_card|
-        [cube_card.type_line.split(" ").first == "Land" && cube_card.type_line.split(" ").count > 4 ? 0 : 1,
-        cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{U}") ? 0 : 1,
-        cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Island") ? 0 : 1,
-        cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{B}") ? 0 : 1,
-        cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Swamp") ? 0 : 1,
-        cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{R}") ? 0 : 1,
-        cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Mountain") ? 0 : 1,
-        cube_card.card_text.include?("{W}") && cube_card.card_text.include?("{G}") ? 0 : 1,
-        cube_card.card_text.include?("Plains") && cube_card.card_text.include?("Forest") ? 0 : 1,
-        cube_card.card_text.include?("{U}") && cube_card.card_text.include?("{B}") ? 0 : 1,
-        cube_card.card_text.include?("Island") && cube_card.card_text.include?("Swamp") ? 0 : 1,
-        cube_card.card_text.include?("{U}") && cube_card.card_text.include?("{R}") ? 0 : 1,
-        cube_card.card_text.include?("Island") && cube_card.card_text.include?("Mountain") ? 0 : 1,
-        cube_card.card_text.include?("{U}") && cube_card.card_text.include?("{G}") ? 0 : 1,
-        cube_card.card_text.include?("Island") && cube_card.card_text.include?("Forest") ? 0 : 1,
-        cube_card.card_text.include?("{B}") && cube_card.card_text.include?("{R}") ? 0 : 1,
-        cube_card.card_text.include?("Swamp") && cube_card.card_text.include?("Mountain") ? 0 : 1,
-        cube_card.card_text.include?("{B}") && cube_card.card_text.include?("{G}") ? 0 : 1,
-        cube_card.card_text.include?("Swamp") && cube_card.card_text.include?("Forest") ? 0 : 1,
-        cube_card.card_text.include?("{R}") && cube_card.card_text.include?("{G}") ? 0 : 1,
-        cube_card.card_text.include?("Mountain") && cube_card.card_text.include?("Forest") ? 0 : 1,
-        cube_card.card_text.include?("any color") ? 0 : 1,
-        cube_card.card_text.include?("any type") ? 0 : 1,
-        cube_card.card_text.include?("basic land card") ? 0 : 1,
-        cube_card.card_text.include?("Add {C}") ? 0 : 1,
-        cube_card.card_text.include?("{W}") || cube_card.card_text.include?("Plains") ? 0 : 1,
-        cube_card.card_text.include?("{U}") || cube_card.card_text.include?("Island") ? 0 : 1,
-        cube_card.card_text.include?("{B}") || cube_card.card_text.include?("Swamp") ? 0 : 1,
-        cube_card.card_text.include?("{R}") || cube_card.card_text.include?("Mountain") ? 0 : 1,
-        cube_card.card_text.include?("{G}") || cube_card.card_text.include?("Forest") ? 0 : 1]
-      end
+      cube_cards&.sort_by { |cube_card| land_sort_key(cube_card) }
+    end
+
+    def land_sort_key(cube_card)
+      type_line = cube_card.type_line.to_s
+      text = cube_card.card_text.to_s
+      LAND_SORT_RULES.map { |rule| rule.call(type_line, text) ? 0 : 1 }
     end
   end
 end
