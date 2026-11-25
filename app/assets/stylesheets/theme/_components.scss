@@ -111,3 +111,6 @@ $link-on-parchment: #7a1f1f;
 }
 .table td.pick-slam { position: relative; z-index: 1; animation: pick-slam .45s ease-out; }
 @media (prefers-reduced-motion: reduce) { .table td.pick-slam { animation: none; } }
+
+// Lets a flex item shrink below its content width (so a .table-responsive inside scrolls instead of overflowing both sides).
+.min-w-0 { min-width: 0; }
