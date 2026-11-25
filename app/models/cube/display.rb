@@ -10,19 +10,28 @@ class Cube
     TRI_LAND_MIN_BASIC_TYPES = 3
     COLOR_PAIRS = %w[WU WB WR WG UB UR UG BR BG RG].map(&:chars).freeze
 
-    # Checked in order against a land's rules text; a match sorts the land earlier.
-    LAND_TEXT_RULES = [
+    # Checked in order against (type_line, rules text); a match sorts the land earlier.
+    LAND_SORT_RULES = [
+      # Tri-lands and other lands with 3+ basic land types
+      ->(type_line, _) { (type_line.split(" ") & BASIC_LANDS.values).size >= TRI_LAND_MIN_BASIC_TYPES },
       *COLOR_PAIRS.flat_map do |a, b|
         [
-          ->(text) { text.include?("{#{a}}") && text.include?("{#{b}}") },
-          ->(text) { text.include?(BASIC_LANDS[a]) && text.include?(BASIC_LANDS[b]) }
+          # Two-color duals, by mana symbols in the text
+          ->(_, text) { text.include?("{#{a}}") && text.include?("{#{b}}") },
+          # Duals and fetch lands that name both basic land types (Flooded Strand)
+          ->(_, text) { text.include?(BASIC_LANDS[a]) && text.include?(BASIC_LANDS[b]) }
         ]
       end,
-      ->(text) { text.include?("any color") },
-      ->(text) { text.include?("any type") },
-      ->(text) { text.include?("basic land card") },
-      ->(text) { text.include?("Add {C}") },
-      *BASIC_LANDS.map { |color, basic| ->(text) { text.include?("{#{color}}") || text.include?(basic) } }
+      # Lands that make any color (City of Brass, Command Tower)
+      ->(_, text) { text.include?("any color") },
+      # Lands that copy what you could produce (Reflecting Pool)
+      ->(_, text) { text.include?("any type") },
+      # Basic-land fetchers (Evolving Wilds)
+      ->(_, text) { text.include?("basic land card") },
+      # Colorless utility lands
+      ->(_, text) { text.include?("Add {C}") },
+      # Mono-colored lands, in WUBRG order
+      *BASIC_LANDS.map { |color, basic| ->(_, text) { text.include?("{#{color}}") || text.include?(basic) } }
     ].freeze
 
     def initialize(cube_cards)
@@ -67,17 +76,15 @@ class Cube
       end.values.flatten
     end
 
-    # Lands sort by the first rule they satisfy: lands with 3+ basic land types, then each color pair
-    # (dual mana symbols, then both basic land types), then any-color / any-type / fetch /
-    # colorless lands, then single-color lands in WUBRG order.
+    # Lands sort by the first rule they satisfy, in LAND_SORT_RULES order.
     def sort_land(cube_cards)
       cube_cards&.sort_by { |cube_card| land_sort_key(cube_card) }
     end
 
     def land_sort_key(cube_card)
-      basic_types = (cube_card.type_line.to_s.split(" ") & BASIC_LANDS.values).size
+      type_line = cube_card.type_line.to_s
       text = cube_card.card_text.to_s
-      [ basic_types >= TRI_LAND_MIN_BASIC_TYPES ? 0 : 1, *LAND_TEXT_RULES.map { |rule| rule.call(text) ? 0 : 1 } ]
+      LAND_SORT_RULES.map { |rule| rule.call(type_line, text) ? 0 : 1 }
     end
   end
 end
