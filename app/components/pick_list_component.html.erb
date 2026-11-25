@@ -4,15 +4,10 @@
       <div class="d-flex flex-row">
         <div class="col-md-4 col-12 d-flex flex-row">
           <div class="fw-bold">Text Size: </div>
-          <div class="px-1">
-            <%= button_to "sm", pick_list_size_draft_path(draft), params: {text_size: "small-text"}, method: :post %>
-          </div>
-          <div class="px-1">
-            <%= button_to "med", pick_list_size_draft_path(draft), params: {text_size: "med-text"}, method: :post %>
-          </div>
-          <div class="px-1">
-            <%= button_to "lg", pick_list_size_draft_path(draft), params: {text_size: ""}, method: :post %>
-          </div>
+          <%= form_with url: pick_list_size_draft_path(draft), class: "px-1", data: { controller: "auto-submit" } do |f| %>
+            <%= f.select :text_size, [["Small", "small-text"], ["Medium", "med-text"], ["Large", "lg-text"]], { selected: font_size },
+                  { class: "font-display", autocomplete: "off", data: { controller: "pixel-select", action: "change->auto-submit#submit" } } %>
+          <% end %>
         </div>
         <div class="col-md-4 d-md-inline d-none">
           PICKS

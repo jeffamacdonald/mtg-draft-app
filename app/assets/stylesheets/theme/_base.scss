@@ -23,6 +23,7 @@ select, option, optgroup, input, textarea { font-family: $font-field; }
 
 // Custom select (pixel_select_controller.js): native lists ignore page fonts.
 .pixel-select__native { display: none !important; }
+[data-controller~="pixel-select"]:not(.pixel-select__native) { visibility: hidden; } // no unstyled flash before the script swaps it
 .pixel-select { position: relative; }
 .pixel-select__button {
   width: 100%; text-align: left; font-family: $font-field; font-size: $font-size-field;

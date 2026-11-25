@@ -1,7 +1,7 @@
 class DraftsController < ApplicationController
   before_action :set_display_defaults, only: [:show]
   before_action :find_draft, only: [:show, :edit, :update, :start, :pick_list_size]
-  before_action :set_context, only: [:show, :pick_list_size]
+  before_action :set_context, only: [:show]
   def index
   end
 
@@ -54,7 +54,9 @@ class DraftsController < ApplicationController
 
   def pick_list_size
     current_user.update!(pick_list_size: params[:text_size], secret_key: ENV.fetch("REGISTRATION_SECRET"))
-    
+    find_draft # reload so the participant's user carries the new size
+    set_context
+
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
