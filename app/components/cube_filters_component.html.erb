@@ -5,7 +5,7 @@
         <div class="fw-bold">Search</div>
       <% end %>
       <div class="d-flex gap-2">
-        <%= f.text_field :query, value: filter_params[:query], class: "d-block flex-fill", maxlength: Cubes::FilterQuery::MAX_QUERY_LENGTH, data: {action: "input->filterable#search", "filterable-target": "search"} %>
+        <%= f.text_field :query, value: filter_params[:query], class: "d-block flex-fill", style: "min-width: 0", maxlength: Cubes::FilterQuery::MAX_QUERY_LENGTH, data: {action: "input->filterable#search", "filterable-target": "search"} %>
         <%= render(ButtonComponent.new(variation: :secondary, type: "button", data: {"bs-toggle": "modal", "bs-target": "#advanced-filters"})) { "Advanced" } %>
       </div>
     </div>
