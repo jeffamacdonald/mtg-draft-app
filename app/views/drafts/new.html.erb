@@ -2,7 +2,7 @@
   <div class="card-header">NEW DRAFT</div>
   <%= form_with(model: Draft.new, local: true) do |f| %>
     <div class="pt-3 row justify-content-center">
-      <div class="col-6 text-start d-grid gap-2">
+      <div class="col-11 col-md-6 text-start d-grid gap-2">
         <div class="col-12">
           <%= f.label :name, "Draft Name", class: "fw-bold" %>
           <%= f.text_field :name, class: "d-block" %>

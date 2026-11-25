@@ -1,6 +1,4 @@
-<%= render(DisplayCardComponent.new(width: :sm, classes: "mb-2")) do %>
-  <p class="h1"><%= @draft.name %></p>
-<% end %>
+<%= render(TitleCardComponent.new(title: @draft.name)) %>
 <% if @draft.owner == current_user %>
   <div class="container text-center mb-2">
     <%= form_with(url: start_draft_path(@draft)) do |f| %>
