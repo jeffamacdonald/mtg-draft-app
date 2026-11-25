@@ -1,5 +1,5 @@
-<div id="draft_<%= draft.id %>_pick_list" data-turbo-frame>
-  <%= render(DisplayCardComponent.new(width: :xxl, classes: "mb-2")) do %>
+<div id="draft_<%= draft.id %>_pick_list" class="min-w-0" data-turbo-frame>
+  <%= render(DisplayCardComponent.new(width: :xxl, classes: "mb-2 min-w-0")) do %>
     <div class="card-header">
       <div class="d-flex flex-row">
         <div class="col-md-4 col-12 d-flex flex-row">
