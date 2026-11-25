@@ -2,8 +2,9 @@
 
 class DraftListComponent < ViewComponent::Base
   def initialize(user:)
-    @pending_drafts = Draft.pending - user.drafts
+    user_draft_ids = user.drafts.select(:id)
+    @pending_drafts = Draft.pending.where.not(id: user_draft_ids)
     @active_drafts = user.drafts
-    @spectator_drafts = Draft.active - @active_drafts
+    @spectator_drafts = Draft.active.where.not(id: user_draft_ids)
   end
 end
