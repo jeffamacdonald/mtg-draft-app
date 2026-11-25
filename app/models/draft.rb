@@ -72,15 +72,12 @@ class Draft < ApplicationRecord
     active_pick&.draft_participant
   end
 
-  # Atomically raises last_pick_number to this pick's number (it never goes down), so
-  # concurrent picks and skips can't overwrite each other.
+  # Raises last_pick_number to this pick's number (it never goes down). The row lock keeps
+  # concurrent picks and skips from overwriting each other.
   def record_pick!(participant_pick)
-    sql = self.class.sanitize_sql_array([
-      "UPDATE drafts SET last_pick_number = GREATEST(last_pick_number, ?) WHERE id = ? RETURNING last_pick_number",
-      participant_pick.pick_number, id
-    ])
-    self.last_pick_number = self.class.connection.select_value(sql)
-    clear_attribute_changes([ :last_pick_number ])
+    with_lock do
+      update!(last_pick_number: [ last_pick_number, participant_pick.pick_number ].max)
+    end
   end
 
   def timer_live?
