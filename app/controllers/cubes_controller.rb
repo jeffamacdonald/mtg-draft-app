@@ -7,6 +7,7 @@ class CubesController < ApplicationController
 
   def show
     @cube = Cube.find(params[:id])
+    @filter_query = ::Cubes::FilterQuery.new(filter_params[:query])
     @cube_cards = @cube.cube_cards
       .select(
         "cube_cards.*",
@@ -15,10 +16,7 @@ class CubesController < ApplicationController
         "cards.card_text"
       )
       .active.sorted
-      .with_cmc(filter_params[:cmc])
-      .with_color(filter_params[:color])
-      .with_card_text_matching(filter_params[:card_text])
-      .with_card_type_matching(filter_params[:card_type])
+    @cube_cards = @filter_query.apply(@cube_cards)
     @text_only = current_user.default_display == "text" 
     @image_size = current_user.default_image_size
   end
@@ -54,7 +52,7 @@ class CubesController < ApplicationController
   helper_method def filter_params
     return {} unless params[:filters].present?
 
-    params.require(:filters).permit(:cmc, :color, :card_text, :card_type, :text_only, :image_size)
+    params.require(:filters).permit(:query, :text_only, :image_size)
   end
 
   def create_params

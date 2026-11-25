@@ -32,6 +32,17 @@ RSpec.describe "GET /drafts/:id (active draft cube list)", type: :request do
     expect(card_ids_in_page).not_to include(hidden.id)
   end
 
+  it "filters the cube list by the search query" do
+    elf = add_card(name: "Elf", cmc: 2)
+    giant = add_card(name: "Giant", cmc: 5)
+
+    get draft_path(draft, filters: { query: "mv>=4" })
+
+    expect(card_ids_in_page).to eq([ giant.id ])
+    expect(response.body).to include('value="mv&gt;=4"')
+    expect(card_ids_in_page).not_to include(elf.id)
+  end
+
   it "groups cards into color sections in display order" do
     add_card(name: "W Card", color: [ "W" ])
     add_card(name: "U Card", color: [ "U" ])
@@ -68,6 +79,15 @@ RSpec.describe "GET /drafts/:id (active draft cube list)", type: :request do
     expect(response.body).not_to include("cube_card__img")
   end
 
+  it "applies a view switch on the same request" do
+    add_card(name: "Switched Card")
+
+    get draft_path(draft), params: { filters: { text_only: 1, image_size: "lg" } }
+
+    expect(response.body).not_to include("cube_card__img")
+    expect(response.body).to include("Large Image View")
+  end
+
   it "shows card images in image mode" do
     card = add_card(name: "Pictured Card")
 
@@ -81,23 +101,23 @@ RSpec.describe "GET /drafts/:id (active draft cube list)", type: :request do
     let!(:cheap_white) { add_card(name: "Cheap White", color: [ "W" ], cmc: 1, type_line: "Creature - Elf", card_text: "Flying") }
     let!(:pricey_blue) { add_card(name: "Pricey Blue", color: [ "U" ], cmc: 5, type_line: "Sorcery", card_text: "Draw cards") }
 
-    it "filters by cmc" do
-      get draft_path(draft), params: { filters: { cmc: 5 } }
+    it "filters by mana value" do
+      get draft_path(draft), params: { filters: { query: "mv=5" } }
       expect(card_ids_in_page).to eq([ pricey_blue.id ])
     end
 
     it "filters by color" do
-      get draft_path(draft), params: { filters: { color: "W" } }
+      get draft_path(draft), params: { filters: { query: "c:w" } }
       expect(card_ids_in_page).to eq([ cheap_white.id ])
     end
 
-    it "filters by card text" do
-      get draft_path(draft), params: { filters: { card_text: "Flying" } }
+    it "filters by oracle text" do
+      get draft_path(draft), params: { filters: { query: "o:flying" } }
       expect(card_ids_in_page).to eq([ cheap_white.id ])
     end
 
     it "filters by card type" do
-      get draft_path(draft), params: { filters: { card_type: "Sorcery" } }
+      get draft_path(draft), params: { filters: { query: "t:sorcery" } }
       expect(card_ids_in_page).to eq([ pricey_blue.id ])
     end
   end

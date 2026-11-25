@@ -1,18 +1,13 @@
 class DraftsController < ApplicationController
+  before_action :set_display_defaults, only: [:show]
   before_action :find_draft, only: [:show, :edit, :update, :start, :pick_list_size]
   before_action :set_context, only: [:show, :pick_list_size]
-  before_action :set_display_defaults, only: [:show]
   def index
   end
 
   def show
-    @cube_cards = @draft.cube.cube_cards
-      .for_display
-      .active.sorted
-      .with_cmc(filter_params[:cmc])
-      .with_color(filter_params[:color])
-      .with_card_text_matching(filter_params[:card_text])
-      .with_card_type_matching(filter_params[:card_type])
+    @filter_query = ::Cubes::FilterQuery.new(filter_params[:query])
+    @cube_cards = @filter_query.apply(@draft.cube.cube_cards.for_display.active.sorted)
   end
 
   def edit
@@ -76,7 +71,7 @@ class DraftsController < ApplicationController
   helper_method def filter_params
     return {} unless params[:filters].present?
 
-    params.require(:filters).permit(:cmc, :color, :card_text, :card_type, :text_only, :image_size)
+    params.require(:filters).permit(:query, :text_only, :image_size)
   end
 
   def create_params

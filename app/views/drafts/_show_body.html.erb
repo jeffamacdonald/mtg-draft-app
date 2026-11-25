@@ -3,8 +3,12 @@
   <div class="d-flex flex-md-row flex-column justify-content-center w-100">
     <%= render(PickListComponent.new(draft: draft, context: context)) %>
   </div>
-  <%= render(CubeFiltersComponent.new(url: draft_path(draft), filter_params: filter_params, user: context.draft_participant&.user)) %>
-  <% cache context.cube_list_cache_key(filter_params) do %>
-    <%= render(CubeCardListComponent.new(cube_cards: cube_cards, context: context)) %>
+  <%= render(CubeFiltersComponent.new(url: draft_path(draft), filter_params: filter_params)) %>
+  <%= turbo_frame_tag "cube_list", target: "_top" do %>
+    <%= render "shared/ignored_filter_terms", terms: local_assigns.fetch(:ignored_terms, []) %>
+    <%= render(CubeViewSwitchComponent.new(url: draft_path(draft), filter_params: filter_params, user: context.draft_participant&.user)) %>
+    <% cache context.cube_list_cache_key(filter_params) do %>
+      <%= render(CubeCardListComponent.new(cube_cards: cube_cards, context: context)) %>
+    <% end %>
   <% end %>
 </div>

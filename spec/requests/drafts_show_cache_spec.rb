@@ -57,7 +57,7 @@ RSpec.describe "GET /drafts/:id (cube list fragment cache)", type: :request do
 
   it "caches each filter combination separately" do
     get draft_path(draft)
-    get draft_path(draft), params: { filters: { cmc: 5 } }
+    get draft_path(draft), params: { filters: { query: "mv=5" } }
 
     expect(card_ids_in_page).to eq([ second_card.id ])
   end
