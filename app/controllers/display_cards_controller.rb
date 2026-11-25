@@ -3,16 +3,17 @@ class DisplayCardsController < ApplicationController
     cube_card = CubeCard.find(params[:cube_card_id])
     draft = Draft.find_by(id: params[:draft_id])
     if draft.present?
-      current_participant = draft.draft_participants.find_by(user: current_user)
-      picking_participant = if current_participant.skipped?
-        current_participant
-      elsif current_participant.can_pick_for?(draft.active_participant)
-        draft.active_participant
-      end
-
-      if draft.participant_picks.map(&:cube_card).include?(cube_card)
+      if draft.participant_picks.exists?(cube_card_id: cube_card.id)
         render_cube_card_path(cube_card)
       else
+        current_participant = draft.draft_participants.find_by(user: current_user)
+        active_participant = draft.active_participant
+        picking_participant = if current_participant.skipped?
+          current_participant
+        elsif current_participant.can_pick_for?(active_participant)
+          active_participant
+        end
+
         if picking_participant.present?
           render_new_participant_pick_path(cube_card, picking_participant)
         else
