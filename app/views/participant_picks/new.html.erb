@@ -16,6 +16,7 @@
             <%= form_with(model: ParticipantPick.new, id: "pick_form") do |f| %>
               <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
               <%= f.hidden_field :cube_card_id, value: @cube_card.id %>
+              <%= f.hidden_field :participant_pick_id, value: @draft_participant.next_open_pick&.id %>
               <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 w-100", data: { turbo: false })) { "Pick" } %>
             <% end %>
           </div>

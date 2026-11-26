@@ -26,6 +26,7 @@ Correctness, maintainability (human-readable code, consistent patterns), minimal
 ## Conventions (going forward)
 The codebase is old and doesn't fully match these; apply them to new/changed code, don't rewrite legacy code to match.
 - Business logic lives in service classes, namespaced by model (e.g. `Drafts::AdvancePick`), not in model classes. Models keep associations, validations, scopes.
+- Services are called with a class method taking keyword arguments (e.g. `Drafts::MakePick.call(draft_participant:, cube_card:)`) that delegates to `new(...).call`. They live in `app/services/<model plural>/`.
 - Small stateless shared helpers that don't belong to one model (e.g. `BusinessDays.off?`) are plain modules/classes in `app/models/`.
 - Frontend: use ViewComponent components and Turbo (frames/streams) before reaching for custom JavaScript.
 - When a task needs a new pattern or convention not covered here, stop and ask the user's preference, then record the answer in this section.

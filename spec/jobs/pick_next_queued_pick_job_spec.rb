@@ -46,6 +46,15 @@ RSpec.describe PickNextQueuedPickJob, type: :job do
         end
       end
 
+      context "when the pick is made by hand before the job gets the lock" do
+        it "does nothing" do
+          allow(Drafts::MakePick).to receive(:call).and_raise(Drafts::MakePick::StalePick)
+          expect(PickMailer).not_to receive(:next_up_email)
+
+          expect { described_class.perform_now(participant_pick) }.not_to raise_error
+        end
+      end
+
       context "when queued picks are present" do
         it "picks the queued pick with priority 1 and sends email" do
           expect(PickMailer).to receive(:next_up_email).and_return(double("MessageDelivery", deliver_now: true))
