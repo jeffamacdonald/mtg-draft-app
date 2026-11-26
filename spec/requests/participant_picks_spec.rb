@@ -16,6 +16,18 @@ RSpec.describe 'ParticipantPicks', type: :request do
     #   TODO
     end
 
+    it "includes the drafter's next open pick in the form" do
+      draft_participant = create(:draft_participant, draft:, user:)
+      open_pick = create(:participant_pick, draft_participant:, cube_card: nil)
+      stub_request(:get, "https://api.scryfall.com/cards/named?exact=#{cube_card.card.name}")
+        .to_return(status: 200, body: { image_uris: { normal: nil } }.to_json)
+
+      get new_participant_pick_path, params: { draft_participant_id: draft_participant.id, cube_card_id: cube_card.id }
+
+      field = Nokogiri::HTML(response.body).at_css('input[name="participant_pick[participant_pick_id]"]')
+      expect(field['value']).to eq(open_pick.id)
+    end
+
     context 'when not signed in' do
       before { sign_out user }
 
@@ -47,11 +59,34 @@ RSpec.describe 'ParticipantPicks', type: :request do
     #   TODO
     end
 
+    it 'passes the intended pick to the service' do
+      open_pick = create(:participant_pick, draft_participant:, cube_card: nil)
+      expect(Drafts::MakePick).to receive(:call)
+        .with(draft_participant:, cube_card:, participant_pick_id: open_pick.id)
+        .and_raise(Drafts::MakePick::StalePick)
+
+      post participant_picks_path, params: pick_params.deep_merge(participant_pick: { participant_pick_id: open_pick.id })
+    end
+
+    context 'when it is no longer the participant\'s turn' do
+      before { allow(Drafts::MakePick).to receive(:call).and_raise(Drafts::MakePick::StalePick) }
+
+      it 'redirects to the draft, flashes an error and sends no email' do
+        expect(PickMailer).not_to receive(:next_up_email)
+
+        post participant_picks_path, params: pick_params
+
+        expect(response).to redirect_to(draft_path(draft))
+        expect(flash[:error]).to include('your turn changed')
+      end
+    end
+
     context 'when the next-up email fails to send' do
       let(:next_participant) { create(:draft_participant, draft:) }
 
       before do
-        allow_any_instance_of(DraftParticipant).to receive(:pick_card!).and_return(build_stubbed(:participant_pick))
+        pick = create(:participant_pick, draft_participant:, cube_card: nil)
+        allow(Drafts::MakePick).to receive(:call).and_return(pick)
         allow_any_instance_of(Draft).to receive(:active_participant).and_return(next_participant)
         allow(PickMailer).to receive(:next_up_email).and_raise(StandardError, 'Zoho token refresh failed')
       end

@@ -7,19 +7,15 @@ class ParticipantPicksController < ApplicationController
   def create
     draft_participant = DraftParticipant.find(create_params[:draft_participant_id])
     cube_card = CubeCard.find(create_params[:cube_card_id])
-    pick = draft_participant.pick_card!(cube_card)
-    
-    # Email next participant
-    next_user = draft_participant.reload.draft.active_participant.user
-    if next_user != current_user
-      begin
-        PickMailer.next_up_email(pick, next_user).deliver_now
-      rescue StandardError => e
-        Rails.logger.error("Next-up email failed: #{e.class}: #{e.message}")
-        flash[:error] = "Your pick was saved, but the email to the next player failed to send. Please notify the admin."
-      end
+    pick = Drafts::MakePick.call(draft_participant:, cube_card:, participant_pick_id: create_params[:participant_pick_id])
+
+    unless Drafts::NotifyNextUp.call(pick:, except_user: current_user)
+      flash[:error] = "Your pick was saved, but the email to the next player failed to send. Please notify the admin."
     end
 
+    redirect_to draft_path(draft_participant.draft)
+  rescue Drafts::MakePick::StalePick
+    flash[:error] = "That pick wasn't saved. It was already made, or your turn changed."
     redirect_to draft_path(draft_participant.draft)
   end
 
@@ -66,7 +62,8 @@ class ParticipantPicksController < ApplicationController
   def create_params
     params.require(:participant_pick).permit(
       :cube_card_id,
-      :draft_participant_id
+      :draft_participant_id,
+      :participant_pick_id
     )
   end
 
