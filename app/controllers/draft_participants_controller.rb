@@ -1,4 +1,6 @@
 class DraftParticipantsController < ApplicationController
+  before_action :authorize_settings, only: [ :edit, :update ]
+
   def new
     @draft = Draft.find(params[:draft_id])
   end
@@ -10,11 +12,9 @@ class DraftParticipantsController < ApplicationController
   end
 
   def edit
-    @draft_participant = DraftParticipant.find(params[:id])
   end
 
   def update
-    @draft_participant = DraftParticipant.find(params[:id])
     @draft_participant.update!(update_params)
 
     respond_to do |format|
@@ -37,6 +37,11 @@ class DraftParticipantsController < ApplicationController
   end
 
   private
+
+  def authorize_settings
+    @draft_participant = DraftParticipant.find(params[:id])
+    require_own_draft_participant(@draft_participant)
+  end
 
   def create_params
     params.require(:draft_participant).permit(
