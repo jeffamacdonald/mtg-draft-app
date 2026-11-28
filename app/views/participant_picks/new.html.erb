@@ -12,14 +12,15 @@
           <%= render(ScryfallLinkComponent.new(card: @cube_card.card)) %>
         </div>
         <div class="row justify-content-center mt-2 gx-3">
-          <div class="col-4">
-            <%= form_with(model: ParticipantPick.new, id: "pick_form") do |f| %>
-              <%= f.hidden_field :draft_participant_id, value: @draft_participant.id %>
-              <%= f.hidden_field :cube_card_id, value: @cube_card.id %>
-              <%= f.hidden_field :participant_pick_id, value: @draft_participant.next_open_pick&.id %>
-              <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 w-100", data: { turbo: false })) { "Pick" } %>
-            <% end %>
-          </div>
+          <% next_open_pick = @draft_participant.next_open_pick %>
+          <% if next_open_pick %>
+            <div class="col-4">
+              <%= form_with(url: pick_participant_pick_path(next_open_pick), method: :patch, scope: :participant_pick, id: "pick_form") do |f| %>
+                <%= f.hidden_field :cube_card_id, value: @cube_card.id %>
+                <%= render(ButtonComponent.new(variation: :primary, classes: "mb-2 w-100", data: { turbo: false })) { "Pick" } %>
+              <% end %>
+            </div>
+          <% end %>
           <% participant_for_queue = @draft_participant.user == current_user ? @draft_participant : DraftParticipant.find_by(user: current_user, draft: @draft_participant.draft) %>
           <% queued_pick = participant_for_queue.queued_picks.find { |qp| qp.cube_card_id == @cube_card.id } %>
           <% if queued_pick.present? %>

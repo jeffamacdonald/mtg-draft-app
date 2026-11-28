@@ -22,9 +22,10 @@ Rails.application.routes.draw do
     end
     resources :transfer_portal_transactions, only: [:new]
   end
-  resources :participant_picks, only: [:new, :create, :show, :edit, :update] do
+  resources :participant_picks, only: [ :new, :show, :edit, :update ] do
     member do
       get :hovercard
+      patch :pick
     end
   end
   resources :queued_picks, only: [:new, :create, :destroy] do
