@@ -50,6 +50,9 @@ module Drafts
       else
         advance_draft
       end
+
+      # Checked for skipped drafters too: the final pick may be one they are catching up on
+      draft.completed! if final_pick?
     end
 
     # Otherwise the card would fill a later pick and jump the draft past other players
@@ -67,12 +70,11 @@ module Drafts
 
     def advance_draft
       draft.update!(last_pick_at: pick.updated_at)
+      @starts_next_turn = !final_pick?
+    end
 
-      if pick.pick_number == draft.participants_count * draft.rounds
-        draft.completed!
-      else
-        @starts_next_turn = true
-      end
+    def final_pick?
+      pick.pick_number == draft.participants_count * draft.rounds
     end
   end
 end

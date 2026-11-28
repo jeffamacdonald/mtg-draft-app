@@ -97,6 +97,21 @@ RSpec.describe Drafts::MakePick do
       end
     end
 
+    context "when a skipped participant makes the draft's final pick" do
+      let!(:participant_1) { create :draft_participant, draft: draft, draft_position: 1, skipped: true }
+      let!(:final_pick) { create :participant_pick, draft_participant: participant_1, cube_card_id: nil, round: draft.rounds, pick_number: draft.rounds * 14, skipped: true }
+
+      it "completes the draft without starting another turn" do
+        expect(SkipActiveParticipantJob).not_to receive(:set)
+        expect(PickNextQueuedPickJob).not_to receive(:set)
+
+        subject
+
+        expect(final_pick.reload.cube_card).to eq cube_card
+        expect(draft.reload.status).to eq DraftStatus.completed
+      end
+    end
+
     context "when the participant is not on the clock" do
       let!(:filled_pick) { create :participant_pick, draft_participant: participant_1, round: 1, pick_number: 1 }
       let!(:other_pick) { create :participant_pick, draft_participant: participant_14, cube_card_id: nil, round: 1, pick_number: 2 }

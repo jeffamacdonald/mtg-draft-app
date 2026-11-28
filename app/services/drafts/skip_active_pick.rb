@@ -46,6 +46,9 @@ module Drafts
       return if next_participant.nil? || next_participant == draft_participant
 
       PickMailer.skipped_email(draft_participant, next_participant.user).deliver_now
+    rescue StandardError => e
+      # The skip is already saved; raising here would stop the next skip from being enqueued
+      Rails.logger.error("Skipped email failed: #{e.class}: #{e.message}")
     end
   end
 end
