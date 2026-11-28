@@ -77,6 +77,29 @@ RSpec.describe DraftParticipantsController, type: :request do
     end
   end
 
+  describe "managing another drafter's settings" do
+    let(:draft) { create(:draft) }
+    let(:other_participant) { create(:draft_participant, draft: draft, display_name: "original") }
+
+    before do
+      sign_in create(:user)
+    end
+
+    it 'does not show the settings page' do
+      get edit_draft_participant_path(other_participant)
+
+      expect(response).to redirect_to(draft_path(draft))
+      expect(flash[:error]).to include('your own drafter')
+    end
+
+    it 'does not update the settings' do
+      patch draft_participant_path(other_participant), params: { draft_participant: { display_name: 'new' } }
+
+      expect(response).to redirect_to(draft_path(draft))
+      expect(other_participant.reload.display_name).to eq 'original'
+    end
+  end
+
   describe 'GET #picks' do
     let(:draft) { create(:draft) }
     let(:user) { create(:user) }

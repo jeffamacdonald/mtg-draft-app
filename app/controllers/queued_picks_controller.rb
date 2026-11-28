@@ -1,6 +1,9 @@
 class QueuedPicksController < ApplicationController
+  before_action :authorize_new, only: :new
+  before_action :authorize_create, only: :create
+  before_action :authorize_destroy, only: :destroy
+
 	def new
-		@draft_participant = DraftParticipant.find(params[:draft_participant_id])
     @cube_card = CubeCard.find(params[:cube_card_id])
 	end
 
@@ -14,7 +17,6 @@ class QueuedPicksController < ApplicationController
 	end
 
 	def destroy
-		@queued_pick = QueuedPick.find params[:id]
 		@queued_pick.destroy!
 		respond_to do |format|
       format.turbo_stream do
@@ -41,6 +43,20 @@ class QueuedPicksController < ApplicationController
   end
 
 	private
+
+  def authorize_new
+    @draft_participant = DraftParticipant.find(params[:draft_participant_id])
+    require_own_draft_participant(@draft_participant)
+  end
+
+  def authorize_create
+    require_own_draft_participant(DraftParticipant.find(create_params[:draft_participant_id]))
+  end
+
+  def authorize_destroy
+    @queued_pick = QueuedPick.find(params[:id])
+    require_own_draft_participant(@queued_pick.draft_participant)
+  end
 
 	def create_params
 		params.require(:queued_pick).permit(:cube_card_id, :draft_participant_id, :priority_number)

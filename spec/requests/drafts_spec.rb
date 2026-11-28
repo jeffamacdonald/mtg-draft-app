@@ -41,6 +41,35 @@ RSpec.describe DraftsController, type: :request do
     end
   end
 
+  describe 'managing a draft you do not own' do
+    let(:draft) { create(:draft, status: DraftStatus.pending) }
+
+    before do
+      sign_in create(:user)
+    end
+
+    def expect_rejection
+      expect(response).to redirect_to(draft_path(draft))
+      expect(flash[:error]).to include('Only the draft owner')
+      expect(draft.reload.status).to eq(DraftStatus.pending)
+    end
+
+    it 'does not show the edit page' do
+      get edit_draft_path(draft)
+      expect_rejection
+    end
+
+    it 'does not update the draft' do
+      patch draft_path(draft), params: { draft: { status: DraftStatus.active } }
+      expect_rejection
+    end
+
+    it 'does not start the draft' do
+      post start_draft_path(draft)
+      expect_rejection
+    end
+  end
+
   describe 'GET #edit' do
     let(:user) { create(:user) }
 
@@ -49,7 +78,7 @@ RSpec.describe DraftsController, type: :request do
     end
 
     context 'when the draft status is pending' do
-      let(:draft) { create(:draft, status: DraftStatus.pending) }
+      let(:draft) { create(:draft, status: DraftStatus.pending, owner: user) }
 
       it 'returns a successful response' do
         get edit_draft_path(draft)
@@ -58,7 +87,7 @@ RSpec.describe DraftsController, type: :request do
     end
 
     context 'when the draft status is not pending' do
-      let(:draft) { create(:draft, status: DraftStatus.active) }
+      let(:draft) { create(:draft, status: DraftStatus.active, owner: user) }
 
       it 'redirects to the draft show page' do
         get edit_draft_path(draft)
@@ -68,7 +97,7 @@ RSpec.describe DraftsController, type: :request do
   end
 
   describe 'PATCH #update' do
-    let(:draft) { create(:draft) }
+    let(:draft) { create(:draft, owner: user) }
     let(:valid_params) { { status: DraftStatus.active } }
     let(:user) { create(:user) }
 

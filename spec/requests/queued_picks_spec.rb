@@ -85,4 +85,32 @@ RSpec.describe QueuedPicksController, type: :request do
       expect(queued_pick_2.reload.priority_number).to eq(2)
     end
   end
+
+  describe "managing another drafter's queue" do
+    let(:other_participant) { create(:draft_participant, draft: draft) }
+    let!(:other_pick) { create(:queued_pick, draft_participant: other_participant, priority_number: 1) }
+
+    def expect_rejection
+      expect(response).to redirect_to(draft_path(draft))
+      expect(flash[:error]).to include("your own drafter")
+    end
+
+    it "does not open the queue dialog" do
+      get new_queued_pick_path, params: { draft_participant_id: other_participant.id, cube_card_id: cube_card.id }
+
+      expect_rejection
+    end
+
+    it "does not add to the queue" do
+      params = { cube_card_id: cube_card.id, draft_participant_id: other_participant.id, priority_number: 2 }
+
+      expect { post queued_picks_path, params: { queued_pick: params } }.not_to change(QueuedPick, :count)
+      expect_rejection
+    end
+
+    it "does not remove from the queue" do
+      expect { delete queued_pick_path(other_pick) }.not_to change(QueuedPick, :count)
+      expect_rejection
+    end
+  end
 end

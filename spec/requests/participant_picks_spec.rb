@@ -29,6 +29,19 @@ RSpec.describe 'ParticipantPicks', type: :request do
       expect(form.at_css('input[name="_method"]')['value']).to eq('patch')
     end
 
+    it "queues to the surrogate's own queue when picking for another drafter" do
+      other = create(:draft_participant, draft:)
+      own = create(:draft_participant, draft:, user:)
+      create(:participant_pick, draft_participant: other, cube_card: nil)
+      stub_request(:get, "https://api.scryfall.com/cards/named?exact=#{cube_card.card.name}")
+        .to_return(status: 200, body: { image_uris: { normal: nil } }.to_json)
+
+      get new_participant_pick_path, params: { draft_participant_id: other.id, cube_card_id: cube_card.id }
+
+      field = Nokogiri::HTML(response.body).at_css('form#add_to_queue_form input[name="queued_pick[draft_participant_id]"]')
+      expect(field['value']).to eq(own.id)
+    end
+
     context 'when not signed in' do
       before { sign_out user }
 

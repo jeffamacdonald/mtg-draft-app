@@ -1,6 +1,7 @@
 class DraftsController < ApplicationController
   before_action :set_display_defaults, only: [:show]
   before_action :find_draft, only: [:show, :edit, :update, :start, :pick_list_size]
+  before_action :require_draft_owner, only: [ :edit, :update, :start ]
   before_action :set_context, only: [:show]
   def index
   end
@@ -94,6 +95,13 @@ class DraftsController < ApplicationController
 
   def find_draft
     @draft = Draft.with_full_associations.find(params[:id])
+  end
+
+  def require_draft_owner
+    return if @draft.owner == current_user
+
+    flash[:error] = "Only the draft owner can manage this draft."
+    redirect_to draft_path(@draft), status: :see_other
   end
 
   def set_display_defaults
