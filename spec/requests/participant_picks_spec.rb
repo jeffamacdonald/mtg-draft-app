@@ -16,7 +16,7 @@ RSpec.describe 'ParticipantPicks', type: :request do
     #   TODO
     end
 
-    it "includes the drafter's next open pick in the form" do
+    it "submits a PATCH for the drafter's next open pick" do
       draft_participant = create(:draft_participant, draft:, user:)
       open_pick = create(:participant_pick, draft_participant:, cube_card: nil)
       stub_request(:get, "https://api.scryfall.com/cards/named?exact=#{cube_card.card.name}")
@@ -24,8 +24,9 @@ RSpec.describe 'ParticipantPicks', type: :request do
 
       get new_participant_pick_path, params: { draft_participant_id: draft_participant.id, cube_card_id: cube_card.id }
 
-      field = Nokogiri::HTML(response.body).at_css('input[name="participant_pick[participant_pick_id]"]')
-      expect(field['value']).to eq(open_pick.id)
+      form = Nokogiri::HTML(response.body).at_css('form#pick_form')
+      expect(form['action']).to eq(pick_participant_pick_path(open_pick))
+      expect(form.at_css('input[name="_method"]')['value']).to eq('patch')
     end
 
     context 'when not signed in' do
@@ -41,31 +42,65 @@ RSpec.describe 'ParticipantPicks', type: :request do
     end
   end
 
-  describe 'POST /participant_picks' do
-    let(:pick_params) do
-      {
-        participant_pick: {
-          draft_participant_id: draft_participant.id,
-          cube_card_id: cube_card.id
-        }
-      }
+  describe 'PATCH /participant_picks/:id/pick' do
+    let(:draft_participant) { create(:draft_participant, draft:, user:) }
+    let!(:open_pick) { create(:participant_pick, draft_participant:, cube_card: nil) }
+    let(:pick_params) { { participant_pick: { cube_card_id: cube_card.id } } }
+
+    subject(:make_pick) { patch pick_participant_pick_path(open_pick), params: pick_params }
+
+    context 'when picking for yourself' do
+      it 'makes that pick, notifies the next drafter and redirects to the draft' do
+        expect(Drafts::MakePick).to receive(:call)
+          .with(draft_participant:, cube_card:, participant_pick_id: open_pick.id)
+          .and_return(open_pick)
+        expect(Drafts::NotifyNextUp).to receive(:call).with(pick: open_pick, except_user: user).and_return(true)
+
+        make_pick
+
+        expect(response).to redirect_to(draft_path(draft))
+        expect(flash[:error]).to be_nil
+      end
     end
 
-    it 'creates a participant pick and redirects' do
-    #   TODO
+    context 'when picking as a surrogate' do
+      let(:draft_participant) { create(:draft_participant, draft:) }
+      let(:surrogate) { create(:draft_participant, draft:, user:) }
+      let!(:surrogacy) { create(:surrogate_draft_participant, draft_participant:, surrogate_participant: surrogate) }
+
+      it 'makes the pick' do
+        expect(Drafts::MakePick).to receive(:call).and_return(open_pick)
+        allow(Drafts::NotifyNextUp).to receive(:call).and_return(true)
+
+        make_pick
+
+        expect(response).to redirect_to(draft_path(draft))
+      end
     end
 
-    it 'sends email to next participant when different from current user' do
-    #   TODO
+    shared_examples 'a rejected pick' do
+      it 'does not make the pick and flashes an error' do
+        expect(Drafts::MakePick).not_to receive(:call)
+
+        make_pick
+
+        expect(response).to redirect_to(draft_path(draft))
+        expect(flash[:error]).to include("can't make picks")
+        expect(open_pick.reload.cube_card).to be_nil
+      end
     end
 
-    it 'passes the intended pick to the service' do
-      open_pick = create(:participant_pick, draft_participant:, cube_card: nil)
-      expect(Drafts::MakePick).to receive(:call)
-        .with(draft_participant:, cube_card:, participant_pick_id: open_pick.id)
-        .and_raise(Drafts::MakePick::StalePick)
+    context 'when another drafter in the draft submits it' do
+      let(:draft_participant) { create(:draft_participant, draft:) }
+      let!(:other_participant) { create(:draft_participant, draft:, user:) }
 
-      post participant_picks_path, params: pick_params.deep_merge(participant_pick: { participant_pick_id: open_pick.id })
+      it_behaves_like 'a rejected pick'
+    end
+
+    context 'when someone outside the draft submits it' do
+      let(:draft_participant) { create(:draft_participant, draft:) }
+
+      it_behaves_like 'a rejected pick'
     end
 
     context 'when it is no longer the participant\'s turn' do
@@ -74,7 +109,7 @@ RSpec.describe 'ParticipantPicks', type: :request do
       it 'redirects to the draft, flashes an error and sends no email' do
         expect(PickMailer).not_to receive(:next_up_email)
 
-        post participant_picks_path, params: pick_params
+        make_pick
 
         expect(response).to redirect_to(draft_path(draft))
         expect(flash[:error]).to include('your turn changed')
@@ -85,14 +120,13 @@ RSpec.describe 'ParticipantPicks', type: :request do
       let(:next_participant) { create(:draft_participant, draft:) }
 
       before do
-        pick = create(:participant_pick, draft_participant:, cube_card: nil)
-        allow(Drafts::MakePick).to receive(:call).and_return(pick)
+        allow(Drafts::MakePick).to receive(:call).and_return(open_pick)
         allow_any_instance_of(Draft).to receive(:active_participant).and_return(next_participant)
         allow(PickMailer).to receive(:next_up_email).and_raise(StandardError, 'Zoho token refresh failed')
       end
 
       it 'still redirects to the draft and flashes an error' do
-        post participant_picks_path, params: pick_params
+        make_pick
 
         expect(response).to redirect_to(draft_path(draft))
         expect(flash[:error]).to include('failed to send')
@@ -103,7 +137,8 @@ RSpec.describe 'ParticipantPicks', type: :request do
       before { sign_out user }
 
       it 'redirects to sign in' do
-        post participant_picks_path, params: pick_params
+        make_pick
+
         expect(response).to redirect_to(new_user_session_path)
       end
     end

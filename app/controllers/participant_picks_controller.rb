@@ -4,19 +4,27 @@ class ParticipantPicksController < ApplicationController
     @cube_card = CubeCard.find(params[:cube_card_id])
   end
 
-  def create
-    draft_participant = DraftParticipant.find(create_params[:draft_participant_id])
-    cube_card = CubeCard.find(create_params[:cube_card_id])
-    pick = Drafts::MakePick.call(draft_participant:, cube_card:, participant_pick_id: create_params[:participant_pick_id])
+  # Fills the participant pick with a card
+  def pick
+    participant_pick = ParticipantPick.find(params[:id])
+    draft_participant = participant_pick.draft_participant
 
-    unless Drafts::NotifyNextUp.call(pick:, except_user: current_user)
+    unless may_pick_for?(draft_participant)
+      flash[:error] = "You can't make picks for that drafter."
+      return redirect_to draft_path(draft_participant.draft), status: :see_other
+    end
+
+    cube_card = CubeCard.find(pick_params[:cube_card_id])
+    made_pick = Drafts::MakePick.call(draft_participant:, cube_card:, participant_pick_id: participant_pick.id)
+
+    unless Drafts::NotifyNextUp.call(pick: made_pick, except_user: current_user)
       flash[:error] = "Your pick was saved, but the email to the next player failed to send. Please notify the admin."
     end
 
-    redirect_to draft_path(draft_participant.draft)
+    redirect_to draft_path(draft_participant.draft), status: :see_other
   rescue Drafts::MakePick::StalePick
     flash[:error] = "That pick wasn't saved. It was already made, or your turn changed."
-    redirect_to draft_path(draft_participant.draft)
+    redirect_to draft_path(draft_participant.draft), status: :see_other
   end
 
   def show
@@ -59,12 +67,14 @@ class ParticipantPicksController < ApplicationController
 
   private
 
-  def create_params
-    params.require(:participant_pick).permit(
-      :cube_card_id,
-      :draft_participant_id,
-      :participant_pick_id
-    )
+  # The drafter themselves, or one of their surrogates
+  def may_pick_for?(draft_participant)
+    current_participant = draft_participant.draft.draft_participants.find_by(user: current_user)
+    current_participant.present? && current_participant.can_pick_for?(draft_participant)
+  end
+
+  def pick_params
+    params.require(:participant_pick).permit(:cube_card_id)
   end
 
   def update_params
